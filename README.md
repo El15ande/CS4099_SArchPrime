@@ -6,6 +6,8 @@ DOER
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3. Ethics](#3-ethics)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4. Resources](#4-resources)
 
+---
+
 ## DOER (ver 1.0)
 
 0.1 Prototype: [Software Architecture Viewpoints – Analysis and Visualisation](https://blogs.cs.st-andrews.ac.uk/studentprojects/2019/02/28/software-architecture-viewpoints-analysis-and-visualisation/)  
