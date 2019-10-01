@@ -28,28 +28,30 @@ DOER
 
 ### 2. Objectives
 
+2.0 Objective list __ver 1.2__
+
 2.1 __Primary objectives__: `SA = { Elements, Forms, Rationale/Constraints }`  
-1. Implement an architecture component design tool that provides predefined components for user to build customised architecture components. (progress: single-level architecture component)
-2. Support hierarchical features on architecture components. (progress: hierarchical architecture component)
-3. Provide visualisation on architecture components.
-4. Implement an architecture connector design tool that provides interactions among architectural components. (revealing the relationship by component definitions and supporting manually connection) (progress: hierarchical architecture component with intra-components connector)
-5. Support hierarchical features on connectors. (progress: a single architecture view - hierarchical architecture component with inter-components connector)
-6. Provide visualisation on connectors.
-7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
-8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
-9. Based on connections, the tool is able to reveal constraints between different components and views. (progress: core function)
-10. Conduct a user evaluation on core design tool, evaluate the design functions and the visualisation design.
+- [ ] 1. Implement an architecture component design tool that provides predefined components for user to build customised architecture components. (progress: single-level architecture component)
+- [ ] 2. Support hierarchical features on architecture components. (progress: hierarchical architecture component)
+- [ ] 3. Provide visualisation on architecture components.
+- [ ] 4. Implement an architecture connector design tool that provides interactions among architectural components. (revealing the relationship by component definitions and supporting manually connection) (progress: hierarchical architecture component with intra-components connector)
+- [ ] 5. Support hierarchical features on connectors. (progress: a single architecture view - hierarchical architecture component with inter-components connector)
+- [ ] 6. Provide visualisation on connectors.
+- [ ] 7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
+- [ ] 8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
+- [ ] 9. Based on connections, the tool is able to reveal constraints between different components and views. (progress: core function)
+- [ ] 10. Conduct a user evaluation on core design tool, evaluate the design functions and the visualisation design.
 
 2.2 __Secondary objectives__: improve user experience & software quality  
-1. Improve user experience based on the first evaluation
+- [ ] 1. Improve user experience based on the first evaluation
 Add IO function: the product diagram / visualisation can be imported or exported for reuse.
-2. Implement extension tool(s) that provide further software engineering behaviours. (e.g. Agile developments, existing software engineering tools connection)
-3. Conduct the second user evaluation on the overall tool, evaluate the quality and robustness of the system.
+- [ ] 2. Implement extension tool(s) that provide further software engineering behaviours. (e.g. Agile developments, existing software engineering tools connection)
+- [ ] 3. Conduct the second user evaluation on the overall tool, evaluate the quality and robustness of the system.
 
 2.3 __Tertiary objectives__: support further user behaviours
-1. Improve software quality furthermore based on the second evaluation.
-2. Support collaborations on the tool, enable version control or multi-user editing on a single architecture.
-3. Provide API for users to design customised extension tools.
+- [ ] 1. Improve software quality furthermore based on the second evaluation.
+- [ ] 2. Support collaborations on the tool, enable version control or multi-user editing on a single architecture.
+- [ ] 3. Provide API for users to design customised extension tools.
 
 ### 3. Ethics
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on the objective 10 and 14, two separate user evaluations need to be conducted. These user evaluations does not need any personal information from users, but only collect their advice to further optimise the software. The artifact evaluation form is signed and submitted through MMS together.
