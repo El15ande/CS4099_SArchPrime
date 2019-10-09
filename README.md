@@ -56,7 +56,7 @@ Add IO function: the product diagram / visualisation can be imported or exported
 - [ ] 3. Provide API for users to design customised extension tools.
 
 ### 3. Ethics
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on the objective 10 and 14, two separate user evaluations need to be conducted. These user evaluations does not need any personal information from users, but only collect their advice to further optimise the software. The artifact evaluation form is signed and submitted through MMS together.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Based on the objective 2.1.10 and 2.2.3, two separate user evaluations need to be conducted. These user evaluations does not need any personal information from users, but only collect their advice to further optimise the software. The artifact evaluation form is signed and submitted through MMS together.
 
 ### 4. Resources
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This project does not require any special hardware, software and licenses. All designs and implementations requirements can be fulfilled by current lab machines.
@@ -64,6 +64,8 @@ Add IO function: the product diagram / visualisation can be imported or exported
 ### 5. Document links
 
 5.1 [Final report](https://docs.google.com/document/d/10sQ_gjIIORgNqmJ4ZFjDqs-XWodzEVgzkOk5H3DjjvM/edit?usp=sharing)
+
+5.2 [Design sheet](https://docs.google.com/spreadsheets/d/17t339HamR7QzjQzV_GF6dRHW-bJkCdzY8Lhw6yHwgZk/edit?usp=sharing)
 
 ---
 
