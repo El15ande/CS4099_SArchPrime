@@ -4,7 +4,9 @@ DOER
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1. Description](#1-description)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2. Objectives](#2-objectives)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3. Ethics](#3-ethics)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4. Resources](#4-resources)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4. Resources](#4-resources)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[5. Links](#5-links)  
+Technology Stacks  
 
 ---
 
@@ -58,3 +60,11 @@ Add IO function: the product diagram / visualisation can be imported or exported
 
 ### 4. Resources
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This project does not require any special hardware, software and licenses. All designs and implementations requirements can be fulfilled by current lab machines.
+
+### 5. Document links
+
+5.1 [Final report](https://docs.google.com/document/d/10sQ_gjIIORgNqmJ4ZFjDqs-XWodzEVgzkOk5H3DjjvM/edit?usp=sharing)
+
+---
+
+## Technology Stacks
