@@ -1,0 +1,23 @@
+{
+  "name": "shproject",
+  "version": "1.0.0",
+  "description": "160000139 Senior Honours Project",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/El15ande/CS4099_SHProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/El15ande/CS4099_SHProject/issues"
+  },
+  "homepage": "https://github.com/El15ande/CS4099_SHProject#readme",
+  "dependencies": {
+    "vue": "^2.6.10",
+    "vuetify": "^2.1.2"
+  }
+}
