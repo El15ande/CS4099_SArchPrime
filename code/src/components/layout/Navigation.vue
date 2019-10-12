@@ -1,14 +1,28 @@
 <template>
-    <v-navigation-drawer>
+    <v-navigation-drawer 
+    app
+    dark
+    color='indigo darken-1'
+    >
         <v-list nav>
-            <div />
+            <v-list-item two-line>
+                <v-list-title class="title" two-line>
+                    Senior Honours Project
+                </v-list-title>
+            </v-list-item>
+
+             <v-divider class="mx-3 mb-3" />
 
             <v-list-item
-                v-for='(item, i) in items'
+                v-for='(link, i) in links'
                 :key='i'
+                :to='link.link'
             >
-                <v-list-item-title v-text='item.title' />
-
+                <v-list-item-action>
+                    <v-icon>{{ link.icon }}</v-icon>
+                </v-list-item-action>
+                
+                <v-list-item-title v-text='link.title' />
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
@@ -17,9 +31,12 @@
 <script>
 export default {
     data: () => ({
-        items: [
-            { title: '1st item' },
-            { title: '2nd item' }
+        links: [
+            { 
+                link: '/',
+                title: 'Dashboard',
+                icon: 'mdi-view-dashboard-variant' 
+            }
         ]
     })
 }
