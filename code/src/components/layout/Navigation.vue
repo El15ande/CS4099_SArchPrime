@@ -1,22 +1,26 @@
 <template>
-    <v-navigation-drawer 
+    <v-navigation-drawer
     app
     dark
     color='indigo darken-1'
     >
+        <v-list-item two-line>
+            <v-list-item-title class="title">
+                Senior Honours Project
+            </v-list-item-title>
+        </v-list-item>
+
+        <v-divider class="mx-3 mb-3" />
+
+        <v-subheader class="mt-4 light">My Tools</v-subheader>
+       
         <v-list nav>
-            <v-list-item two-line>
-                <v-list-title class="title" two-line>
-                    Senior Honours Project
-                </v-list-title>
-            </v-list-item>
-
-             <v-divider class="mx-3 mb-3" />
-
+            <div />
             <v-list-item
-                v-for='(link, i) in links'
+                v-for='(link, i) in tool_links'
                 :key='i'
-                :to='link.link'
+                :to='link.to'
+                active-class='primary'
             >
                 <v-list-item-action>
                     <v-icon>{{ link.icon }}</v-icon>
@@ -25,17 +29,44 @@
                 <v-list-item-title v-text='link.title' />
             </v-list-item>
         </v-list>
+
+        <v-subheader class="mt-4 light">My Architectures</v-subheader>
+
+        <v-list>
+            <v-list-item
+                v-for='(arch, i) in arch_links'
+                :key='i'
+            >   
+                
+                <v-list-item-action>
+                    <v-icon>{{ arch.icon }}</v-icon>
+                </v-list-item-action>
+
+                <v-list-item-title v-text="arch.title" />
+            </v-list-item>
+        </v-list>
     </v-navigation-drawer>
 </template>
 
 <script>
 export default {
     data: () => ({
-        links: [
+        tool_links: [
             { 
-                link: '/',
+                to: '/',
                 title: 'Dashboard',
                 icon: 'mdi-view-dashboard-variant' 
+            }
+        ],
+
+        arch_links: [
+            {
+                title: 'My Architecture 1',
+                icon: 'mdi-file-tree'
+            },
+            {
+                title: 'My Architecture 2',
+                icon: 'mdi-file-tree'
             }
         ]
     })

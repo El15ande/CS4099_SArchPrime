@@ -2,6 +2,8 @@
     <v-app-bar
     app
     absolute
+    flat
+    color='transparent'
     >
         <v-toolbar-title>
             {{ title }}
