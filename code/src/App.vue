@@ -3,6 +3,8 @@
         <layout-navigation />
 
         <layout-topbar />
+
+        <layout-mainview />
     </v-app>
 </template>
 
@@ -10,7 +12,8 @@
 export default {
     components: {
         LayoutNavigation: () => import('@/components/layout/Navigation'),
-        LayoutTopbar: () => import('@/components/layout/TopBar')
+        LayoutTopbar: () => import('@/components/layout/TopBar'),
+        LayoutMainview: () => import('@/components/layout/Mainview') 
     },
     data: () => ({
     }),

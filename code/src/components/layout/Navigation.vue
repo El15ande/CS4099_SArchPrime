@@ -3,7 +3,7 @@
     app
     dark
     permanent
-    color='indigo darken-1'
+    color="indigo darken-1"
     >
         <v-list-item two-line>
             <v-list-item-title class="title">
@@ -21,7 +21,7 @@
                 v-for='(link, i) in tool_links'
                 :key='i'
                 :to='link.to'
-                active-class='primary'
+                active-class="primary"
             >
                 <v-list-item-action>
                     <v-icon>{{ link.icon }}</v-icon>
@@ -57,6 +57,11 @@ export default {
                 to: '/',
                 title: 'Dashboard',
                 icon: 'mdi-view-dashboard-variant' 
+            },
+            {
+                to: '/setting',
+                title: 'Setting',
+                icon: 'mdi-settings-outline'
             }
         ],
 

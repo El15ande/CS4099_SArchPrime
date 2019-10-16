@@ -3,7 +3,7 @@
     app
     absolute
     flat
-    color='transparent'
+    color="transparent"
     >
         <v-toolbar-title>
             {{ title }}

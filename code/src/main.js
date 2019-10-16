@@ -7,19 +7,31 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
 const paths = [
-  { 
-    path: '/',
-    view: 'Dashboard',
-    name: 'Dashboard'
-  }
+    { 
+        path: '/',
+        viewname: 'Dashboard'
+    },
+    {
+        path: '/setting',
+        viewname: 'Setting'
+    }
 ]
 
+function route ({ path, viewname }) {
+    return {
+        path,
+        view: viewname,
+        name: viewname,
+        component: (resolve) => import(`@/views/${viewname}.vue`).then(resolve)
+    }
+}
+
 const router = new VueRouter({
-  routes: paths
+    routes: paths.map(path => route(path))
 });
 
 new Vue({
-  router,
-  vuetify,
-  render: h => h(App)
+    router,
+    vuetify,
+    render: h => h(App)
 }).$mount('#app');
