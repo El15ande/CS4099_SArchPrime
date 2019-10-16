@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/El15ande/CS4099_SHProject#readme",
   "dependencies": {
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.3"
   }
 }

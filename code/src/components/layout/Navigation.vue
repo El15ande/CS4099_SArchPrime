@@ -1,7 +1,8 @@
 <template>
-    <v-navigation-drawer
+    <v-navigation-drawer 
     app
     dark
+    permanent
     color='indigo darken-1'
     >
         <v-list-item two-line>
@@ -70,5 +71,5 @@ export default {
             }
         ]
     })
-}
+};
 </script>>

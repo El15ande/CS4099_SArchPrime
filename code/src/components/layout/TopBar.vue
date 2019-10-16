@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar
+    <v-app-bar 
     app
     absolute
     flat
@@ -14,7 +14,13 @@
 <script>
 export default {
     data: () => ({
-        title: 'Dashboard',
-    })
+        title: 'Dashboard'
+    }),
+
+    watch: {
+        '$route' (val) {
+            this.title = val.name;
+        }
+    }
 }
 </script>
