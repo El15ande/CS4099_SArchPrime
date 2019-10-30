@@ -33,7 +33,7 @@
 
         <v-subheader class="mt-4 light">My Architectures</v-subheader>
 
-        <v-list>
+        <!-- <v-list>
             <v-list-item
                 v-for='(arch, i) in arch_links'
                 :key='i'
@@ -45,7 +45,7 @@
 
                 <v-list-item-title v-text="arch.title" />
             </v-list-item>
-        </v-list>
+        </v-list> -->
     </v-navigation-drawer>
 </template>
 
@@ -62,17 +62,6 @@ export default {
                 to: '/setting',
                 title: 'Setting',
                 icon: 'mdi-settings-outline'
-            }
-        ],
-
-        arch_links: [
-            {
-                title: 'My Architecture 1',
-                icon: 'mdi-file-tree'
-            },
-            {
-                title: 'My Architecture 2',
-                icon: 'mdi-file-tree'
             }
         ]
     })
