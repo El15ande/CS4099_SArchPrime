@@ -18,7 +18,7 @@
         <v-list nav>
             <div />
             <v-list-item
-                v-for='(link, i) in toolLinks'
+                v-for='(link, i) in toolList'
                 :key='i'
                 :to='link.to'
                 active-class="primary"
@@ -35,7 +35,7 @@
 
         <v-list>
             <v-list-item
-                v-for='(arch, i) in archLinks'
+                v-for='(arch, i) in archList'
                 :key='i'
             >   
                 
@@ -52,27 +52,26 @@
 <script>
 import AXIOS from 'axios';
 import { EVENTBUS } from '../../main.js';
-const HOST = 'http://localhost:20803';
+const REMOTEHOST = 'http://yw69.host.cs.st-andrews.ac.uk/node';
+const LOCALHOST = 'http://localhost:8080/';
 
 export default {
-    data: () => ({
-        toolLinks: [
-            { 
-                to: '/',
-                title: 'Dashboard',
-                icon: 'mdi-view-dashboard-variant' 
-            },
-            {
-                to: '/setting',
-                title: 'Setting',
-                icon: 'mdi-settings-outline'
-            }
-        ],
-        archLinks: []
-    }),
-
-    created() {
-        this.fetchArchList();
+    data() {
+        return {
+            toolList: [
+                { 
+                    to: '/',
+                    title: 'Dashboard',
+                    icon: 'mdi-view-dashboard-variant' 
+                },
+                {
+                    to: '/setting',
+                    title: 'Setting',
+                    icon: 'mdi-settings-outline'
+                }
+            ],
+            archList: []
+        }
     },
 
     watch: {
@@ -83,12 +82,28 @@ export default {
         fetchArchList() {
             AXIOS({
                 method: 'get',
-                url: HOST + '/archlist',
+                url: REMOTEHOST + 'archlist',
                 crossDomain: true
-            }).then((res) => {
-                this.archLinks = res.data;
-            });
+            }).then((res) => this.archList = res.data);
         }
+    },
+
+    created() {
+        this.fetchArchList();
+    },
+
+    mounted() {
+        let _this = this;
+
+        EVENTBUS.$on('FETCH_ARCHLIST', function() {
+            setTimeout(() => {
+                EVENTBUS.$emit('RETURN_ARCHLIST', _this.archList);
+            }, 500);
+        });
+    },
+
+    beforeDestroy() {
+        EVENTBUS.$off('FETCH_ARCHLIST');
     }
 };
 </script>

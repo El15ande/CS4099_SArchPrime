@@ -2,14 +2,22 @@
     <v-container
     fluid
     >
-        <v-list
-            v-for='(arch, i) in archLinks'
-            :key='i'
-        >
-            <v-card color="grey" width="300px">
-                <v-card-text>{{ arch.title }}</v-card-text>
-            </v-card>
-        </v-list>
+        <v-row>
+            <v-col
+                v-for='(arch, i) in archList'
+                :key='i'
+                :cols=4
+            >
+                <v-card
+                    outlined
+                >
+                    <v-card-title>{{ arch.title }}</v-card-title>
+                    <v-card-actions>
+                        <v-btn text>Enter</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -17,12 +25,23 @@
 import { EVENTBUS } from '../main.js';
 
 export default {
-    data: () => ({
-        archLinks: []
-    }),
+    data() {
+        return {
+            archList: []
+        }
+    },
 
     mounted() {
-        // TODO Eventbus to get data from navigation;
+        let _this = this;
+        
+        EVENTBUS.$emit('FETCH_ARCHLIST');
+        EVENTBUS.$on('RETURN_ARCHLIST', function(payload) {
+            _this.archList = payload;
+        });
+    },
+
+    beforeDestroy() {
+        EVENTBUS.$off('RETURN_ARCHLIST');
     }
 }
 </script>

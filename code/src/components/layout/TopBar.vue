@@ -13,9 +13,11 @@
 
 <script>
 export default {
-    data: () => ({
-        title: 'Dashboard'
-    }),
+    data() {
+        return {
+            title: 'Dashboard'
+        }
+    },
 
     watch: {
         '$route' (val) {
