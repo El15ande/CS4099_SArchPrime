@@ -2,36 +2,27 @@
     <v-container
     fluid
     >
-        <v-stage :config="konva_config" style="border: 1px solid black">
-            <v-layer>
-                <v-rect :config="rect" />
-                
-                <v-text :config="text" />
-            </v-layer>
-        </v-stage>
+        <v-list
+            v-for='(arch, i) in archLinks'
+            :key='i'
+        >
+            <v-card color="grey" width="300px">
+                <v-card-text>{{ arch.title }}</v-card-text>
+            </v-card>
+        </v-list>
     </v-container>
 </template>
 
 <script>
+import { EVENTBUS } from '../main.js';
+
 export default {
     data: () => ({
-        konva_config: {
-            width: window.innerWidth,
-            height: window.innerHeight
-        },
-        rect: {
-            x: 0,
-            y: 0,
-            width: 100,
-            height: 100,
-            fill: '#ffffff',
-            stroke: '#000000',
-            draggable: true
-        },
-        text: {
-            text: 'HelloWorld',
-            draggable: true
-        }
-    })
+        archLinks: []
+    }),
+
+    mounted() {
+        // TODO Eventbus to get data from navigation;
+    }
 }
 </script>

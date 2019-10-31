@@ -8,7 +8,7 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 Vue.use(VueKonka);
 
-const paths = [
+const PATHS = [
     { 
         path: '/',
         viewname: 'Dashboard'
@@ -19,6 +19,12 @@ const paths = [
     }
 ]
 
+const router = new VueRouter({
+    routes: PATHS.map(path => route(path))
+});
+
+export const EVENTBUS = new Vue();
+
 function route ({ path, viewname }) {
     return {
         path,
@@ -27,10 +33,6 @@ function route ({ path, viewname }) {
         component: (resolve) => import(`@/views/${viewname}.vue`).then(resolve)
     }
 }
-
-const router = new VueRouter({
-    routes: paths.map(path => route(path))
-});
 
 new Vue({
     router,

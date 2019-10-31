@@ -18,7 +18,7 @@
         <v-list nav>
             <div />
             <v-list-item
-                v-for='(link, i) in tool_links'
+                v-for='(link, i) in toolLinks'
                 :key='i'
                 :to='link.to'
                 active-class="primary"
@@ -33,9 +33,9 @@
 
         <v-subheader class="mt-4 light">My Architectures</v-subheader>
 
-        <!-- <v-list>
+        <v-list>
             <v-list-item
-                v-for='(arch, i) in arch_links'
+                v-for='(arch, i) in archLinks'
                 :key='i'
             >   
                 
@@ -45,14 +45,18 @@
 
                 <v-list-item-title v-text="arch.title" />
             </v-list-item>
-        </v-list> -->
+        </v-list>
     </v-navigation-drawer>
 </template>
 
 <script>
+import AXIOS from 'axios';
+import { EVENTBUS } from '../../main.js';
+const HOST = 'http://localhost:20803';
+
 export default {
     data: () => ({
-        tool_links: [
+        toolLinks: [
             { 
                 to: '/',
                 title: 'Dashboard',
@@ -63,7 +67,28 @@ export default {
                 title: 'Setting',
                 icon: 'mdi-settings-outline'
             }
-        ]
-    })
+        ],
+        archLinks: []
+    }),
+
+    created() {
+        this.fetchArchList();
+    },
+
+    watch: {
+        '$route': 'fetchArchList'
+    },
+
+    methods: {
+        fetchArchList() {
+            AXIOS({
+                method: 'get',
+                url: HOST + '/archlist',
+                crossDomain: true
+            }).then((res) => {
+                this.archLinks = res.data;
+            });
+        }
+    }
 };
 </script>
