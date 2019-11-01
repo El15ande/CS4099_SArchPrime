@@ -54,8 +54,8 @@
 <script>
 import AXIOS from 'axios';
 import { EVENTBUS } from '../../main.js';
-const REMOTEHOST = 'http://yw69.host.cs.st-andrews.ac.uk/node';
-const LOCALHOST = 'http://localhost:20804/';
+const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+const LOCALHOST = 'https://localhost:20804/';
 
 export default {
     data() {
@@ -84,7 +84,7 @@ export default {
         fetchArchList() {
             AXIOS({
                 method: 'get',
-                url: LOCALHOST + 'archlist',
+                url: `${REMOTEHOST}archlist`,
                 crossDomain: true
             }).then((res) => {
                 if(res.data.err) alert("Cannot read file from server");

@@ -4,9 +4,8 @@
 
 <script>
 import AXIOS from 'axios';
-import { EVENTBUS } from '../main.js';
-const REMOTEHOST = 'http://yw69.host.cs.st-andrews.ac.uk/node';
-const LOCALHOST = 'http://localhost:20804/';
+const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+const LOCALHOST = 'https://localhost:20804/';
 
 export default {
     data() {
@@ -22,12 +21,11 @@ export default {
         
         AXIOS({
             method: 'post',
-            url: LOCALHOST + 'arch',
+            url: `${REMOTEHOST}arch`,
             crossDomain: true,
             data: { title: _this.title }
         }).then((res) => {
             if(res.data.err) alert(`Cannot read file ${res.data.err.path}`);
-            console.log(res.data);
 
             if(res.data) {
                 _this.archData = res.data;
