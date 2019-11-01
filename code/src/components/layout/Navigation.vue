@@ -53,7 +53,7 @@
 import AXIOS from 'axios';
 import { EVENTBUS } from '../../main.js';
 const REMOTEHOST = 'http://yw69.host.cs.st-andrews.ac.uk/node';
-const LOCALHOST = 'http://localhost:8080/';
+const LOCALHOST = 'http://localhost:20804/';
 
 export default {
     data() {
