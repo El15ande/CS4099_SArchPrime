@@ -16,6 +16,10 @@ const PATHS = [
     {
         path: '/setting',
         viewname: 'Setting'
+    },
+    {
+        path: '/workbench/:name',
+        viewname: 'Workbench'
     }
 ]
 

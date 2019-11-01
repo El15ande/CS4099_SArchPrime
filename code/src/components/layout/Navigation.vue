@@ -37,6 +37,8 @@
             <v-list-item
                 v-for='(arch, i) in archList'
                 :key='i'
+                :to='"/workbench/" + arch.title'
+                active-class="primary"
             >   
                 
                 <v-list-item-action>
@@ -82,9 +84,13 @@ export default {
         fetchArchList() {
             AXIOS({
                 method: 'get',
-                url: REMOTEHOST + 'archlist',
+                url: LOCALHOST + 'archlist',
                 crossDomain: true
-            }).then((res) => this.archList = res.data);
+            }).then((res) => {
+                if(res.data.err) alert("Cannot read file from server");
+
+                this.archList = res.data;
+            });
         }
     },
 
