@@ -1,5 +1,9 @@
 <template>
-    <p>{{ archData }}</p>
+    <v-stage 
+        :config='konvaConfig'
+        style="background: #ffffff; border: 1px solid #CFD8DC"
+    > 
+    </v-stage>
 </template>
 
 <script>
@@ -11,7 +15,12 @@ export default {
     data() {
         return {
             title: '',
-            archData: {}
+            archData: {},
+
+            konvaConfig: {
+                width: window.innerWidth - 2,
+                height: window.innerHeight - sessionStorage.getItem('topbarHeight') - 2
+            }
         }
     },
 
@@ -32,4 +41,4 @@ export default {
         });
     }
 }
-</script>>
+</script>

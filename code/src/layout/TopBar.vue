@@ -15,14 +15,18 @@
 export default {
     data() {
         return {
-            title: 'Dashboard'
+            title: this.$route.params.name || this.$route.name
         }
     },
 
     watch: {
         '$route' (val) {
-            this.title = val.name;
+            this.title = val.params.name || val.name;
         }
+    },
+
+    mounted() {
+        sessionStorage.setItem('topbarHeight', this.$el.offsetHeight);
     }
 }
 </script>
