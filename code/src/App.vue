@@ -11,9 +11,9 @@
 <script>
 export default {
     components: {
-        LayoutNavigation: () => import('@/components/layout/Navigation'),
-        LayoutTopbar: () => import('@/components/layout/TopBar'),
-        LayoutMainview: () => import('@/components/layout/Mainview') 
+        LayoutNavigation: () => import('@/layout/Navigation'),
+        LayoutTopbar: () => import('@/layout/TopBar'),
+        LayoutMainview: () => import('@/layout/Mainview') 
     }
 };
 </script>
