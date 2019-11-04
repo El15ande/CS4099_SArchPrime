@@ -17,8 +17,93 @@
                             text
                             :to='"/workbench/" + arch.title'
                         >
-                            Enter
+                            ENTER
                         </v-btn>
+
+                        <v-btn
+                            text
+                            color="#ff0000"
+                            @click.stop='deleteDialog = true'
+                        >
+                            DELETE
+                        </v-btn>
+
+                        <v-dialog
+                            v-model='deleteDialog'
+                            width='500'
+                        >
+                            <v-card>
+                                <v-card-title>Delete {{ arch.title }}</v-card-title>
+                                <v-card-text>Your information will be permenently deleted, are you sure?</v-card-text>
+                                <v-card-actions>
+                                    <v-spacer />
+                                    <v-btn
+                                        text
+                                        color="red darken-1"
+                                        @click='deleteArch(arch.title)'
+                                    >
+                                        Continue
+                                    </v-btn>
+                                    <v-btn
+                                        text
+                                        @click='deleteDialog = false'
+                                    >
+                                        Cancel
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+            <v-col :cols=4>
+                <v-card
+                    shaped
+                >
+                    <v-card-title>Start a new architechture</v-card-title>
+                    <v-card-actions>
+                        <v-btn
+                            text
+                            color="teal darken-1"
+                            @click.stop='createDialog = true'
+                        >
+                            CREATE
+                        </v-btn>
+
+                        <v-dialog
+                            v-model='createDialog'
+                            width='500'
+                        >
+                            <v-card>
+                                <v-card-title>Create new architecture</v-card-title>
+                                <v-card-actions>
+                                    <v-text-field 
+                                        v-model='createName'
+                                        outlined
+                                        :rules="['Required']"
+                                        label="Name" 
+                                    />
+                                </v-card-actions>
+                                <v-card-actions>
+                                    <v-spacer />
+                                    <v-btn
+                                        text
+                                        color="teal darken-1"
+                                        :disabled="!createName"
+                                        @click='createArch()'
+                                    >
+                                        Continue
+                                    </v-btn>
+                                    <v-btn
+                                        text
+                                        @click='createDialog = false'
+                                    >
+                                        Cancel
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -27,12 +112,52 @@
 </template>
 
 <script>
+import AXIOS from 'axios';
 import { EVENTBUS } from '../main.js';
+const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+const LOCALHOST = 'http://localhost:20804/';
 
 export default {
     data() {
         return {
-            archList: []
+            archList: [],
+            createDialog: false,
+            createName: '',
+            deleteDialog: false
+        }
+    },
+
+    methods: {
+        createArch() {
+            let _this = this;
+            this.createDialog = false;
+
+            AXIOS({
+                method: 'put',
+                url: `${REMOTEHOST}arch/${_this.createName}`,
+                crossDomain: true
+            }).then((res) => {
+                if(res.status !== 200) alert("Create failed");
+
+                location.reload();
+            });
+        },
+        deleteArch(archTitle) {
+            this.deleteDialog = false;
+            /*this.archList = this.archList.filter(function(arch) {
+                return arch.title !== archTitle;
+            });*/
+
+            AXIOS({
+                method: 'delete',
+                url: `${REMOTEHOST}arch/${archTitle}`,
+                crossDomain: true
+            }).then((res) => {
+                if(res.status !== 200) alert("Delete failed");
+                
+                location.reload();
+            });
+            
         }
     },
 

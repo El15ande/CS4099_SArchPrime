@@ -5,7 +5,7 @@
 <script>
 import AXIOS from 'axios';
 const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
-const LOCALHOST = 'https://localhost:20804/';
+const LOCALHOST = 'http://localhost:20804/';
 
 export default {
     data() {
@@ -20,10 +20,9 @@ export default {
         this.title = this.$route.params.name;
         
         AXIOS({
-            method: 'post',
-            url: `${REMOTEHOST}arch`,
+            method: 'get',
+            url: `${REMOTEHOST}arch/${_this.title}`,
             crossDomain: true,
-            data: { title: _this.title }
         }).then((res) => {
             if(res.data.err) alert(`Cannot read file ${res.data.err.path}`);
 
