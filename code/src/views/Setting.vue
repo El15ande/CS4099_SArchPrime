@@ -1,7 +1,6 @@
 <template>
     <v-container
-    fluid
+        fluid
     >
-        <p>Setting should be here...</p>
     </v-container>
 </template>
