@@ -41,9 +41,7 @@ export default {
         }).then((res) => {
             if(res.data.err) alert(`Cannot read file ${res.data.err.path}`);
 
-            if(res.data) {
-                _this.archData = res.data;
-            }
+            if(res.data) _this.archData = res.data;
         });
     }
 }

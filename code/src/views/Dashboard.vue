@@ -142,9 +142,6 @@ export default {
         },
         deleteArch(archTitle) {
             this.deleteDialog = false;
-            /*this.archList = this.archList.filter(function(arch) {
-                return arch.title !== archTitle;
-            });*/
 
             AXIOS({
                 method: 'delete',

@@ -13,14 +13,8 @@ export default {
             konvaConfig: {
                 width: this.$parent.$refs.canvas.clientWidth - 8,
                 height: window.innerHeight - sessionStorage.getItem('topbarHeight') - 24
-            },
-
-            archData: {}
+            }
         }
-    },
-
-    mounted() {
-        this.archData = JSON.parse(JSON.stringify(this.$parent.archData));
     }
 }
 </script>
