@@ -42,13 +42,17 @@ function route({ path, viewname }) {
     }
 }
 
-export function AxiosRequest(header, query, data, callback) {
+export function AxiosRequest(header, query, data, success) {
     AXIOS({
         method: header,
-        url: `${REMOTEHOST}${query}`,
+        url: `${LOCALHOST}${query}`,
         crossDomain: true,
         data
-    }).then((res) => callback(res));
+    }).then((res) => {
+        if(success) success(res);
+    }).catch((err) => {
+        console.log(err);
+    });
 }
 
 new Vue({
