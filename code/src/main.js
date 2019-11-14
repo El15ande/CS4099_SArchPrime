@@ -42,11 +42,12 @@ function route({ path, viewname }) {
     }
 }
 
-export function AxiosRequest(header, query, callback) {
+export function AxiosRequest(header, query, data, callback) {
     AXIOS({
         method: header,
         url: `${REMOTEHOST}${query}`,
-        crossDomain: true
+        crossDomain: true,
+        data
     }).then((res) => callback(res));
 }
 

@@ -81,7 +81,7 @@ export default {
         fetchArchList() {
             let _this = this;
 
-            AxiosRequest('get', 'archlist', function(res) {
+            AxiosRequest('get', 'archlist', null, function(res) {
                 _this.archList = res.data;
             });
         }

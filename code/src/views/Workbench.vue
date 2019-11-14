@@ -33,7 +33,7 @@ export default {
         let _this = this;
         this.title = this.$route.params.name;
 
-        AxiosRequest('get', `arch/${_this.title}`, function(res) {
+        AxiosRequest('get', `arch/${_this.title}`, null, function(res) {
             if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
         });
     }
