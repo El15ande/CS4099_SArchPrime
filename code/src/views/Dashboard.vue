@@ -110,10 +110,7 @@
 </template>
 
 <script>
-import AXIOS from 'axios';
-import { EVENTBUS } from '../main.js';
-const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
-const LOCALHOST = 'http://localhost:20804/';
+import { EVENTBUS, AxiosRequest } from '../main.js';
 
 export default {
     data() {
@@ -130,29 +127,16 @@ export default {
             let _this = this;
             this.createDialog = false;
 
-            AXIOS({
-                method: 'put',
-                url: `${REMOTEHOST}arch/${_this.createName}`,
-                crossDomain: true
-            }).then((res) => {
-                if(res.status !== 200) alert("Create failed");
-
+            AxiosRequest('put', `arch/${_this.createName}`, function(res) {
                 location.reload();
             });
         },
         deleteArch(archTitle) {
             this.deleteDialog = false;
 
-            AXIOS({
-                method: 'delete',
-                url: `${REMOTEHOST}arch/${archTitle}`,
-                crossDomain: true
-            }).then((res) => {
-                if(res.status !== 200) alert("Delete failed");
-                
+            AxiosRequest('delete', `arch/${archTitle}`, function(res) {
                 location.reload();
             });
-            
         }
     },
 

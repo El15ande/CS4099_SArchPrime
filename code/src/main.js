@@ -3,10 +3,14 @@ import App from './App.vue';
 import VueRouter from 'vue-router'
 import vuetify from './plugins/vuetify';
 import VueKonka from 'vue-konva';
+import AXIOS from 'axios';
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 Vue.use(VueKonka);
+
+const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+const LOCALHOST = 'http://localhost:20804/';
 
 const PATHS = [
     { 
@@ -21,7 +25,7 @@ const PATHS = [
         path: '/workbench/:name',
         viewname: 'Workbench'
     }
-]
+];
 
 const router = new VueRouter({
     routes: PATHS.map(path => route(path))
@@ -29,13 +33,21 @@ const router = new VueRouter({
 
 export const EVENTBUS = new Vue();
 
-function route ({ path, viewname }) {
+function route({ path, viewname }) {
     return {
         path,
         view: viewname,
         name: viewname,
         component: (resolve) => import(`@/views/${viewname}.vue`).then(resolve)
     }
+}
+
+export function AxiosRequest(header, query, callback) {
+    AXIOS({
+        method: header,
+        url: `${REMOTEHOST}${query}`,
+        crossDomain: true
+    }).then((res) => callback(res));
 }
 
 new Vue({
