@@ -5,6 +5,10 @@ const viewpointPrototype = {
     connector: []
 };
 
+const componentPrototype = {
+    cpname: ''
+};
+
 export default class ArchDataModifier {
     constructor(data) {
         this.data = data;
@@ -33,10 +37,11 @@ export default class ArchDataModifier {
     // Delete a unique viewpoint;
     //  vpname: target viewpoint name;
     deleteViewpoint = function(vpname) {
+        let _this = this;
         let position = this.data.indices.indexOf(vpname);
 
         if(position > -1) {
-            delete this.data[vpname];
+            delete _this.data[vpname];
             this.data.indices.splice(position, 1);
         }
 
