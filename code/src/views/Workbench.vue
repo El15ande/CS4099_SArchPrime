@@ -1,17 +1,15 @@
 <template>
     <v-container fluid grid-list-md>
-        <v-layout row wrap>
-                <v-flex ref="toolbox" d-flex md1 style="border: 1px solid #CFD8DC">
-                    <wb-toolbox />
-                </v-flex>
+        <v-layout row wrap> 
+           <v-flex ref="config" d-flex md1 style="border: 1px solid #CFD8DC">
+                <wb-configuration />
+            </v-flex>
 
-                <v-flex ref="canvas" d-flex md10 style="border: 1px solid #CFD8DC">
-                    <wb-canvas />
-                </v-flex>
+            <v-flex ref="canvas" d-flex md10 style="border: 1px solid #CFD8DC">
+                <wb-canvas />
+            </v-flex>
 
-                <v-flex ref="list" d-flex md1 style="border: 1px solid #CFD8DC">
-                    <wb-list />
-                </v-flex>
+            <wb-toolbox />
         </v-layout>
     </v-container>
 </template>
@@ -24,7 +22,7 @@ export default {
     components: {
         WbToolbox: () => import('./WbToolbox'),
         WbCanvas: () => import('./WbCanvas'),
-        WbList: () => import('./WbList')
+        WbConfiguration: () => import('./WbConfiguration')
     },
 
     data() {
