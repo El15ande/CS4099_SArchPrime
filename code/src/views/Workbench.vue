@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { AxiosRequest } from '../main.js';
+import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataModifier from '../ArchDataModifier.js';
 
 export default {
@@ -41,6 +41,16 @@ export default {
         AxiosRequest('get', `arch/${_this.title}`, null, function(res) {
             if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
         });
+
+        EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
+            setTimeout(() => {
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.data.indices);
+            }, 500);
+        });
+    },
+
+    beforeDestroy() {
+        EVENTBUS.$off('FETCH_ARCHVIEWS');
     }
 }
 </script>

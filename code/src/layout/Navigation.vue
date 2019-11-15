@@ -33,7 +33,7 @@
 
         <v-subheader class="mt-4 light">My Architectures</v-subheader>
 
-        <v-list>
+        <v-list nav>
             <v-list-item
                 v-for='(arch, i) in archList'
                 :key='i'

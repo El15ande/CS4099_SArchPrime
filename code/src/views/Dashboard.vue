@@ -6,9 +6,7 @@
                 :key='i'
                 :cols=4
             >
-                <v-card
-                    outlined
-                >
+                <v-card outlined>
                     <v-card-title>{{ arch.title }}</v-card-title>
                     <v-card-actions>
                         <v-btn 
@@ -56,9 +54,7 @@
                 </v-card>
             </v-col>
             <v-col :cols=4>
-                <v-card
-                    shaped
-                >
+                <v-card shaped>
                     <v-card-title>Start a new architechture</v-card-title>
                     <v-card-actions>
                         <v-btn
