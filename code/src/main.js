@@ -2,12 +2,10 @@ import Vue from 'vue';
 import App from './App.vue';
 import VueRouter from 'vue-router'
 import vuetify from './plugins/vuetify';
-import VueKonka from 'vue-konva';
 import AXIOS from 'axios';
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
-Vue.use(VueKonka);
 
 const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
 const LOCALHOST = 'http://localhost:20804/';

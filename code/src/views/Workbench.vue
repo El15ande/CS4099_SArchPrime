@@ -1,17 +1,5 @@
 <template>
-    <v-container fluid grid-list-md>
-        <v-layout row wrap> 
-           <v-flex ref="config" d-flex md1 style="border: 1px solid #CFD8DC">
-                <wb-configuration />
-            </v-flex>
 
-            <v-flex ref="canvas" d-flex md10 style="border: 1px solid #CFD8DC">
-                <wb-canvas />
-            </v-flex>
-
-            <wb-toolbox />
-        </v-layout>
-    </v-container>
 </template>
 
 <script>
@@ -19,12 +7,6 @@ import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataModifier from '../ArchDataModifier.js';
 
 export default {
-    components: {
-        WbToolbox: () => import('./WbToolbox'),
-        WbCanvas: () => import('./WbCanvas'),
-        WbConfiguration: () => import('./WbConfiguration')
-    },
-
     data() {
         return {
             title: '',
