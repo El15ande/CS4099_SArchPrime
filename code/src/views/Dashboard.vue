@@ -123,16 +123,12 @@ export default {
             let _this = this;
             this.createDialog = false;
 
-            AxiosRequest('put', `arch/${_this.createName}`, null, function(res) {
-                location.reload();
-            });
+            AxiosRequest('put', `arch/${_this.createName}`, null, location.reload());
         },
         deleteArch(archTitle) {
             this.deleteDialog = false;
 
-            AxiosRequest('delete', `arch/${archTitle}`, null, function(res) {
-                location.reload();
-            });
+            AxiosRequest('delete', `arch/${archTitle}`, null, location.reload());
         }
     },
 
