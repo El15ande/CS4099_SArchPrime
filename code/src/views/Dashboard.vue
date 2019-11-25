@@ -134,15 +134,10 @@ export default {
 
     mounted() {
         let _this = this;
-        
-        EVENTBUS.$emit('FETCH_ARCHLIST');
-        EVENTBUS.$on('RETURN_ARCHLIST', function(payload) {
-            _this.archList = payload;
-        });
-    },
 
-    beforeDestroy() {
-        EVENTBUS.$off('RETURN_ARCHLIST');
+        AxiosRequest('get', 'archlist', null, function(res) {
+            _this.archList = res.data;
+        });
     }
 }
 </script>

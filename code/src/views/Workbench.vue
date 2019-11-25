@@ -1,4 +1,7 @@
 <template>
+    <div>
+
+    </div>
 </template>
 
 <script>
@@ -43,7 +46,7 @@ export default {
         '$route' () {
             this.setTopBar();
             this.setWbModel();
-            this.wbInstance.requestUpdate();
+            this.wbInstance.requestUpdate(); 
         }
     },
 
@@ -75,6 +78,8 @@ export default {
         EVENTBUS.$off('FETCH_ARCHVIEWS');
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
+
+        location.reload();
     }
 }
 </script>

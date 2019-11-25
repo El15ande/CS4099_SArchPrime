@@ -89,20 +89,6 @@ export default {
 
     created() {
         this.fetchArchList();
-    },
-
-    mounted() {
-        let _this = this;
-
-        EVENTBUS.$on('FETCH_ARCHLIST', function() {
-            setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHLIST', _this.archList);
-            }, 500);
-        });
-    },
-
-    beforeDestroy() {
-        EVENTBUS.$off('FETCH_ARCHLIST');
     }
 };
 </script>
