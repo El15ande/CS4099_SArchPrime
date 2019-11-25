@@ -26,18 +26,19 @@ export default {
             let _this = this;
 
             this.title = this.$route.params.name;
-            AxiosRequest('get', `arch/${_this.title}`, null, function(res) {
+            AxiosRequest('get', `arch/${_this.title}`, null, (res) => {
                 if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
             });
         },
         setWbModel() {
-            this.wbModel = this.$(GoJS.Model);
+            let viewpoints = this.archDataModifier.getViewpoints().map((vp) => {
+                return { 
+                    key: vp 
+                }
+            });
 
-            this.wbModel.nodeDataArray = [
-                { key: "Alpha" },
-                { key: "Beta" },
-                { key: this.title }
-            ];
+            this.wbModel = this.$(GoJS.Model);
+            this.wbModel.nodeDataArray = viewpoints;
             this.wbInstance.model = this.wbModel;
         }
     },
@@ -45,24 +46,27 @@ export default {
     watch: {
         '$route' () {
             this.setTopBar();
-            this.setWbModel();
-            this.wbInstance.requestUpdate(); 
+            setTimeout(() => {
+                this.setWbModel();
+                this.wbInstance.requestUpdate(); 
+            }, 100);
+            
         }
     },
 
     mounted() {
         let _this = this;
-        
+
         this.setTopBar();
 
         this.$ = GoJS.GraphObject.make;
         this.wbInstance = this.$(GoJS.Diagram, this.$el.offsetParent, {});
-        this.setWbModel();
+        setTimeout(() => { this.setWbModel(); }, 100);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
                 EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.data.indices);
-            }, 500);
+            }, 100);
         });
 
         EVENTBUS.$on('DELIVER_CREATEVIEW', function(payload) {

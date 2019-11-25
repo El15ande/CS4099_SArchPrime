@@ -21,6 +21,10 @@ export default class ArchDataModifier {
         return this;
     }
 
+    getViewpoints = function() {
+        return this.data.indices;
+    }
+
     // Add new unique viewpoint;
     //  vpname: new viewpoint name;
     addViewpoint = function(vpname) {

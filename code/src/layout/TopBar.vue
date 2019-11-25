@@ -150,7 +150,7 @@ export default {
 
                 setTimeout(() => { // Wait for workbench reloading;
                     EVENTBUS.$emit('FETCH_ARCHVIEWS');
-                }, 500);
+                }, 100);
             } else this.inWorkbench = false;
         }
     },
