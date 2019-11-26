@@ -7,7 +7,7 @@ import AXIOS from 'axios';
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+// const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
 const LOCALHOST = 'http://localhost:20804/';
 const PATHS = [
     { 
@@ -47,9 +47,7 @@ export function AxiosRequest(header, query, data, success) {
         data
     }).then((res) => {
         if(success) success(res);
-    }).catch((err) => {
-        console.log(err);
-    });
+    }).catch(() => {});
 }
 
 new Vue({

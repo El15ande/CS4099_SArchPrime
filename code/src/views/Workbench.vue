@@ -1,13 +1,9 @@
 <template>
-    <div>
-
-    </div>
 </template>
 
 <script>
 import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataModifier from '../ArchDataModifier.js';
-import GoJS from 'gojs';
 
 export default {
     data() {
@@ -15,9 +11,7 @@ export default {
             title: '',
             archDataModifier: {},
 
-            $: null,
-            wbInstance: null,
-            wbModel: null
+            mxInstance: null
         }
     },
 
@@ -29,28 +23,12 @@ export default {
             AxiosRequest('get', `arch/${_this.title}`, null, (res) => {
                 if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
             });
-        },
-        setWbModel() {
-            let viewpoints = this.archDataModifier.getViewpoints().map((vp) => {
-                return { 
-                    key: vp 
-                }
-            });
-
-            this.wbModel = this.$(GoJS.Model);
-            this.wbModel.nodeDataArray = viewpoints;
-            this.wbInstance.model = this.wbModel;
         }
     },
 
     watch: {
         '$route' () {
             this.setTopBar();
-            setTimeout(() => {
-                this.setWbModel();
-                this.wbInstance.requestUpdate(); 
-            }, 100);
-            
         }
     },
 
@@ -58,10 +36,6 @@ export default {
         let _this = this;
 
         this.setTopBar();
-
-        this.$ = GoJS.GraphObject.make;
-        this.wbInstance = this.$(GoJS.Diagram, this.$el.offsetParent, {});
-        setTimeout(() => { this.setWbModel(); }, 100);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
@@ -82,8 +56,6 @@ export default {
         EVENTBUS.$off('FETCH_ARCHVIEWS');
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
-
-        location.reload();
     }
 }
 </script>

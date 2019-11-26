@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { EVENTBUS, AxiosRequest } from '../main.js';
+import { AxiosRequest } from '../main.js';
 
 export default {
     data() {
