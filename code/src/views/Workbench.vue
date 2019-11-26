@@ -1,4 +1,5 @@
 <template>
+    <div />
 </template>
 
 <script>
@@ -9,9 +10,7 @@ export default {
     data() {
         return {
             title: '',
-            archDataModifier: {},
-
-            mxInstance: null
+            archDataModifier: {}
         }
     },
 
@@ -56,6 +55,8 @@ export default {
         EVENTBUS.$off('FETCH_ARCHVIEWS');
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
+
+        location.reload();
     }
 }
 </script>
