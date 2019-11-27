@@ -2,8 +2,8 @@
     <v-container fluid>
         <v-row>
             <v-col
-                v-for='(arch, i) in archList'
-                :key='i'
+                v-for='arch in archList'
+                :key='arch.title'
                 :cols=4
             >
                 <v-card outlined>
@@ -19,7 +19,7 @@
                         <v-btn
                             text
                             color="#ff0000"
-                            @click.stop='deleteDialog = true'
+                            @click.stop='setDeleteTarget(arch.title)'
                         >
                             DELETE
                         </v-btn>
@@ -29,14 +29,14 @@
                             width='500'
                         >
                             <v-card>
-                                <v-card-title>Delete {{ arch.title }}</v-card-title>
+                                <v-card-title>Delete {{ deleteName }}</v-card-title>
                                 <v-card-text>Your information will be permenently deleted, are you sure?</v-card-text>
                                 <v-card-actions>
                                     <v-spacer />
                                     <v-btn
                                         text
                                         color="red darken-1"
-                                        @click='deleteArch(arch.title)'
+                                        @click='deleteArch(deleteName)'
                                     >
                                         Continue
                                     </v-btn>
@@ -114,7 +114,8 @@ export default {
             archList: [],
             createDialog: false,
             createName: '',
-            deleteDialog: false
+            deleteDialog: false,
+            deleteName: '',
         }
     },
 
@@ -123,12 +124,22 @@ export default {
             let _this = this;
             this.createDialog = false;
 
-            AxiosRequest('put', `arch/${_this.createName}`, null, location.reload());
+            AxiosRequest('put', `arch/${_this.createName}`, null, () => {
+                location.reload();
+            });
         },
+        
+        setDeleteTarget(archTitle) {
+            this.deleteDialog = true;
+            this.deleteName = archTitle;
+        },
+
         deleteArch(archTitle) {
             this.deleteDialog = false;
 
-            AxiosRequest('delete', `arch/${archTitle}`, null, location.reload());
+            AxiosRequest('delete', `arch/${archTitle}`, null, () => {
+                location.reload();
+            });
         }
     },
 

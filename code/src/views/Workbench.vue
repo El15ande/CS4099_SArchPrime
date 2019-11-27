@@ -27,6 +27,13 @@ export default {
                 if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
             });
         },
+
+        render() {
+            setTimeout(() => {
+                this.jointGraph.clear();
+                this.setViewpoints();
+            }, 100);
+        },
         
         setViewpoints() {
             let viewpoints = this.archDataModifier.getViewpoints();
@@ -48,10 +55,7 @@ export default {
     watch: {
         '$route' () {
             this.setTopBar();
-            setTimeout(() => {
-                this.jointGraph.clear();
-                this.setViewpoints();
-            }, 100);
+            this.render();
         }
     },
 
@@ -79,11 +83,13 @@ export default {
 
         EVENTBUS.$on('DELIVER_CREATEVIEW', function(payload) {
             _this.archDataModifier.addViewpoint(payload).save();
+            _this.render();
         });
 
         EVENTBUS.$on('DELIVER_REMOVEVIEW', function(payload) {
             _this.archDataModifier.deleteViewpoint(payload).save();
-        })
+            _this.render();
+        });
     },
 
     beforeDestroy() {
