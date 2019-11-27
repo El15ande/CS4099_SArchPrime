@@ -7,8 +7,8 @@ import AXIOS from 'axios';
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-// const REMOTEHOST = 'https://yw69.host.cs.st-andrews.ac.uk/node';
-const LOCALHOST = 'http://localhost:20804/';
+const SERVER = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+//const SERVER = 'http://localhost:20804/';
 const PATHS = [
     { 
         path: '/',
@@ -45,7 +45,7 @@ export const EVENTBUS = new Vue();
 export function AxiosRequest(header, query, data, success) {
     AXIOS({
         method: header,
-        url: `${LOCALHOST}${query}`,
+        url: `${SERVER}${query}`,
         crossDomain: true,
         data
     }).then((res) => {
