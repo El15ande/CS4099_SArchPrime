@@ -28,8 +28,6 @@ const router = new VueRouter({
     routes: PATHS.map(path => route(path))
 });
 
-export const EVENTBUS = new Vue();
-
 function route({ path, viewname }) {
     return {
         path,
@@ -38,6 +36,11 @@ function route({ path, viewname }) {
         component: (resolve) => import(`@/views/${viewname}.vue`).then(resolve)
     }
 }
+
+
+
+// Exports;
+export const EVENTBUS = new Vue();
 
 export function AxiosRequest(header, query, data, success) {
     AXIOS({

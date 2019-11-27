@@ -5,12 +5,16 @@
 <script>
 import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataModifier from '../ArchDataModifier.js';
+import * as JOINT from 'jointjs';
 
 export default {
     data() {
         return {
             title: '',
-            archDataModifier: {}
+            archDataModifier: {},
+
+            jointGraph: null,
+            jointPaper: null,
         }
     },
 
@@ -22,12 +26,32 @@ export default {
             AxiosRequest('get', `arch/${_this.title}`, null, (res) => {
                 if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
             });
+        },
+        
+        setViewpoints() {
+            let viewpoints = this.archDataModifier.getViewpoints();
+            let viewpoint;
+
+            viewpoints.map((vp) => {
+                viewpoint = new JOINT.shapes.standard.Rectangle();
+                viewpoint.resize(200, 100);
+                viewpoint.attr({
+                    label: {
+                        text: vp
+                    }
+                });
+                viewpoint.addTo(this.jointGraph);
+            });
         }
     },
 
     watch: {
         '$route' () {
             this.setTopBar();
+            setTimeout(() => {
+                this.jointGraph.clear();
+                this.setViewpoints();
+            }, 100);
         }
     },
 
@@ -35,6 +59,17 @@ export default {
         let _this = this;
 
         this.setTopBar();
+
+        this.jointGraph = new JOINT.dia.Graph;
+        this.jointPaper = new JOINT.dia.Paper({
+            el: this.$el.offsetParent,
+            model: this.jointGraph,
+            width: this.$el.offsetParent.clientWidth,
+            height: this.$el.offsetParent.clientHeight
+        });
+        setTimeout(() => {
+            this.setViewpoints()
+        }, 100);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {

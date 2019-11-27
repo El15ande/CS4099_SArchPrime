@@ -1,9 +1,25 @@
 import { AxiosRequest } from './main.js';
 
-const viewpointPrototype = {
+const VIEWPOINT_PROTOTYPE = {
+    /*
+        Components array;
+    */
     component: [],
+
+    /*
+        Connectors array;
+    */
     connector: []
 };
+
+const COMPONENT_PROTOTYPE = {
+
+    /*
+        Component name;
+    */
+    cpname: '',
+
+}
 
 export default class ArchDataModifier {
     constructor(data) {
@@ -17,6 +33,12 @@ export default class ArchDataModifier {
         return this;
     }
 
+
+
+    /*
+        Viewpoints;
+    */
+
     getViewpoints = function() {
         return this.data.indices;
     }
@@ -25,7 +47,7 @@ export default class ArchDataModifier {
     //  vpname: new viewpoint name;
     addViewpoint = function(vpname) {
         if(this.data.indices.indexOf(vpname) < 0) {
-            let viewpoint = Object.assign({}, viewpointPrototype);
+            let viewpoint = Object.assign({}, VIEWPOINT_PROTOTYPE);
 
             this.data[vpname] = viewpoint;
             this.data.indices.push(vpname);
@@ -47,4 +69,11 @@ export default class ArchDataModifier {
 
         return this;
     }
+
+
+
+    /*
+        Components;
+    */
+   
 }
