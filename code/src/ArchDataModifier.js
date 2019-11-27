@@ -1,6 +1,15 @@
 import { AxiosRequest } from './main.js';
 
+const CANVAS_PROTOTYPE = {
+    x: 0,
+    y: 0,
+    width: 300,
+    height: 150
+};
+
 const VIEWPOINT_PROTOTYPE = {
+    canvas: CANVAS_PROTOTYPE,
+
     /*
         Components array;
     */
@@ -13,13 +22,14 @@ const VIEWPOINT_PROTOTYPE = {
 };
 
 const COMPONENT_PROTOTYPE = {
+    canvas: CANVAS_PROTOTYPE,
 
     /*
         Component name;
     */
     cpname: '',
 
-}
+};
 
 export default class ArchDataModifier {
     constructor(data) {
@@ -38,9 +48,16 @@ export default class ArchDataModifier {
     /*
         Viewpoints;
     */
-
+    
+    // Get all viewpoints names;
     getViewpoints = function() {
         return this.data.indices;
+    }
+
+    // Get a viewpoint through name;
+    //  vpname: target viewpoint name;
+    getViewpoint = function(vpname) {
+        return this.data[vpname];
     }
 
     // Add new unique viewpoint;
@@ -59,12 +76,18 @@ export default class ArchDataModifier {
     // Delete a unique viewpoint;
     //  vpname: target viewpoint name;
     deleteViewpoint = function(vpname) {
-        let _this = this;
-        let position = this.data.indices.indexOf(vpname);
+        delete this.data[vpname];
 
-        if(position > -1) {
-            delete _this.data[vpname];
-            this.data.indices.splice(position, 1);
+        return this;
+    }
+
+    updateViewpoint = function(attr, vpname, newValue) {
+        switch (attr) {
+            case 'position':
+                this.data[vpname].canvas.x = newValue.x;
+                this.data[vpname].canvas.y = newValue.y;
+                break;
+            default: break;
         }
 
         return this;

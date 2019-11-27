@@ -9,7 +9,7 @@
 
         <v-toolbar-items v-if="inWorkbench">
             <v-select
-                label="views"
+                label="Views"
                 :items="archViews"
                 :style="selectMargin"
                 v-model="selectedView"
@@ -150,7 +150,7 @@ export default {
 
                 setTimeout(() => { // Wait for workbench reloading;
                     EVENTBUS.$emit('FETCH_ARCHVIEWS');
-                }, 100);
+                }, 400);
             } else this.inWorkbench = false;
         }
     },

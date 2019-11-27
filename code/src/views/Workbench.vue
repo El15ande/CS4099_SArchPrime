@@ -2,9 +2,16 @@
     <div />
 </template>
 
+<style>
+    .v-content__wrap {
+        border: 1px solid #CFD8DC;
+    }
+</style>
+
 <script>
 import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataModifier from '../ArchDataModifier.js';
+import $ from 'jquery';
 import * as JOINT from 'jointjs';
 
 export default {
@@ -32,22 +39,38 @@ export default {
             setTimeout(() => {
                 this.jointGraph.clear();
                 this.setViewpoints();
-            }, 100);
+            }, 200);
         },
         
         setViewpoints() {
             let viewpoints = this.archDataModifier.getViewpoints();
-            let viewpoint;
+            let viewpoint, vpshape;
+
+            sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
+            sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
 
             viewpoints.map((vp) => {
-                viewpoint = new JOINT.shapes.standard.Rectangle();
-                viewpoint.resize(200, 100);
-                viewpoint.attr({
-                    label: {
-                        text: vp
+                viewpoint = this.archDataModifier.getViewpoint(vp);
+                vpshape = new JOINT.shapes.standard.Rectangle();
+
+                vpshape.position(viewpoint.canvas.x, viewpoint.canvas.y);
+                vpshape.resize(viewpoint.canvas.width, viewpoint.canvas.height);
+                vpshape.attr({
+                    label: { 
+                        text: vp,
+                        'font-size': (viewpoint.canvas.width * viewpoint.canvas.height) / 1000
                     }
                 });
-                viewpoint.addTo(this.jointGraph);
+
+                vpshape.addTo(this.jointGraph);
+            });
+
+            this.jointPaper.on('element:pointerup', (cellView) => {
+                this.archDataModifier.updateViewpoint(
+                    'position',
+                    cellView.model.attr().label.text, 
+                    cellView.model.attributes.position
+                ).save();
             });
         }
     },
@@ -71,14 +94,12 @@ export default {
             width: this.$el.offsetParent.clientWidth,
             height: this.$el.offsetParent.clientHeight
         });
-        setTimeout(() => {
-            this.setViewpoints()
-        }, 100);
+        setTimeout(() => { this.setViewpoints(); }, 200);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.data.indices);
-            }, 100);
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.getViewpoints());
+            }, 200);
         });
 
         EVENTBUS.$on('DELIVER_CREATEVIEW', function(payload) {
