@@ -18,10 +18,18 @@
             />
         </v-toolbar-items>
 
+        <v-btn
+            icon
+            @click.stop='goOverview()'
+            v-if='inWorkbench'
+        >
+            <v-icon>mdi-file-document-box</v-icon>
+        </v-btn>
+
         <v-btn 
             icon
             @click.stop='createViewDialog = true'
-            v-if="inWorkbench"
+            v-if='inWorkbench'
         >
             <v-icon>mdi-file-document-box-plus</v-icon>
         </v-btn>
@@ -116,11 +124,14 @@ export default {
                 'margin-top': `${sessionStorage.getItem('topbarHeight') / 4 - 2}px`,
                 'margin-left': `12px`
             },
+
+            archViews: [],
+            selectedView: '',
+
             createViewDialog: false,
             createViewName: '',
+
             deleteViewDialog: false,
-            archViews: [],
-            selectedView: ''
         }
     },
 
@@ -132,12 +143,18 @@ export default {
             this.createViewName = null;
             this.selectedView = null;
         },
+
         deleteView() {
             this.deleteViewDialog = false;
             this.archViews.splice(this.archViews.indexOf(this.selectedView), 1);
 
             EVENTBUS.$emit('DELIVER_REMOVEVIEW', this.selectedView);
             this.selectedView = null;
+        },
+
+        goOverview() {
+            this.selectedView = null;
+            EVENTBUS.$emit('DELIVER_GOOVERVIEW');
         }
     },
 
@@ -153,6 +170,10 @@ export default {
                     EVENTBUS.$emit('FETCH_ARCHVIEWS');
                 }, 400);
             } else this.inWorkbench = false;
+        },
+
+        'selectedView' (val) {
+            EVENTBUS.$emit('DELIVER_ENTERVIEW', val);
         }
     },
 

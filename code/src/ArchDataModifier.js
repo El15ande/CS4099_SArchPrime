@@ -47,7 +47,7 @@ export default class ArchDataModifier {
     */
     
     // Get all viewpoints names;
-    getViewpoints = function() {
+    getViewModel = function() {
         return this.data.indices;
     };
 

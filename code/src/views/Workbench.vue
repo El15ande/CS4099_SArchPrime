@@ -1,5 +1,17 @@
 <template>
-    <div />
+    <div>
+        <v-menu
+            v-model='jointContextMenu'
+            absolute
+            :position-x='menuX'
+            :position-y='menuY'
+        >
+            <v-list>
+                <v-list-item>
+                </v-list-item>
+            </v-list>
+        </v-menu>
+    </div>
 </template>
 
 <style>
@@ -24,6 +36,10 @@ export default {
 
             jointGraph: null,
             jointPaper: null,
+
+            jointContextMenu: false,
+            menuX: 0,
+            menuY: 0,
         }
     },
 
@@ -37,15 +53,15 @@ export default {
             });
         },
 
-        render() {
+        renderViewModel() {
             setTimeout(() => {
                 this.jointGraph.clear();
-                this.setViewpoints();
+                this.setViewModel();
             }, 200);
         },
         
-        setViewpoints() {
-            let viewpoints = this.archDataModifier.getViewpoints();
+        setViewModel() {
+            let viewpoints = this.archDataModifier.getViewModel();
             let viewpoint, vpshape;
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
@@ -67,20 +83,35 @@ export default {
                 vpshape.addTo(this.jointGraph);
             });
 
-            this.jointPaper.on('element:pointerup', (cellView) => {
+            // Viewpoint drag & drop;
+            this.jointPaper.on('cell:pointerup', (cellView) => {
                 this.archDataModifier.updateViewpoint(
                     'position',
                     cellView.model.attr().label.text, 
                     cellView.model.attributes.position
                 ).save();
             });
+
+            this.jointPaper.on('cell:pointerclick', (cellView) => {
+            });
+
+            // Blank context menu call out (right click);
+            this.jointPaper.on('blank:contextmenu', (evt) => {
+                this.jointContextMenu = true;
+                this.menuX = evt.originalEvent.clientX;
+                this.menuY = evt.originalEvent.clientY;
+            });
+        },
+
+        renderViewpoint(vpname) {
+            let vpdata = this.archDataModifier.getViewpoint(vpname);
         }
     },
 
     watch: {
         '$route' () {
             this.setTopBar();
-            this.render();
+            this.renderViewModel();
         }
     },
 
@@ -100,22 +131,31 @@ export default {
             gridSize: 20,
             drawGrid: { name: 'mesh' }
         });
-        setTimeout(() => { this.setViewpoints(); }, 400);
+        setTimeout(() => { this.setViewModel(); }, 400);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.getViewpoints());
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.getViewModel());
             }, 200);
         });
 
         EVENTBUS.$on('DELIVER_CREATEVIEW', function(payload) {
             _this.archDataModifier.addViewpoint(payload).save();
-            _this.render();
+            _this.renderViewModel();
         });
 
         EVENTBUS.$on('DELIVER_REMOVEVIEW', function(payload) {
             _this.archDataModifier.deleteViewpoint(payload).save();
-            _this.render();
+            _this.renderViewModel();
+        });
+
+        EVENTBUS.$on('DELIVER_ENTERVIEW', function(payload) {
+            _this.jointGraph.clear();
+            _this.renderViewpoint(payload);
+        });
+
+        EVENTBUS.$on('DELIVER_GOOVERVIEW', function() {
+            _this.renderViewModel();
         });
     },
 
@@ -123,6 +163,7 @@ export default {
         EVENTBUS.$off('FETCH_ARCHVIEWS');
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
+        EVENTBUS.$off('DELIVER_ENTERVIEW');
 
         location.reload();
     }
