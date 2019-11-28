@@ -1,35 +1,5 @@
 import { AxiosRequest } from './main.js';
-
-const CANVAS_PROTOTYPE = {
-    x: 0,
-    y: 0,
-    width: 300,
-    height: 150
-};
-
-const VIEWPOINT_PROTOTYPE = {
-    canvas: CANVAS_PROTOTYPE,
-
-    /*
-        Components array;
-    */
-    component: [],
-
-    /*
-        Connectors array;
-    */
-    connector: []
-};
-
-const COMPONENT_PROTOTYPE = {
-    canvas: CANVAS_PROTOTYPE,
-
-    /*
-        Component name;
-    */
-    cpname: '',
-
-};
+import $ from 'jquery';
 
 export default class ArchDataModifier {
     constructor(data) {
@@ -41,7 +11,34 @@ export default class ArchDataModifier {
         AxiosRequest('POST', `arch/${this.data.name}`, this.data);
 
         return this;
-    }
+    };
+
+    makeCanvas = function() {
+        return {
+            x: 0,
+            y: 0,
+            width: 240,
+            height: 120
+        };
+    };
+
+    makeViewpoint = function() {
+        let canvas = this.makeCanvas();
+
+        return {
+            canvas,
+            
+            /*
+                Components array;
+            */
+            component: [],
+
+            /*
+                Connectors array;
+            */
+            connector: []
+        };
+    };
 
 
 
@@ -52,26 +49,26 @@ export default class ArchDataModifier {
     // Get all viewpoints names;
     getViewpoints = function() {
         return this.data.indices;
-    }
+    };
 
     // Get a viewpoint through name;
     //  vpname: target viewpoint name;
     getViewpoint = function(vpname) {
         return this.data[vpname];
-    }
+    };
 
     // Add new unique viewpoint;
     //  vpname: new viewpoint name;
     addViewpoint = function(vpname) {
         if(this.data.indices.indexOf(vpname) < 0) {
-            let viewpoint = Object.assign({}, VIEWPOINT_PROTOTYPE);
+            let viewpoint = this.makeViewpoint();
 
             this.data[vpname] = viewpoint;
             this.data.indices.push(vpname);
         }
 
         return this;
-    }
+    };
 
     // Delete a unique viewpoint;
     //  vpname: target viewpoint name;
@@ -79,7 +76,7 @@ export default class ArchDataModifier {
         delete this.data[vpname];
 
         return this;
-    }
+    };
 
     updateViewpoint = function(attr, vpname, newValue) {
         switch (attr) {
@@ -91,7 +88,7 @@ export default class ArchDataModifier {
         }
 
         return this;
-    }
+    };
 
 
 

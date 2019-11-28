@@ -129,14 +129,15 @@ export default {
             this.createViewDialog = false;
 
             EVENTBUS.$emit('DELIVER_CREATEVIEW', this.createViewName);
-            this.selectedView = this.createViewName;
+            this.createViewName = null;
+            this.selectedView = null;
         },
         deleteView() {
             this.deleteViewDialog = false;
             this.archViews.splice(this.archViews.indexOf(this.selectedView), 1);
 
             EVENTBUS.$emit('DELIVER_REMOVEVIEW', this.selectedView);
-            this.selectedView = '';
+            this.selectedView = null;
         }
     },
 

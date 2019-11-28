@@ -7,8 +7,8 @@ import AXIOS from 'axios';
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-const SERVER = 'https://yw69.host.cs.st-andrews.ac.uk/node';
-//const SERVER = 'http://localhost:20804/';
+//const SERVER = 'https://yw69.host.cs.st-andrews.ac.uk/node';
+const SERVER = 'http://localhost:20804/';
 const PATHS = [
     { 
         path: '/',

@@ -3,6 +3,8 @@
 </template>
 
 <style>
+    @import '../../node_modules/jointjs/dist/joint.css';
+
     .v-content__wrap {
         border: 1px solid #CFD8DC;
     }
@@ -58,7 +60,7 @@ export default {
                 vpshape.attr({
                     label: { 
                         text: vp,
-                        'font-size': (viewpoint.canvas.width * viewpoint.canvas.height) / 1000
+                        'font-size': (viewpoint.canvas.width * viewpoint.canvas.height) / 1200
                     }
                 });
 
@@ -91,10 +93,14 @@ export default {
         this.jointPaper = new JOINT.dia.Paper({
             el: this.$el.offsetParent,
             model: this.jointGraph,
+            
             width: this.$el.offsetParent.clientWidth,
-            height: this.$el.offsetParent.clientHeight
+            height: this.$el.offsetParent.clientHeight,
+
+            gridSize: 20,
+            drawGrid: { name: 'mesh' }
         });
-        setTimeout(() => { this.setViewpoints(); }, 200);
+        setTimeout(() => { this.setViewpoints(); }, 400);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
