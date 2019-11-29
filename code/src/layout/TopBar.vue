@@ -190,6 +190,14 @@ export default {
         EVENTBUS.$on('RETURN_ARCHVIEWS', function(payload) {
             _this.archViews = payload;
         });
+
+        EVENTBUS.$on('INVOKE_CREATEVIEW', function() {
+            _this.createViewDialog = true;
+        });
+
+        EVENTBUS.$on('INVOKE_ENTERVIEW', function(payload) {
+            _this.selectedView = payload;
+        });
     },
 
     beforeDestroy() {

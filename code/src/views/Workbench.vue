@@ -1,13 +1,21 @@
 <template>
     <div>
         <v-menu
-            v-model='jointContextMenu'
+            v-model='jointMenu'
             absolute
             :position-x='menuX'
             :position-y='menuY'
         >
             <v-list>
-                <v-list-item>
+                <v-list-item 
+                    v-for='(item, i) in menu'
+                    :key='i'
+                    @click.stop='routeAction(item.action)'
+                >
+                    <v-list-item-content>
+                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                        <v-list-item-subtitle>{{ item.description }}</v-list-item-subtitle>
+                    </v-list-item-content>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -37,9 +45,35 @@ export default {
             jointGraph: null,
             jointPaper: null,
 
-            jointContextMenu: false,
+            jointMenu: false,
+            menuContext: '',
             menuX: 0,
             menuY: 0,
+        }
+    },
+
+    computed: {
+        menu() {
+            switch (this.menuContext) {
+                case 'VM_CELL':
+                    return [
+                        
+                    ];
+                case 'VM_BLANK':
+                    return [
+                        {
+                            name: 'New View',
+                            description: 'Create a new view',
+                            action: 'addView'
+                        },
+                        {
+                            name: 'New View Connection',
+                            description: 'Create a new connection between views',
+                            action: 'addViewConnection'
+                        }
+                    ];
+                default: return []; 
+            }
         }
     },
 
@@ -51,6 +85,24 @@ export default {
             AxiosRequest('get', `arch/${_this.title}`, null, (res) => {
                 if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
             });
+        },
+
+        setMenuCoordinate(e) {
+            this.menuX = e.originalEvent.clientX;
+            this.menuY = e.originalEvent.clientY;
+        },
+
+        routeAction(action) {
+            switch(action) {
+                case 'addView':
+                    EVENTBUS.$emit('INVOKE_CREATEVIEW');
+                    return;
+                case 'addViewConnection':
+                    // TODO link;
+                    console.log('link');
+                    return;
+                default: return;
+            }
         },
 
         renderViewModel() {
@@ -83,7 +135,7 @@ export default {
                 vpshape.addTo(this.jointGraph);
             });
 
-            // Viewpoint drag & drop;
+            // Cell: drag & drop;
             this.jointPaper.on('cell:pointerup', (cellView) => {
                 this.archDataModifier.updateViewpoint(
                     'position',
@@ -92,20 +144,32 @@ export default {
                 ).save();
             });
 
-            this.jointPaper.on('cell:pointerclick', (cellView) => {
+            // Cell: left double click;
+            this.jointPaper.on('cell:pointerdblclick', (cellView, evt) => {
+                let vpname = cellView.model.attr().label.text;
+
+                EVENTBUS.$emit('INVOKE_ENTERVIEW', vpname);
+                this.renderViewpoint(vpname);
             });
 
-            // Blank context menu call out (right click);
+            // Cell: right click;
+            this.jointPaper.on('cell:contextmenu', (cellView, evt) => {
+                this.jointMenu = true;
+                this.menuContext = 'VM_CELL';
+                this.setMenuCoordinate(evt);
+            })
+
+            // Blank space: right click;
             this.jointPaper.on('blank:contextmenu', (evt) => {
-                this.jointContextMenu = true;
-                this.menuX = evt.originalEvent.clientX;
-                this.menuY = evt.originalEvent.clientY;
+                this.jointMenu = true;
+                this.menuContext = 'VM_BLANK';
+                this.setMenuCoordinate(evt);
             });
         },
 
         renderViewpoint(vpname) {
-            let vpdata = this.archDataModifier.getViewpoint(vpname);
-        }
+            // let vpdata = this.archDataModifier.getViewpoint(vpname);
+        },
     },
 
     watch: {
@@ -164,6 +228,8 @@ export default {
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
         EVENTBUS.$off('DELIVER_ENTERVIEW');
+
+        this.archDataModifier.save();
 
         location.reload();
     }
