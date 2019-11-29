@@ -10,7 +10,7 @@
                 <v-list-item 
                     v-for='(item, i) in menu'
                     :key='i'
-                    @click.stop='routeAction(item.action)'
+                    @click.stop='item.action'
                 >
                     <v-list-item-content>
                         <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -49,29 +49,44 @@ export default {
             menuContext: '',
             menuX: 0,
             menuY: 0,
+
+            selectedView: null,
         }
     },
 
     computed: {
         menu() {
+            let _this = this;
+
             switch (this.menuContext) {
                 case 'VM_CELL':
                     return [
-                        
+                        {
+                            name: 'New View Connection',
+                            description: 'Create a new connection between views',
+                            action: function() {
+                            }
+                        }
                     ];
+                
                 case 'VM_BLANK':
                     return [
                         {
                             name: 'New View',
                             description: 'Create a new view',
-                            action: 'addView'
+                            action: function() {
+                                EVENTBUS.$emit('INVOKE_CREATEVIEW');
+                            }
                         },
                         {
                             name: 'New View Connection',
-                            description: 'Create a new connection between views',
-                            action: 'addViewConnection'
+                            description: 'Create a new arbitrary view connection',
+                            action: function() {
+                                
+                            }
                         }
                     ];
+                
                 default: return []; 
             }
         }
@@ -90,19 +105,6 @@ export default {
         setMenuCoordinate(e) {
             this.menuX = e.originalEvent.clientX;
             this.menuY = e.originalEvent.clientY;
-        },
-
-        routeAction(action) {
-            switch(action) {
-                case 'addView':
-                    EVENTBUS.$emit('INVOKE_CREATEVIEW');
-                    return;
-                case 'addViewConnection':
-                    // TODO link;
-                    console.log('link');
-                    return;
-                default: return;
-            }
         },
 
         renderViewModel() {
@@ -156,6 +158,7 @@ export default {
             this.jointPaper.on('cell:contextmenu', (cellView, evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_CELL';
+                this.selectedView = cellView;
                 this.setMenuCoordinate(evt);
             })
 
@@ -168,7 +171,9 @@ export default {
         },
 
         renderViewpoint(vpname) {
-            // let vpdata = this.archDataModifier.getViewpoint(vpname);
+            let vpdata = this.archDataModifier.getViewpoint(vpname);
+
+            console.log(vpdata);
         },
     },
 

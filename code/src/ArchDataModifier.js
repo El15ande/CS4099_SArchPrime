@@ -40,6 +40,9 @@ export default class ArchDataModifier {
         };
     };
 
+    makeViewpointConnection = function() {
+    };
+
 
 
     /*
