@@ -7,6 +7,9 @@ DOER
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[4. Resources](#4-resources)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[5. Links](#5-links)  
 Technology Stacks  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1. Client-side implementation](#1-client-side-implmentation)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2. Server-side implementation](#2-server-side-implementation)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3. Architecture data representation: JSON](#3-architecture-data representation-json)  
 
 ---
 
@@ -19,7 +22,7 @@ Technology Stacks
 1.1 __Project title: Software architecture viewpoint design & visualisation tool__
 
 1.2 __Description:__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In software engineering, the process of transforming textual architecture documentations into some diagrammatic or visualisation representations is inevitable for architects and project managers, this could lead to numerous components and models which emphasise distinct focal points regarding different stakeholders and contexts involved in the development (i.e. different architecture viewpoints). In industrial environment, the static architecture diagram (drawn on the whiteboard or using generic diagram design tools) may be transient and lack of visualisation or software engineering support, while professional modelling and analysing tools may be difficult to utilise and thus lead to a large amount of workload. On the other hand, existing software architecture design and visualisation tools (e.g. [Structurizr](http://structurizr.com), [Confluence](https://www.atlassian.com/software/confluence)) can satisfy most of the above requirements, but are rarely supported with the features of multiple viewpoints switching and connections revealing.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In software engineering, the process of transforming textual architecture documentations into some diagrammatic or visualisation representations is inevitable for architects and project managers, this could lead to numerous amount of components, connectors and view models documentations which emphasise distinct focal points regarding different stakeholders and contexts involved in the development (i.e. different architecture viewpoints). In industrial environment, the static architecture diagram (whiteboard handrafts or generic diagram design tools) may be transient and lack of visualisation or software engineering support, while professional modelling and analysing tools may be difficult to utilise and thus lead to a large amount of workload. On the other hand, existing software architecture design and visualisation tools (e.g. [Structurizr](http://structurizr.com), [Confluence](https://www.atlassian.com/software/confluence)) can satisfy most of the above requirements, but are rarely supported with the features of multiple viewpoints switching and connections revealing.  
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This project aims to provide a composite software architecture viewpoint design and visualisation tool with customised elements designers:  
 - For a single architecture view, it will help user design a single architecture diagram/visualisation product with customised components and connectors.  
@@ -70,3 +73,17 @@ Add IO function: the product diagram / visualisation can be imported or exported
 ---
 
 ## Technology Stacks
+
+### 1. Client-side implementation
+
+1.1 Frontend framework: Vuetify (Vue.js)
+
+1.2 Workbench graphics: JointJS (jQuery, Backbone.js)
+
+### 2. Server-side implementation
+
+2.1 Backend framework: Node.js
+
+2.2 RESTful HTTP communication: Axios
+
+### 3. Architecture data representation: JSON

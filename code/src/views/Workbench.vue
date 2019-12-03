@@ -50,7 +50,10 @@ export default {
             menuX: 0,
             menuY: 0,
 
-            selectedView: null,
+            selectedView: {
+                sid: '',
+                spos: {}
+            },
         }
     },
 
@@ -65,6 +68,10 @@ export default {
                             name: 'New View Connection',
                             description: 'Create a new connection between views',
                             action: function() {
+                                let link = new JOINT.shapes.standard.Link();
+                                link.source({ id: _this.selectedView.sid });
+                                link.target(_this.selectedView.spos);
+                                link.addTo(_this.jointGraph);
                             }
                         }
                     ];
@@ -139,11 +146,14 @@ export default {
 
             // Cell: drag & drop;
             this.jointPaper.on('cell:pointerup', (cellView) => {
-                this.archDataModifier.updateViewpoint(
-                    'position',
-                    cellView.model.attr().label.text, 
-                    cellView.model.attributes.position
-                ).save();
+                if(cellView.model.isElement()) {
+                    this.archDataModifier.updateViewpoint(
+                        'position',
+                        cellView.model.attr().label.text, 
+                        cellView.model.attributes.position
+                    ).save();
+                } else if(cellView.model.isLink()) {
+                } 
             });
 
             // Cell: left double click;
@@ -156,9 +166,15 @@ export default {
 
             // Cell: right click;
             this.jointPaper.on('cell:contextmenu', (cellView, evt) => {
+                console.log(cellView);
+
                 this.jointMenu = true;
                 this.menuContext = 'VM_CELL';
-                this.selectedView = cellView;
+                this.selectedView.sid = cellView.model.cid;
+                this.selectedView.spos = {
+                    x: cellView.model.attributes.position.x + cellView.model.attributes.size.width / 2,
+                    y: cellView.model.attributes.position.y + cellView.model.attributes.size.height + 50
+                }
                 this.setMenuCoordinate(evt);
             })
 
