@@ -41,6 +41,17 @@ export default class ArchDataModifier {
     };
 
     makeViewpointConnection = function() {
+        return {
+            /*
+                Source point/viewpoint;
+            */
+            source: '',
+
+            /*
+                Target point/viewpoint;
+            */
+            target: '',
+        }
     };
 
 
@@ -92,6 +103,32 @@ export default class ArchDataModifier {
 
         return this;
     };
+
+    /*
+        Viewpoint connections;
+    */
+
+    getViewpointConnections = function() {
+        return this.data.connections;
+    }
+
+    addViewpointConnection = function(source, target) {
+        let connection = this.makeViewpointConnection();
+        connection.source = source;
+        connection.target = target;
+
+        this.data.connections.push(connection);
+
+        return this;
+    }
+
+    deleteViewpointConnection = function(source, target) {
+        this.data.connections = this.data.connections.filter((c) => {
+            return JSON.stringify({ source, target }) !== JSON.stringify(c);
+        });
+
+        return this;
+    }
 
 
 

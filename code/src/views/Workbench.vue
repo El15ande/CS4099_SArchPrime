@@ -50,10 +50,8 @@ export default {
             menuX: 0,
             menuY: 0,
 
-            selectedView: {
-                sid: '',
-                spos: {}
-            },
+            selectedView: {},
+            selectedLink: {}
         }
     },
 
@@ -62,16 +60,28 @@ export default {
             let _this = this;
 
             switch (this.menuContext) {
-                case 'VM_CELL':
+                case 'VM_ELEMENT':
                     return [
                         {
                             name: 'New View Connection',
                             description: 'Create a new connection between views',
                             action: function() {
-                                let link = new JOINT.shapes.standard.Link();
-                                link.source({ id: _this.selectedView.sid });
-                                link.target(_this.selectedView.spos);
-                                link.addTo(_this.jointGraph);
+                                _this.jointMenu = false;
+                                _this.archDataModifier.addViewpointConnection(_this.selectedView.sid, _this.selectedView.spos).save();
+                                _this.renderViewModel();
+                            }
+                        }
+                    ];
+
+                case 'VM_LINK':
+                    return [
+                        {
+                            name:'Remove Connection',
+                            description: 'Remove this connection',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.archDataModifier.deleteViewpointConnection(_this.selectedLink.lsource, _this.selectedLink.ltarget).save();
+                                _this.renderViewModel();
                             }
                         }
                     ];
@@ -85,6 +95,7 @@ export default {
                                 EVENTBUS.$emit('INVOKE_CREATEVIEW');
                             }
                         },
+
                         {
                             name: 'New View Connection',
                             description: 'Create a new arbitrary view connection',
@@ -100,6 +111,14 @@ export default {
     },
 
     methods: {
+        getCell(vpid) {
+            let target = this.jointGraph.getCells().filter((cell) => {
+                return cell.vpid === vpid;
+            });
+
+            return target[0];
+        },
+
         setTopBar() {
             let _this = this;
 
@@ -123,7 +142,8 @@ export default {
         
         setViewModel() {
             let viewpoints = this.archDataModifier.getViewModel();
-            let viewpoint, vpshape;
+            let viewpointConnections = this.archDataModifier.getViewpointConnections();
+            let viewpoint, vpshape, conshape;
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
@@ -140,48 +160,88 @@ export default {
                         'font-size': (viewpoint.canvas.width * viewpoint.canvas.height) / 1200
                     }
                 });
+                vpshape.vpid = vp;
 
                 vpshape.addTo(this.jointGraph);
             });
 
+            viewpointConnections.map((c) => {
+                conshape = new JOINT.shapes.standard.Link();
+                (typeof c.source === 'string')
+                    ? conshape.source(this.getCell(c.source))
+                    : conshape.source({
+                        x: c.source.x,
+                        y: c.source.y
+                    });
+                (typeof c.target === 'string')
+                    ? conshape.target(this.getCell(c.source))
+                    : conshape.target({
+                        x: c.target.x,
+                        y: c.target.y
+                    });
+
+                conshape.addTo(this.jointGraph);
+            });
+
             // Cell: drag & drop;
-            this.jointPaper.on('cell:pointerup', (cellView) => {
-                if(cellView.model.isElement()) {
-                    this.archDataModifier.updateViewpoint(
-                        'position',
-                        cellView.model.attr().label.text, 
-                        cellView.model.attributes.position
-                    ).save();
-                } else if(cellView.model.isLink()) {
-                } 
+            this.jointPaper.on('element:pointerup', (elementView) => {
+                this.archDataModifier.updateViewpoint(
+                    'position',
+                    elementView.model.attr().label.text, 
+                    elementView.model.attributes.position
+                ).save();
             });
 
             // Cell: left double click;
-            this.jointPaper.on('cell:pointerdblclick', (cellView, evt) => {
-                let vpname = cellView.model.attr().label.text;
+            this.jointPaper.on('element:pointerdblclick', (elementView, evt) => {
+                let vpname = elementView.model.attr().label.text;
 
                 EVENTBUS.$emit('INVOKE_ENTERVIEW', vpname);
                 this.renderViewpoint(vpname);
             });
 
             // Cell: right click;
-            this.jointPaper.on('cell:contextmenu', (cellView, evt) => {
-                console.log(cellView);
+            this.jointPaper.on('element:contextmenu', (elementView, evt) => {
+                console.log(elementView);
 
                 this.jointMenu = true;
-                this.menuContext = 'VM_CELL';
-                this.selectedView.sid = cellView.model.cid;
-                this.selectedView.spos = {
-                    x: cellView.model.attributes.position.x + cellView.model.attributes.size.width / 2,
-                    y: cellView.model.attributes.position.y + cellView.model.attributes.size.height + 50
-                }
+                this.menuContext = 'VM_ELEMENT';
+                this.selectedView = {
+                    sid: elementView.model.vpid,
+                    spos: {
+                        x: elementView.model.attributes.position.x + elementView.model.attributes.size.width / 2,
+                        y: elementView.model.attributes.position.y + elementView.model.attributes.size.height + 40
+                    }
+                };
+
                 this.setMenuCoordinate(evt);
-            })
+            });
+
+            this.jointPaper.on('link:contextmenu', (linkView, evt) => {
+                console.log(linkView);
+
+                this.jointMenu = true;
+                this.menuContext = 'VM_LINK';
+                this.selectedLink = {
+                    lsource: linkView.sourceView 
+                        ? linkView.sourceView.model.cid
+                        : linkView.sourcePoint,
+                    ltarget: linkView.targetView
+                        ? linkView.targetView.model.cid
+                        : linkView.targetPoint
+                }
+
+                this.setMenuCoordinate(evt);
+            });
 
             // Blank space: right click;
             this.jointPaper.on('blank:contextmenu', (evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_BLANK';
+                this.selectedView.spos = {
+                    x: evt.offsetX,
+                    y: evt.offsetY
+                }
                 this.setMenuCoordinate(evt);
             });
         },

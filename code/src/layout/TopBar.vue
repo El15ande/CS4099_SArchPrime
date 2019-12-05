@@ -202,6 +202,8 @@ export default {
 
     beforeDestroy() {
         EVENTBUS.$off('RETURN_ARCHVIEWS');
+        EVENTBUS.$off('INVOKE_CREATEVIEW');
+        EVENTBUS.$off('INVOKE_ENTERVIEW');
     }
 }
 </script>
