@@ -110,7 +110,7 @@ export default class ArchDataModifier {
 
     getViewpointConnections = function() {
         return this.data.connections;
-    }
+    };
 
     addViewpointConnection = function(source, target) {
         let connection = this.makeViewpointConnection();
@@ -120,7 +120,7 @@ export default class ArchDataModifier {
         this.data.connections.push(connection);
 
         return this;
-    }
+    };
 
     deleteViewpointConnection = function(source, target) {
         this.data.connections = this.data.connections.filter((c) => {
@@ -128,7 +128,27 @@ export default class ArchDataModifier {
         });
 
         return this;
-    }
+    };
+
+    updateViewpointConnection = function(attr, before, after) {
+        
+
+        switch(attr) {
+            case 'length':
+                let oldConnection = { source: before.lsource, target: before.ltarget };
+                this.data.connections.map((c) => {
+                    if(JSON.stringify(oldConnection) === JSON.stringify(c)) {
+                        c.source = after.newSource;
+                        c.target = after.newTarget;
+                        return this;
+                    }
+                });
+                break;
+            default: break;
+        }
+
+        return this;
+    };
 
 
 

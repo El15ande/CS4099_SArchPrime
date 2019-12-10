@@ -67,7 +67,10 @@ export default {
                             description: 'Create a new connection between views',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataModifier.addViewpointConnection(_this.selectedView.sid, _this.selectedView.spos).save();
+                                _this.archDataModifier.addViewpointConnection(
+                                    _this.selectedView.sid, 
+                                    _this.selectedView.spos
+                                ).save();
                                 _this.renderViewModel();
                             }
                         }
@@ -80,7 +83,10 @@ export default {
                             description: 'Remove this connection',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataModifier.deleteViewpointConnection(_this.selectedLink.lsource, _this.selectedLink.ltarget).save();
+                                _this.archDataModifier.deleteViewpointConnection(
+                                    _this.selectedLink.lsource, 
+                                    _this.selectedLink.ltarget
+                                ).save();
                                 _this.renderViewModel();
                             }
                         }
@@ -192,6 +198,33 @@ export default {
                 ).save();
             });
 
+            // Link: drag & drop;
+            this.jointPaper.on('link:pointerdown', (linkView) => {
+                this.selectedLink = {
+                    lsource: linkView.sourceView 
+                        ? linkView.sourceView.model.vpid
+                        : linkView.sourcePoint,
+                    ltarget: linkView.targetView
+                        ? linkView.targetView.model.vpid
+                        : linkView.targetPoint
+                };
+            });
+
+            this.jointPaper.on('link:pointerup', (linkView) => {
+                this.archDataModifier.updateViewpointConnection(
+                    'length',
+                    this.selectedLink,
+                    {
+                        newSource: linkView.sourceView
+                            ? linkView.sourceView.model.vpid
+                            : linkView.sourcePoint,
+                        newTarget: linkView.targetView
+                            ? linkView.targetView.model.vpid
+                            : linkView.targetPoint
+                    }
+                ).save();
+            });
+
             // Cell: left double click;
             this.jointPaper.on('element:pointerdblclick', (elementView, evt) => {
                 let vpname = elementView.model.attr().label.text;
@@ -202,8 +235,6 @@ export default {
 
             // Cell: right click;
             this.jointPaper.on('element:contextmenu', (elementView, evt) => {
-                console.log(elementView);
-
                 this.jointMenu = true;
                 this.menuContext = 'VM_ELEMENT';
                 this.selectedView = {
@@ -217,19 +248,18 @@ export default {
                 this.setMenuCoordinate(evt);
             });
 
+            // Link: right click;
             this.jointPaper.on('link:contextmenu', (linkView, evt) => {
-                console.log(linkView);
-
                 this.jointMenu = true;
                 this.menuContext = 'VM_LINK';
                 this.selectedLink = {
                     lsource: linkView.sourceView 
-                        ? linkView.sourceView.model.cid
+                        ? linkView.sourceView.model.vpid
                         : linkView.sourcePoint,
                     ltarget: linkView.targetView
-                        ? linkView.targetView.model.cid
+                        ? linkView.targetView.model.vpid
                         : linkView.targetPoint
-                }
+                };
 
                 this.setMenuCoordinate(evt);
             });
