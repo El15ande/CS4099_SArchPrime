@@ -180,7 +180,7 @@ export default {
                         y: c.source.y
                     });
                 (typeof c.target === 'string')
-                    ? conshape.target(this.getCell(c.source))
+                    ? conshape.target(this.getCell(c.target))
                     : conshape.target({
                         x: c.target.x,
                         y: c.target.y
@@ -210,19 +210,48 @@ export default {
                 };
             });
 
-            this.jointPaper.on('link:pointerup', (linkView) => {
-                this.archDataModifier.updateViewpointConnection(
-                    'length',
-                    this.selectedLink,
-                    {
-                        newSource: linkView.sourceView
-                            ? linkView.sourceView.model.vpid
-                            : linkView.sourcePoint,
-                        newTarget: linkView.targetView
-                            ? linkView.targetView.model.vpid
-                            : linkView.targetPoint
+            this.jointPaper.on('link:pointerup', (linkView, evt, x, y) => {
+                let newPoint = new JOINT.g.Point(x, y);
+                let nearbyElements = this.jointGraph.findModelsFromPoint(newPoint);
+                
+                if(nearbyElements.length !== 0) {
+                    if(linkView.sourcePoint.x === x && linkView.sourcePoint.y === y) {
+                        this.archDataModifier.updateViewpointConnection(
+                            'length',
+                            this.selectedLink,
+                            {
+                                newSource: nearbyElements[0].vpid,
+                                newTarget: linkView.targetView
+                                    ? linkView.targetView.model.vpid
+                                    : linkView.targetPoint
+                            }
+                        ).save();
+                    } else if(linkView.targetPoint.x === x && linkView.targetPoint.y === y) {
+                        this.archDataModifier.updateViewpointConnection(
+                            'length',
+                            this.selectedLink,
+                            {
+                                newSource: linkView.sourceView
+                                    ? linkView.sourceView.model.vpid
+                                    : linkView.sourcePoint,
+                                newTarget: nearbyElements[0].vpid
+                            }
+                        ).save();
                     }
-                ).save();
+                } else {
+                    this.archDataModifier.updateViewpointConnection(
+                        'length',
+                        this.selectedLink,
+                        {
+                            newSource: linkView.sourceView
+                                ? linkView.sourceView.model.vpid
+                                : linkView.sourcePoint,
+                            newTarget: linkView.targetView
+                                ? linkView.targetView.model.vpid
+                                : linkView.targetPoint
+                        }
+                    ).save();
+                }
             });
 
             // Cell: left double click;

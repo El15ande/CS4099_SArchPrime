@@ -131,7 +131,8 @@ export default class ArchDataModifier {
     };
 
     updateViewpointConnection = function(attr, before, after) {
-        
+        console.log(before);
+        console.log(after);
 
         switch(attr) {
             case 'length':
