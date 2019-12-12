@@ -19,6 +19,39 @@
                 </v-list-item>
             </v-list>
         </v-menu>
+
+        <v-dialog
+            v-model="labelDialog"
+            width='500'
+        >
+            <v-card>
+                <v-card-title>Add label</v-card-title>
+                <v-card-actions>
+                    <v-text-field
+                        v-model="labelInput"
+                        outlined
+                        :rules="['Required']"
+                        label="Label" 
+                    />
+                </v-card-actions>
+                <v-card-actions>
+                        <v-spacer />
+                        <v-btn
+                            text
+                            color="teal darken-1"
+                            @click='addLabel()'
+                        >
+                            Add
+                        </v-btn>
+                        <v-btn
+                            text
+                            @click='labelDialog = false'
+                        >
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -51,7 +84,11 @@ export default {
             menuY: 0,
 
             selectedView: {},
-            selectedLink: {}
+            selectedLink: {},
+
+            selectedLinkModel: null,
+            labelDialog: false,
+            labelInput: ''
         }
     },
 
@@ -78,6 +115,15 @@ export default {
 
                 case 'VM_LINK':
                     return [
+                        {
+                            name: 'Add Label',
+                            description: 'Add textual label to this connection',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.labelDialog = true;
+                            }
+                        },
+
                         {
                             name:'Remove Connection',
                             description: 'Remove this connection',
@@ -106,7 +152,7 @@ export default {
                             name: 'New View Connection',
                             description: 'Create a new arbitrary view connection',
                             action: function() {
-                                
+                                // TODO Arbitrary connection;
                             }
                         }
                     ];
@@ -185,6 +231,14 @@ export default {
                         x: c.target.x,
                         y: c.target.y
                     });
+                if(c.labels) {
+                    let labelArr = c.labels.map((l) => {
+                        return {
+                            attrs: { text: { text: l } }
+                        };
+                    });
+                    conshape.labels(labelArr);
+                }
 
                 conshape.addTo(this.jointGraph);
             });
@@ -252,6 +306,8 @@ export default {
                         }
                     ).save();
                 }
+
+                this.renderViewModel();
             });
 
             // Cell: left double click;
@@ -289,6 +345,7 @@ export default {
                         ? linkView.targetView.model.vpid
                         : linkView.targetPoint
                 };
+                this.selectedLinkModel = linkView.model;
 
                 this.setMenuCoordinate(evt);
             });
@@ -303,6 +360,23 @@ export default {
                 }
                 this.setMenuCoordinate(evt);
             });
+        },
+        
+        addLabel() {
+            this.labelDialog = false;
+
+            this.selectedLinkModel.appendLabel({ 
+                attrs: { text: { text: this.labelInput } } 
+            });
+
+            this.archDataModifier.updateViewpointConnection(
+                'label',
+                this.selectedLink,
+                this.labelInput
+            ).save();
+
+            this.labelInput = '';
+            this.renderViewModel();
         },
 
         renderViewpoint(vpname) {

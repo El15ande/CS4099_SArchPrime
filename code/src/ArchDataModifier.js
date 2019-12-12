@@ -51,6 +51,11 @@ export default class ArchDataModifier {
                 Target point/viewpoint;
             */
             target: '',
+
+            /*
+                Link labels
+            */
+           labels: []
         }
     };
 
@@ -124,30 +129,29 @@ export default class ArchDataModifier {
 
     deleteViewpointConnection = function(source, target) {
         this.data.connections = this.data.connections.filter((c) => {
-            return JSON.stringify({ source, target }) !== JSON.stringify(c);
+            return JSON.stringify({ source, target }) !== JSON.stringify({ source: c.source, target: c.target });
         });
 
         return this;
     };
 
     updateViewpointConnection = function(attr, before, after) {
-        console.log(before);
-        console.log(after);
+        let oldConnection = { source: before.lsource, target: before.ltarget };
 
-        switch(attr) {
-            case 'length':
-                let oldConnection = { source: before.lsource, target: before.ltarget };
-                this.data.connections.map((c) => {
-                    if(JSON.stringify(oldConnection) === JSON.stringify(c)) {
+        this.data.connections.map((c) => {
+            if(JSON.stringify(oldConnection) === JSON.stringify({ source: c.source, target: c.target })) {
+                switch(attr) {
+                    case 'length':
                         c.source = after.newSource;
                         c.target = after.newTarget;
-                        return this;
-                    }
-                });
-                break;
-            default: break;
-        }
-
+                        break;
+                    case 'label':
+                        c.labels.push(after);
+                        break;
+                    default: break;
+                }
+            }
+        });
         return this;
     };
 
