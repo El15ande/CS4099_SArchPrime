@@ -36,13 +36,13 @@ Technology Stacks
 2.0 Objective list __ver 1.2__
 
 2.1 __Primary objectives__: `SA = { Elements, Forms, Rationale/Constraints }`  
-- [ ] 1. Implement an architecture component design tool that provides predefined components for user to build customised architecture components. (progress: single-level architecture component)
+- [x] 1. Implement an architecture component design tool that provides predefined components for user to build customised architecture components. (progress: single-level architecture component)
 - [ ] 2. Support hierarchical features on architecture components. (progress: hierarchical architecture component)
-- [ ] 3. Provide visualisation on architecture components.
-- [ ] 4. Implement an architecture connector design tool that provides interactions among architectural components. (revealing the relationship by component definitions and supporting manually connection) (progress: hierarchical architecture component with intra-components connector)
+- [x] 3. Provide visualisation on architecture components.
+- [x] 4. Implement an architecture connector design tool that provides interactions among architectural components. (revealing the relationship by component definitions and supporting manually connection) (progress: hierarchical architecture component with intra-components connector)
 - [ ] 5. Support hierarchical features on connectors. (progress: a single architecture view - hierarchical architecture component with inter-components connector)
-- [ ] 6. Provide visualisation on connectors.
-- [ ] 7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
+- [x] 6. Provide visualisation on connectors.
+- [x] 7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
 - [ ] 8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
 - [ ] 9. Based on connections, the tool is able to reveal constraints between different components and views. (progress: core function)
 - [ ] 10. Conduct a user evaluation on core design tool, evaluate the design functions and the visualisation design.
