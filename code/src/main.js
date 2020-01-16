@@ -42,9 +42,9 @@ function route({ path, viewname }) {
 // Exports;
 export const EVENTBUS = new Vue();
 
-export function AxiosRequest(header, query, data, success) {
+export function AxiosRequest(method, query, data, success) {
     AXIOS({
-        method: header,
+        method,
         url: `${SERVER}${query}`,
         crossDomain: true,
         data
@@ -53,6 +53,7 @@ export function AxiosRequest(header, query, data, success) {
     }).catch(() => {});
 }
 
+// Root instance;
 new Vue({
     router,
     vuetify,
