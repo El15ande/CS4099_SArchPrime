@@ -1,5 +1,4 @@
 import { AxiosRequest } from './main.js';
-import $ from 'jquery';
 
 export default class ArchDataModifier {
     constructor(data) {
@@ -147,6 +146,9 @@ export default class ArchDataModifier {
                         break;
                     case 'label':
                         c.labels.push(after);
+                        break;
+                    case 'clear':
+                        c.labels = [];
                         break;
                     default: break;
                 }

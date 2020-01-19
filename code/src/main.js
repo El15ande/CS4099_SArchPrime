@@ -45,9 +45,9 @@ export const EVENTBUS = new Vue();
 export function AxiosRequest(method, query, data, success) {
     AXIOS({
         method,
+        data,
         url: `${SERVER}${query}`,
-        crossDomain: true,
-        data
+        crossDomain: true
     }).then((res) => {
         if(success) success(res);
     }).catch(() => {});

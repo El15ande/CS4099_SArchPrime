@@ -117,10 +117,19 @@ export default {
                     return [
                         {
                             name: 'Add Label',
-                            description: 'Add textual label to this connection',
+                            description: 'Add label to this connection',
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
+                            }
+                        },
+
+                        {
+                            name: 'Remove Label',
+                            description: 'Remove label from this connection',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.removeLabel();
                             }
                         },
 
@@ -310,7 +319,7 @@ export default {
                 this.renderViewModel();
             });
 
-            // Cell: left double click;
+            // Cell: left double click; 
             this.jointPaper.on('element:pointerdblclick', (elementView, evt) => {
                 let vpname = elementView.model.attr().label.text;
 
@@ -376,6 +385,15 @@ export default {
             ).save();
 
             this.labelInput = '';
+            this.renderViewModel();
+        },
+
+        removeLabel() {
+            this.archDataModifier.updateViewpointConnection(
+                'clear',
+                this.selectedLink
+            ).save();
+
             this.renderViewModel();
         },
 
