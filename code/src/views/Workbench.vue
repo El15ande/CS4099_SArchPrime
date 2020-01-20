@@ -370,7 +370,8 @@ export default {
                 let vpname = elementView.model.attr().label.text;
 
                 EVENTBUS.$emit('INVOKE_ENTERVIEW', vpname);
-                this.renderViewpoint(vpname);
+                this.deregisterViewModel();
+                this.renderConfiguration(vpname);
             });
 
             // Cell (viewpoint): right click;
@@ -446,10 +447,18 @@ export default {
             this.renderViewModel();
         },
 
-        renderViewpoint(vpname) {
-            let vpdata = this.archDataModifier.getViewpoint(vpname);
+        deregisterViewModel() {
+            this.jointPaper.off('element:pointerup');
+            this.jointPaper.off('link:pointerdown');
+            this.jointPaper.off('link:pointerup');
+            this.jointPaper.off('element:pointerdblclick');
+            this.jointPaper.off('element:contextmenu');
+            this.jointPaper.off('link:contextmenu');
+            this.jointPaper.off('blank:contextmenu');
+        },
 
-            console.log(vpdata);
+        renderConfiguration(cname) {
+            this.archDataModifier.getConfiguration(cname);
         },
     },
 
@@ -496,7 +505,8 @@ export default {
 
         EVENTBUS.$on('DELIVER_ENTERVIEW', function(payload) {
             _this.jointGraph.clear();
-            _this.renderViewpoint(payload);
+            _this.deregisterViewModel();
+            _this.renderConfiguration(payload);
         });
 
         EVENTBUS.$on('DELIVER_GOOVERVIEW', function() {
@@ -511,7 +521,6 @@ export default {
         EVENTBUS.$off('DELIVER_ENTERVIEW');
 
         this.archDataModifier.save();
-
         location.reload();
     }
 }

@@ -176,4 +176,14 @@ export default class ArchDataModifier {
         });
         return this;
     };
+
+
+
+    /*
+        Configuration;
+    */
+
+    getConfiguration(c) {
+        console.log(c);
+    };
 }
