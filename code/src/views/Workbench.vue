@@ -39,7 +39,7 @@
                         <v-btn
                             text
                             color="teal darken-1"
-                            @click='addLabel()'
+                            @click='addConnectionLabel()'
                         >
                             Add
                         </v-btn>
@@ -50,6 +50,15 @@
                             Cancel
                         </v-btn>
                     </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog
+            v-model="sizeDialog"
+            width='500'
+        >
+            <v-card>
+                <v-card-title>Resize</v-card-title>
             </v-card>
         </v-dialog>
     </div>
@@ -78,17 +87,24 @@ export default {
             jointGraph: null,
             jointPaper: null,
 
+            // Click menu;
             jointMenu: false,
             menuContext: '',
             menuX: 0,
             menuY: 0,
 
+            // Viewpoint cache;
             selectedView: {},
+            
+            // Connection cache;
             selectedLink: {},
 
+            // Connection label cache;
             selectedLinkModel: null,
             labelDialog: false,
-            labelInput: ''
+            labelInput: '',
+
+            sizeDialog: false
         }
     },
 
@@ -104,17 +120,40 @@ export default {
                             description: 'Create a new connection between views',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataModifier.addViewpointConnection(
+                                _this.archDataModifier.addConnection(
                                     _this.selectedView.sid, 
                                     _this.selectedView.spos
                                 ).save();
                                 _this.renderViewModel();
                             }
-                        }
+                        },
+
+                        /*{
+                            name: 'Resize',
+                            description: 'Resize the view',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.sizeDialog = true;
+                            }
+                        }*/
                     ];
 
                 case 'VM_LINK':
-                    return [
+                    let removeConnection = 
+                        {
+                            name:'Remove Connection',
+                            description: 'Remove this connection',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.archDataModifier.deleteConnection(
+                                    _this.selectedLink.lsource, 
+                                    _this.selectedLink.ltarget
+                                ).save();
+                                _this.renderViewModel();
+                            }
+                        };
+
+                    let addLabel = 
                         {
                             name: 'Add Label',
                             description: 'Add label to this connection',
@@ -122,46 +161,31 @@ export default {
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
                             }
-                        },
-
+                        };
+                    
+                    let removeLabel =
                         {
                             name: 'Remove Label',
                             description: 'Remove label from this connection',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.removeLabel();
+                                _this.removeConnectionLabel();
                             }
-                        },
+                        };
 
-                        {
-                            name:'Remove Connection',
-                            description: 'Remove this connection',
-                            action: function() {
-                                _this.jointMenu = false;
-                                _this.archDataModifier.deleteViewpointConnection(
-                                    _this.selectedLink.lsource, 
-                                    _this.selectedLink.ltarget
-                                ).save();
-                                _this.renderViewModel();
-                            }
-                        }
-                    ];
-                
+                    let menu = _this.selectedLink.llabel > 0
+                        ? [removeConnection, removeLabel]
+                        : [removeConnection, addLabel];
+
+                    return menu;
                 case 'VM_BLANK':
                     return [
                         {
                             name: 'New View',
                             description: 'Create a new view',
                             action: function() {
+                                _this.jointMenu = false;
                                 EVENTBUS.$emit('INVOKE_CREATEVIEW');
-                            }
-                        },
-
-                        {
-                            name: 'New View Connection',
-                            description: 'Create a new arbitrary view connection',
-                            action: function() {
-                                // TODO Arbitrary connection;
                             }
                         }
                     ];
@@ -180,6 +204,7 @@ export default {
             return target[0];
         },
 
+        // Update top bar options;
         setTopBar() {
             let _this = this;
 
@@ -194,16 +219,20 @@ export default {
             this.menuY = e.originalEvent.clientY;
         },
 
+        // Refresh workbench;
         renderViewModel() {
             setTimeout(() => {
                 this.jointGraph.clear();
                 this.setViewModel();
-            }, 200);
+            }, 400);
         },
         
+
+
+        // View model: top level view, consisting of viewpoints (top-level component) & connections (top-level connector);
         setViewModel() {
-            let viewpoints = this.archDataModifier.getViewModel();
-            let viewpointConnections = this.archDataModifier.getViewpointConnections();
+            let viewpoints = this.archDataModifier.getViewpoints();
+            let connections = this.archDataModifier.getConnections();
             let viewpoint, vpshape, conshape;
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
@@ -226,7 +255,7 @@ export default {
                 vpshape.addTo(this.jointGraph);
             });
 
-            viewpointConnections.map((c) => {
+            connections.map((c) => {
                 conshape = new JOINT.shapes.standard.Link();
                 (typeof c.source === 'string')
                     ? conshape.source(this.getCell(c.source))
@@ -252,7 +281,7 @@ export default {
                 conshape.addTo(this.jointGraph);
             });
 
-            // Cell: drag & drop;
+            // Cell (viewpoint): drag & drop;
             this.jointPaper.on('element:pointerup', (elementView) => {
                 this.archDataModifier.updateViewpoint(
                     'position',
@@ -261,7 +290,7 @@ export default {
                 ).save();
             });
 
-            // Link: drag & drop;
+            // Link (connection): drag & drop;
             this.jointPaper.on('link:pointerdown', (linkView) => {
                 this.selectedLink = {
                     lsource: linkView.sourceView 
@@ -269,7 +298,8 @@ export default {
                         : linkView.sourcePoint,
                     ltarget: linkView.targetView
                         ? linkView.targetView.model.vpid
-                        : linkView.targetPoint
+                        : linkView.targetPoint,
+                    llabel: linkView.model.attributes.labels.length
                 };
             });
 
@@ -279,8 +309,8 @@ export default {
                 
                 if(nearbyElements.length !== 0) {
                     if(linkView.sourcePoint.x === x && linkView.sourcePoint.y === y) {
-                        this.archDataModifier.updateViewpointConnection(
-                            'length',
+                        this.archDataModifier.updateConnection(
+                            'link',
                             this.selectedLink,
                             {
                                 newSource: nearbyElements[0].vpid,
@@ -290,8 +320,8 @@ export default {
                             }
                         ).save();
                     } else if(linkView.targetPoint.x === x && linkView.targetPoint.y === y) {
-                        this.archDataModifier.updateViewpointConnection(
-                            'length',
+                        this.archDataModifier.updateConnection(
+                            'link',
                             this.selectedLink,
                             {
                                 newSource: linkView.sourceView
@@ -302,8 +332,8 @@ export default {
                         ).save();
                     }
                 } else {
-                    this.archDataModifier.updateViewpointConnection(
-                        'length',
+                    this.archDataModifier.updateConnection(
+                        'link',
                         this.selectedLink,
                         {
                             newSource: linkView.sourceView
@@ -319,7 +349,7 @@ export default {
                 this.renderViewModel();
             });
 
-            // Cell: left double click; 
+            // Cell (viewpoint): left double click; 
             this.jointPaper.on('element:pointerdblclick', (elementView, evt) => {
                 let vpname = elementView.model.attr().label.text;
 
@@ -327,7 +357,7 @@ export default {
                 this.renderViewpoint(vpname);
             });
 
-            // Cell: right click;
+            // Cell (viewpoint): right click;
             this.jointPaper.on('element:contextmenu', (elementView, evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_ELEMENT';
@@ -342,7 +372,7 @@ export default {
                 this.setMenuCoordinate(evt);
             });
 
-            // Link: right click;
+            // Link (connection): right click;
             this.jointPaper.on('link:contextmenu', (linkView, evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_LINK';
@@ -352,7 +382,8 @@ export default {
                         : linkView.sourcePoint,
                     ltarget: linkView.targetView
                         ? linkView.targetView.model.vpid
-                        : linkView.targetPoint
+                        : linkView.targetPoint,
+                    llabel: linkView.model.attributes.labels.length
                 };
                 this.selectedLinkModel = linkView.model;
 
@@ -371,15 +402,16 @@ export default {
             });
         },
         
-        addLabel() {
+        // Add link (connection) label;
+        addConnectionLabel() {
             this.labelDialog = false;
 
             this.selectedLinkModel.appendLabel({ 
                 attrs: { text: { text: this.labelInput } } 
             });
 
-            this.archDataModifier.updateViewpointConnection(
-                'label',
+            this.archDataModifier.updateConnection(
+                'alabel',
                 this.selectedLink,
                 this.labelInput
             ).save();
@@ -388,9 +420,10 @@ export default {
             this.renderViewModel();
         },
 
-        removeLabel() {
-            this.archDataModifier.updateViewpointConnection(
-                'clear',
+        // Remove link (connection) label;
+        removeConnectionLabel() {
+            this.archDataModifier.updateConnection(
+                'rlabel',
                 this.selectedLink
             ).save();
 
@@ -431,7 +464,7 @@ export default {
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.getViewModel());
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.getViewpoints());
             }, 200);
         });
 
