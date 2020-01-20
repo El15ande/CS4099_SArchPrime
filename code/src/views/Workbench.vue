@@ -25,7 +25,7 @@
             width='500'
         >
             <v-card>
-                <v-card-title>Add label</v-card-title>
+                <v-card-title>{{ labelDialogTitle }}</v-card-title>
                 <v-card-actions>
                     <v-text-field
                         v-model="labelInput"
@@ -41,7 +41,7 @@
                             color="teal darken-1"
                             @click='addConnectionLabel()'
                         >
-                            Add
+                            Add/Edit
                         </v-btn>
                         <v-btn
                             text
@@ -102,6 +102,7 @@ export default {
             // Connection label cache;
             selectedLinkModel: null,
             labelDialog: false,
+            labelDialogTitle: '',
             labelInput: '',
 
             sizeDialog: false
@@ -160,6 +161,21 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
+                                _this.labelDialogTitle = 'Add Label'
+                            }
+                        };
+                    
+                    let editLabel = 
+                        {
+                            name: 'Edit Label',
+                            description: 'Edit label',
+                            action: function() {
+                                console.log(_this.selectedLink.llabel);
+
+                                _this.jointMenu = false;
+                                _this.labelDialog = true;
+                                _this.labelDialogTitle = 'Edit Label'
+                                _this.labelInput = _this.selectedLink.llabel[0].attrs.text.text;
                             }
                         };
                     
@@ -173,8 +189,8 @@ export default {
                             }
                         };
 
-                    let menu = _this.selectedLink.llabel > 0
-                        ? [removeConnection, removeLabel]
+                    let menu = _this.selectedLink.llabel.length > 0
+                        ? [removeConnection, editLabel, removeLabel]
                         : [removeConnection, addLabel];
 
                     return menu;
@@ -299,7 +315,7 @@ export default {
                     ltarget: linkView.targetView
                         ? linkView.targetView.model.vpid
                         : linkView.targetPoint,
-                    llabel: linkView.model.attributes.labels.length
+                    llabel: linkView.model.attributes.labels
                 };
             });
 
@@ -383,7 +399,7 @@ export default {
                     ltarget: linkView.targetView
                         ? linkView.targetView.model.vpid
                         : linkView.targetPoint,
-                    llabel: linkView.model.attributes.labels.length
+                    llabel: linkView.model.attributes.labels
                 };
                 this.selectedLinkModel = linkView.model;
 

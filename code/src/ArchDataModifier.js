@@ -164,6 +164,7 @@ export default class ArchDataModifier {
                         c.target = after.newTarget;
                         break;
                     case 'alabel':
+                        c.labels = [];
                         c.labels.push(after);
                         break;
                     case 'rlabel':
