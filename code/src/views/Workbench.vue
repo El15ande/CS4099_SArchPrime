@@ -52,15 +52,6 @@
                     </v-card-actions>
             </v-card>
         </v-dialog>
-
-        <v-dialog
-            v-model="sizeDialog"
-            width='500'
-        >
-            <v-card>
-                <v-card-title>Resize</v-card-title>
-            </v-card>
-        </v-dialog>
     </div>
 </template>
 
@@ -74,7 +65,8 @@
 
 <script>
 import { EVENTBUS, AxiosRequest } from '../main.js';
-import ArchDataModifier from '../ArchDataModifier.js';
+import ArchDataAdapator from '../ArchDataAdapator.js';
+import ArchGraphComponent from '../ArchGraphComponent.js';
 import $ from 'jquery';
 import * as JOINT from 'jointjs';
 
@@ -82,7 +74,7 @@ export default {
     data() {
         return {
             title: '',
-            archDataModifier: {},
+            archDataAdapator: {},
 
             jointGraph: null,
             jointPaper: null,
@@ -104,8 +96,6 @@ export default {
             labelDialog: false,
             labelDialogTitle: '',
             labelInput: '',
-
-            sizeDialog: false
         }
     },
 
@@ -121,22 +111,13 @@ export default {
                             description: 'Create a new connection between views',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataModifier.addConnection(
+                                _this.archDataAdapator.addConnection(
                                     _this.selectedView.sid, 
                                     _this.selectedView.spos
                                 ).save();
                                 _this.renderViewModel();
                             }
-                        },
-
-                        /*{
-                            name: 'Resize',
-                            description: 'Resize the view',
-                            action: function() {
-                                _this.jointMenu = false;
-                                _this.sizeDialog = true;
-                            }
-                        }*/
+                        }
                     ];
 
                 case 'VM_LINK':
@@ -146,7 +127,7 @@ export default {
                             description: 'Remove this connection',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataModifier.deleteConnection(
+                                _this.archDataAdapator.deleteConnection(
                                     _this.selectedLink.lsource, 
                                     _this.selectedLink.ltarget
                                 ).save();
@@ -170,8 +151,6 @@ export default {
                             name: 'Edit Label',
                             description: 'Edit label',
                             action: function() {
-                                console.log(_this.selectedLink.llabel);
-
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
                                 _this.labelDialogTitle = 'Edit Label'
@@ -226,7 +205,7 @@ export default {
 
             this.title = this.$route.params.name;
             AxiosRequest('get', `arch/${_this.title}`, null, (res) => {
-                if(res.data) _this.archDataModifier = new ArchDataModifier(res.data);
+                if(res.data) _this.archDataAdapator = new ArchDataAdapator(res.data);
             });
         },
 
@@ -247,15 +226,15 @@ export default {
 
         // View model: top level view, consisting of viewpoints (top-level component) & connections (top-level connector);
         setViewModel() {
-            let viewpoints = this.archDataModifier.getViewpoints();
-            let connections = this.archDataModifier.getConnections();
+            let viewpoints = this.archDataAdapator.getViewpoints();
+            let connections = this.archDataAdapator.getConnections();
             let viewpoint, vpshape, conshape;
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
 
             viewpoints.map((vp) => {
-                viewpoint = this.archDataModifier.getViewpoint(vp);
+                viewpoint = this.archDataAdapator.getViewpoint(vp);
                 vpshape = new JOINT.shapes.standard.Rectangle();
 
                 vpshape.position(viewpoint.canvas.x, viewpoint.canvas.y);
@@ -267,7 +246,7 @@ export default {
                     }
                 });
                 vpshape.vpid = vp;
-
+                
                 vpshape.addTo(this.jointGraph);
             });
 
@@ -299,7 +278,7 @@ export default {
 
             // Cell (viewpoint): drag & drop;
             this.jointPaper.on('element:pointerup', (elementView) => {
-                this.archDataModifier.updateViewpoint(
+                this.archDataAdapator.updateViewpoint(
                     'position',
                     elementView.model.attr().label.text, 
                     elementView.model.attributes.position
@@ -325,7 +304,7 @@ export default {
                 
                 if(nearbyElements.length !== 0) {
                     if(linkView.sourcePoint.x === x && linkView.sourcePoint.y === y) {
-                        this.archDataModifier.updateConnection(
+                        this.archDataAdapator.updateConnection(
                             'link',
                             this.selectedLink,
                             {
@@ -336,7 +315,7 @@ export default {
                             }
                         ).save();
                     } else if(linkView.targetPoint.x === x && linkView.targetPoint.y === y) {
-                        this.archDataModifier.updateConnection(
+                        this.archDataAdapator.updateConnection(
                             'link',
                             this.selectedLink,
                             {
@@ -348,7 +327,9 @@ export default {
                         ).save();
                     }
                 } else {
-                    this.archDataModifier.updateConnection(
+                    console.log(linkView.source);
+
+                    this.archDataAdapator.updateConnection(
                         'link',
                         this.selectedLink,
                         {
@@ -427,7 +408,7 @@ export default {
                 attrs: { text: { text: this.labelInput } } 
             });
 
-            this.archDataModifier.updateConnection(
+            this.archDataAdapator.updateConnection(
                 'alabel',
                 this.selectedLink,
                 this.labelInput
@@ -439,7 +420,7 @@ export default {
 
         // Remove link (connection) label;
         removeConnectionLabel() {
-            this.archDataModifier.updateConnection(
+            this.archDataAdapator.updateConnection(
                 'rlabel',
                 this.selectedLink
             ).save();
@@ -458,7 +439,10 @@ export default {
         },
 
         renderConfiguration(cname) {
-            this.archDataModifier.getConfiguration(cname);
+            this.archDataAdapator.getConfiguration(cname);
+
+            var shapey = new ArchGraphComponent(cname);
+            shapey.addTo(this.jointGraph);
         },
     },
 
@@ -489,17 +473,17 @@ export default {
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataModifier.getViewpoints());
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataAdapator.getViewpoints());
             }, 200);
         });
 
         EVENTBUS.$on('DELIVER_CREATEVIEW', function(payload) {
-            _this.archDataModifier.addViewpoint(payload).save();
+            _this.archDataAdapator.addViewpoint(payload).save();
             _this.renderViewModel();
         });
 
         EVENTBUS.$on('DELIVER_REMOVEVIEW', function(payload) {
-            _this.archDataModifier.deleteViewpoint(payload).save();
+            _this.archDataAdapator.deleteViewpoint(payload).save();
             _this.renderViewModel();
         });
 
@@ -520,7 +504,7 @@ export default {
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
         EVENTBUS.$off('DELIVER_ENTERVIEW');
 
-        this.archDataModifier.save();
+        this.archDataAdapator.save();
         location.reload();
     }
 }

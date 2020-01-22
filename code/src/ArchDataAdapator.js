@@ -1,6 +1,6 @@
 import { AxiosRequest } from './main.js';
 
-export default class ArchDataModifier {
+export default class ArchDataAdapator {
     constructor(data) {
         this.data = data;
     }
@@ -184,6 +184,6 @@ export default class ArchDataModifier {
     */
 
     getConfiguration(c) {
-        console.log(c);
+        // console.log(c);
     };
 }
