@@ -439,9 +439,10 @@ export default {
         },
 
         renderConfiguration(cname) {
-            this.archDataAdapator.getConfiguration(cname);
+            let x = this.archDataAdapator.makeComponent();
+            x.cpname = 'waht';
 
-            var shapey = new ArchGraphComponent(cname);
+            var shapey = new ArchGraphComponent(x);
             shapey.addTo(this.jointGraph);
         },
     },

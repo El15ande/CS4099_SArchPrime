@@ -58,6 +58,25 @@ export default class ArchDataAdapator {
         }
     };
 
+    makeComponent = function() {
+        let canvas = this.makeCanvas();
+
+        return {
+            canvas,
+
+            /*
+                Component & connector hierarchy;
+            */
+           component: [],
+           connector: [],
+
+            /*
+                Component name;
+            */
+            cpname: ''
+        }
+    };
+
 
 
     /*

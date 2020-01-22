@@ -1,22 +1,24 @@
 import * as JOINT from 'jointjs'
 
 export default class ArchGraphComponent {
-    constructor(name) {
+    constructor(data) {
         this.jointComponent = new JOINT.shapes.devs.Model({
             attrs: {
                 '.label': {
-                    text: name
-                }
+                    text: data.cpname,
+                    'y': data.canvas.height / 2 - 5, // Font position;
+                    'font-size': 20 // Font size;
+                },
             },
 
             position: {
-                x: 100,
-                y: 100
+                x: data.canvas.x,
+                y: data.canvas.y
             },
 
             size: {
-                width: 200,
-                height: 100
+                width: data.canvas.width,
+                height: data.canvas.height
             },
 
             inPorts: [],
