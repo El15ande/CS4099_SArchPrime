@@ -129,14 +129,14 @@ export default {
             menuX: 0,
             menuY: 0,
 
-            // Viewpoint cache;
-            selectedView: {},
+            // Component cache;
+            selectedComponent: {},
             
-            // Connection cache;
-            selectedLink: {},
+            // Connector cache;
+            selectedConnector: {},
 
             // Connection label cache;
-            selectedLinkModel: null,
+            selectedConnectorModel: null,
             labelDialog: false,
             labelDialogTitle: '',
             labelInput: '',
@@ -161,8 +161,8 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.addConnection(
-                                    _this.selectedView.sid, 
-                                    _this.selectedView.spos
+                                    _this.selectedComponent.sid, 
+                                    _this.selectedComponent.spos
                                 ).save();
                                 _this.renderViewModel();
                             }
@@ -174,8 +174,8 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.resizeDialog = true;
-                                _this.resizeWidth = _this.selectedView.ssize.width / 20;
-                                _this.resizeHeight = _this.selectedView.ssize.height / 20;
+                                _this.resizeWidth = _this.selectedComponent.ssize.width / 20;
+                                _this.resizeHeight = _this.selectedComponent.ssize.height / 20;
                             }
                         }
                     ];
@@ -188,8 +188,8 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.deleteConnection(
-                                    _this.selectedLink.lsource, 
-                                    _this.selectedLink.ltarget
+                                    _this.selectedConnector.lsource, 
+                                    _this.selectedConnector.ltarget
                                 ).save();
                                 _this.renderViewModel();
                             }
@@ -214,7 +214,7 @@ export default {
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
                                 _this.labelDialogTitle = 'Edit Label'
-                                _this.labelInput = _this.selectedLink.llabel[0].attrs.text.text;
+                                _this.labelInput = _this.selectedConnector.llabel[0].attrs.text.text;
                             }
                         };
                     
@@ -228,11 +228,12 @@ export default {
                             }
                         };
 
-                    let menu = _this.selectedLink.llabel.length > 0
+                    let menu = _this.selectedConnector.llabel.length > 0
                         ? [removeConnection, editLabel, removeLabel]
                         : [removeConnection, addLabel];
 
                     return menu;
+                
                 case 'VM_BLANK':
                     return [
                         {
@@ -241,6 +242,24 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 EVENTBUS.$emit('INVOKE_CREATEVIEW');
+                            }
+                        }
+                    ];
+                
+                case 'CFG_BLANK':
+                    return [
+                        {
+                            name: 'Back',
+                            description: 'Return back to previous level',
+                            action: function() {
+                                _this.jointMenu = false;
+                                
+                                if(_this.selectedComponent.sid === 0) {
+                                    EVENTBUS.$emit('INVOKE_ENTERVIEW', null);
+                                    _this.renderViewModel();
+                                } else {
+
+                                }
                             }
                         }
                     ];
@@ -284,7 +303,11 @@ export default {
         
 
 
-        // View model: top level view, consisting of viewpoints (top-level component) & connections (top-level connector);
+        /* 
+            View model level: top level view, consisting of viewpoints (top-level component) & connections (top-level connector);
+        */
+
+       // Setter;
         setViewModel() {
             let viewpoints = this.archDataAdapator.getViewpoints();
             let connections = this.archDataAdapator.getConnections();
@@ -347,7 +370,7 @@ export default {
 
             // Link (connection): drag & drop;
             this.jointPaper.on('link:pointerdown', (linkView) => {
-                this.selectedLink = {
+                this.selectedConnector = {
                     lsource: linkView.sourceView 
                         ? linkView.sourceView.model.vpid
                         : linkView.sourcePoint,
@@ -366,7 +389,7 @@ export default {
                     if(linkView.sourcePoint.x === x && linkView.sourcePoint.y === y) {
                         this.archDataAdapator.updateConnection(
                             'link',
-                            this.selectedLink,
+                            this.selectedConnector,
                             {
                                 newSource: nearbyElements[0].vpid,
                                 newTarget: linkView.targetView
@@ -377,7 +400,7 @@ export default {
                     } else if(linkView.targetPoint.x === x && linkView.targetPoint.y === y) {
                         this.archDataAdapator.updateConnection(
                             'link',
-                            this.selectedLink,
+                            this.selectedConnector,
                             {
                                 newSource: linkView.sourceView
                                     ? linkView.sourceView.model.vpid
@@ -389,7 +412,7 @@ export default {
                 } else {
                     this.archDataAdapator.updateConnection(
                         'link',
-                        this.selectedLink,
+                        this.selectedConnector,
                         {
                             newSource: linkView.sourceView
                                 ? linkView.sourceView.model.vpid
@@ -406,18 +429,14 @@ export default {
 
             // Cell (viewpoint): left double click; 
             this.jointPaper.on('element:pointerdblclick', (elementView, evt) => {
-                let vpname = elementView.model.attr().label.text;
-
-                EVENTBUS.$emit('INVOKE_ENTERVIEW', vpname);
-                this.deregisterViewModel();
-                this.renderConfiguration(vpname);
+                EVENTBUS.$emit('INVOKE_ENTERVIEW', elementView.model.attr().label.text);
             });
 
             // Cell (viewpoint): right click;
             this.jointPaper.on('element:contextmenu', (elementView, evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_ELEMENT';
-                this.selectedView = {
+                this.selectedComponent = {
                     sid: elementView.model.vpid,
                     spos: {
                         x: elementView.model.attributes.position.x + elementView.model.attributes.size.width / 2,
@@ -433,7 +452,7 @@ export default {
             this.jointPaper.on('link:contextmenu', (linkView, evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_LINK';
-                this.selectedLink = {
+                this.selectedConnector = {
                     lsource: linkView.sourceView 
                         ? linkView.sourceView.model.vpid
                         : linkView.sourcePoint,
@@ -442,7 +461,7 @@ export default {
                         : linkView.targetPoint,
                     llabel: linkView.model.attributes.labels
                 };
-                this.selectedLinkModel = linkView.model;
+                this.selectedConnectorModel = linkView.model;
 
                 this.setMenuCoordinate(evt);
             });
@@ -451,7 +470,7 @@ export default {
             this.jointPaper.on('blank:contextmenu', (evt) => {
                 this.jointMenu = true;
                 this.menuContext = 'VM_BLANK';
-                this.selectedView.spos = {
+                this.selectedComponent.spos = {
                     x: evt.offsetX,
                     y: evt.offsetY
                 }
@@ -463,13 +482,13 @@ export default {
         addConnectionLabel() {
             this.labelDialog = false;
 
-            this.selectedLinkModel.appendLabel({ 
+            this.selectedConnectorModel.appendLabel({ 
                 attrs: { text: { text: this.labelInput } } 
             });
 
             this.archDataAdapator.updateConnection(
                 'alabel',
-                this.selectedLink,
+                this.selectedConnector,
                 this.labelInput
             ).save();
 
@@ -481,7 +500,7 @@ export default {
         removeConnectionLabel() {
             this.archDataAdapator.updateConnection(
                 'rlabel',
-                this.selectedLink
+                this.selectedConnector
             ).save();
 
             this.renderViewModel();
@@ -492,7 +511,7 @@ export default {
 
             this.archDataAdapator.updateViewpoint(
                 'resize',
-                this.selectedView.sid,
+                this.selectedComponent.sid,
                 {
                     width: Math.ceil(this.resizeWidth) * 20,
                     height: Math.ceil(this.resizeHeight) * 20
@@ -510,14 +529,35 @@ export default {
             this.jointPaper.off('element:contextmenu');
             this.jointPaper.off('link:contextmenu');
             this.jointPaper.off('blank:contextmenu');
+
+            this.selectedComponent = {};
+            this.selctedConnector = {};
         },
 
-        renderConfiguration(cname) {
-            let x = this.archDataAdapator.makeComponent();
-            x.cpname = 'waht';
 
-            var shapey = new ArchGraphComponent(x);
-            shapey.addTo(this.jointGraph);
+
+        /*
+            Configuration level: 
+        */
+
+        // Setter;
+        renderConfiguration(cid, cname) {
+            let configuration = this.archDataAdapator.getConfiguration(cid, cname);
+            console.log(configuration);
+            
+            this.jointPaper.on('blank:contextmenu', (evt) => {
+                this.jointMenu = true;
+                this.menuContext = 'CFG_BLANK';
+                this.selectedComponent = {
+                    sid: cid,
+                    sname: cname,
+                    spos: {
+                        x: evt.offsetX,
+                        y: evt.offsetY
+                    }
+                };
+                this.setMenuCoordinate(evt);
+            });
         },
     },
 
@@ -565,7 +605,7 @@ export default {
         EVENTBUS.$on('DELIVER_ENTERVIEW', function(payload) {
             _this.jointGraph.clear();
             _this.deregisterViewModel();
-            _this.renderConfiguration(payload);
+            _this.renderConfiguration(0, payload);
         });
 
         EVENTBUS.$on('DELIVER_GOOVERVIEW', function() {

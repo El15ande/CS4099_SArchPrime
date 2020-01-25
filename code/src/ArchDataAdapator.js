@@ -3,6 +3,7 @@ import { AxiosRequest } from './main.js';
 export default class ArchDataAdapator {
     constructor(data) {
         this.data = data;
+        
     }
 
     // Post current data to the server;
@@ -71,8 +72,9 @@ export default class ArchDataAdapator {
            connector: [],
 
             /*
-                Component name;
+                Component id & name;
             */
+            cpid: 0,
             cpname: ''
         }
     };
@@ -206,7 +208,11 @@ export default class ArchDataAdapator {
         Configuration;
     */
 
-    getConfiguration(c) {
-        // console.log(c);
+    getConfiguration(cid, cname) {
+        if(cid === 0) { // Viewpoint data;
+            return this.data[cname];
+        } else { // Hierarhchical component data;
+
+        }
     };
 }
