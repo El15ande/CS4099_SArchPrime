@@ -52,6 +52,50 @@
                     </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog
+            v-model="resizeDialog"
+            width='500'
+        >
+            <v-card>
+                <v-card-title>Resize</v-card-title>
+                <v-card-actions>
+                    <v-col md='6'>
+                        <v-text-field
+                            v-model="resizeWidth"
+                            outlined
+                            :rules="['Required']"
+                            label="Current width (block)" 
+                        />
+                    </v-col>
+
+                    <v-col md='6'>
+                        <v-text-field
+                            v-model="resizeHeight"
+                            outlined
+                            :rules="['Required']"
+                            label="Current height (block)" 
+                        />
+                    </v-col>
+                </v-card-actions>
+                <v-card-actions>
+                        <v-spacer />
+                        <v-btn
+                            text
+                            color="teal darken-1"
+                            @click='resizeViewpoint()'
+                        >
+                            Resize
+                        </v-btn>
+                        <v-btn
+                            text
+                            @click='resizeDialog = false'
+                        >
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -96,6 +140,11 @@ export default {
             labelDialog: false,
             labelDialogTitle: '',
             labelInput: '',
+
+            // Resize cache;
+            resizeDialog: false,
+            resizeWidth: 0,
+            resizeHeight: 0,
         }
     },
 
@@ -116,6 +165,17 @@ export default {
                                     _this.selectedView.spos
                                 ).save();
                                 _this.renderViewModel();
+                            }
+                        },
+
+                        {
+                            name: 'Resize',
+                            description: 'Resize the viewpoint',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.resizeDialog = true;
+                                _this.resizeWidth = _this.selectedView.ssize.width / 20;
+                                _this.resizeHeight = _this.selectedView.ssize.height / 20;
                             }
                         }
                     ];
@@ -242,7 +302,7 @@ export default {
                 vpshape.attr({
                     label: { 
                         text: vp,
-                        'font-size': (viewpoint.canvas.width * viewpoint.canvas.height) / 1200
+                        'font-size': 20 // (viewpoint.canvas.width * viewpoint.canvas.height) / 1200
                     }
                 });
                 vpshape.vpid = vp;
@@ -327,8 +387,6 @@ export default {
                         ).save();
                     }
                 } else {
-                    console.log(linkView.source);
-
                     this.archDataAdapator.updateConnection(
                         'link',
                         this.selectedLink,
@@ -364,7 +422,8 @@ export default {
                     spos: {
                         x: elementView.model.attributes.position.x + elementView.model.attributes.size.width / 2,
                         y: elementView.model.attributes.position.y + elementView.model.attributes.size.height + 40
-                    }
+                    },
+                    ssize: elementView.model.attributes.size
                 };
 
                 this.setMenuCoordinate(evt);
@@ -423,6 +482,21 @@ export default {
             this.archDataAdapator.updateConnection(
                 'rlabel',
                 this.selectedLink
+            ).save();
+
+            this.renderViewModel();
+        },
+
+        resizeViewpoint() {
+            this.resizeDialog = false;
+
+            this.archDataAdapator.updateViewpoint(
+                'resize',
+                this.selectedView.sid,
+                {
+                    width: Math.ceil(this.resizeWidth) * 20,
+                    height: Math.ceil(this.resizeHeight) * 20
+                }
             ).save();
 
             this.renderViewModel();

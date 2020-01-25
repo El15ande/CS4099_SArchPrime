@@ -126,6 +126,10 @@ export default class ArchDataAdapator {
                 this.data[vpname].canvas.x = v.x;
                 this.data[vpname].canvas.y = v.y;
                 break;
+            case 'resize':
+                this.data[vpname].canvas.width = v.width;
+                this.data[vpname].canvas.height = v.height;
+                break;
             default: break;
         }
 
