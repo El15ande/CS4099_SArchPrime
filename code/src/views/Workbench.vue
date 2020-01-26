@@ -1,10 +1,10 @@
 <template>
     <div>
         <v-menu
-            v-model='jointMenu'
+            v-model="jointMenu"
             absolute
-            :position-x='menuX'
-            :position-y='menuY'
+            :position-x="menuX"
+            :position-y="menuY"
         >
             <v-list>
                 <v-list-item 
@@ -30,7 +30,6 @@
                     <v-text-field
                         v-model="labelInput"
                         outlined
-                        :rules="['Required']"
                         label="Label" 
                     />
                 </v-card-actions>
@@ -64,7 +63,6 @@
                         <v-text-field
                             v-model="resizeWidth"
                             outlined
-                            :rules="['Required']"
                             label="Current width (block)" 
                         />
                     </v-col>
@@ -73,7 +71,6 @@
                         <v-text-field
                             v-model="resizeHeight"
                             outlined
-                            :rules="['Required']"
                             label="Current height (block)" 
                         />
                     </v-col>
@@ -90,6 +87,43 @@
                         <v-btn
                             text
                             @click='resizeDialog = false'
+                        >
+                            Cancel
+                        </v-btn>
+                    </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+
+
+        <v-dialog
+            v-model="componentDialog"
+            width='500'
+        >
+            <v-card>
+                <v-card-title>Create new component</v-card-title>
+                <v-card-actions>
+                    <v-col md='12'>
+                        <v-text-field
+                            v-model="newComponentName"
+                            outlined
+                            :rules="['Required']"
+                            label="Component name" 
+                        />
+                    </v-col>
+                </v-card-actions>
+                <v-card-actions>
+                        <v-spacer />
+                        <v-btn
+                            text
+                            color="teal darken-1"
+                            @click='addComponent()'
+                        >
+                            Add/Edit
+                        </v-btn>
+                        <v-btn
+                            text
+                            @click='componentDialog = false'
                         >
                             Cancel
                         </v-btn>
@@ -145,6 +179,13 @@ export default {
             resizeDialog: false,
             resizeWidth: 0,
             resizeHeight: 0,
+
+
+
+            // Hierarchical component;
+            componentDialog: false,
+            newComponentName: '',
+
         }
     },
 
@@ -261,6 +302,15 @@ export default {
 
                                 }
                             }
+                        },
+
+                        {
+                            name: 'New component',
+                            description: 'Create a new component',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.componentDialog = true;
+                            }
                         }
                     ];
                 
@@ -303,11 +353,7 @@ export default {
         
 
 
-        /* 
-            View model level: top level view, consisting of viewpoints (top-level component) & connections (top-level connector);
-        */
-
-       // Setter;
+       // View model configuration setter;
         setViewModel() {
             let viewpoints = this.archDataAdapator.getViewpoints();
             let connections = this.archDataAdapator.getConnections();
@@ -536,28 +582,41 @@ export default {
 
 
 
-        /*
-            Configuration level: 
-        */
-
-        // Setter;
+        // Hierarchical configuration setter;
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
-            console.log(configuration);
+            let componentShape;
+
+            if(configuration) {
+                configuration.component.map((data) => {
+                    componentShape = new ArchGraphComponent(data);
+
+                    componentShape.addTo(this.jointGraph);
+                });
+
+                // Blank space: right click;
+                this.jointPaper.on('blank:contextmenu', (evt) => {
+                    this.jointMenu = true;
+                    this.menuContext = 'CFG_BLANK';
+                    this.selectedComponent = {
+                        sid: cid,
+                        sname: cname,
+                        spos: {
+                            x: evt.offsetX,
+                            y: evt.offsetY
+                        }
+                    };
+                    this.setMenuCoordinate(evt);
+                });
+            }  
+        },
+
+        addComponent() {
+            this.componentDialog = false;
+
+            this.archDataAdapator.addComponent(this.selectedComponent, this.newComponentName).save();
             
-            this.jointPaper.on('blank:contextmenu', (evt) => {
-                this.jointMenu = true;
-                this.menuContext = 'CFG_BLANK';
-                this.selectedComponent = {
-                    sid: cid,
-                    sname: cname,
-                    spos: {
-                        x: evt.offsetX,
-                        y: evt.offsetY
-                    }
-                };
-                this.setMenuCoordinate(evt);
-            });
+            this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
     },
 
@@ -611,6 +670,14 @@ export default {
         EVENTBUS.$on('DELIVER_GOOVERVIEW', function() {
             _this.renderViewModel();
         });
+
+
+
+        EVENTBUS.$on('ERROR_CONFIGNOTFOUND', function(id, name) {
+            // TODO Display error message;
+            _this.jointGraph.clear();
+            _this.renderConfiguration(id, name);
+        })
     },
 
     beforeDestroy() {
@@ -618,6 +685,7 @@ export default {
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
         EVENTBUS.$off('DELIVER_ENTERVIEW');
+        EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
 
         this.archDataAdapator.save();
         location.reload();

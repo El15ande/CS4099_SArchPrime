@@ -1,9 +1,9 @@
-import { AxiosRequest } from './main.js';
+import { EVENTBUS, AxiosRequest } from './main.js';
 
 export default class ArchDataAdapator {
     constructor(data) {
         this.data = data;
-        
+
     }
 
     // Post current data to the server;
@@ -205,7 +205,7 @@ export default class ArchDataAdapator {
 
 
     /*
-        Configuration;
+        Configurations;
     */
 
     getConfiguration(cid, cname) {
@@ -215,4 +215,20 @@ export default class ArchDataAdapator {
 
         }
     };
+
+    addComponent(parent, cname) {
+        let parentConfig = this.getConfiguration(parent.sid, parent.sname+'??');
+        
+        if(parentConfig) {
+            let component = this.makeComponent();
+            component.canvas.x = parent.spos.x;
+            component.canvas.y = parent.spos.y;
+            component.cpid = parentConfig.component.length + 1;
+            component.cpname = cname;
+
+            parentConfig.component.push(component);
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+
+        return this;
+    }
 }
