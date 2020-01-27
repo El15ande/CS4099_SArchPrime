@@ -21,6 +21,29 @@
         </v-menu>
 
         <v-dialog
+            v-model="errorDialog"
+            width='500'
+        >
+            <v-card outlined>
+                <v-card-title>Error</v-card-title>
+                <v-card-text>
+                    <div>Code: {{ errorMessage }}.</div>
+                    <div>Please retry.</div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        text
+                        color="teal darken-1"
+                        @click='errorDialog = false'
+                    >
+                        OK
+                    </v-btn>
+                </v-card-actions>
+
+            </v-card>
+        </v-dialog>
+
+        <v-dialog
             v-model="labelDialog"
             width='500'
         >
@@ -34,21 +57,21 @@
                     />
                 </v-card-actions>
                 <v-card-actions>
-                        <v-spacer />
-                        <v-btn
-                            text
-                            color="teal darken-1"
-                            @click='addConnectionLabel()'
-                        >
-                            Add/Edit
-                        </v-btn>
-                        <v-btn
-                            text
-                            @click='labelDialog = false'
-                        >
-                            Cancel
-                        </v-btn>
-                    </v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        text
+                        color="teal darken-1"
+                        @click='addConnectionLabel()'
+                    >
+                        Add/Edit
+                    </v-btn>
+                    <v-btn
+                        text
+                        @click='labelDialog = false'
+                    >
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
 
@@ -76,21 +99,21 @@
                     </v-col>
                 </v-card-actions>
                 <v-card-actions>
-                        <v-spacer />
-                        <v-btn
-                            text
-                            color="teal darken-1"
-                            @click='resizeViewpoint()'
-                        >
-                            Resize
-                        </v-btn>
-                        <v-btn
-                            text
-                            @click='resizeDialog = false'
-                        >
-                            Cancel
-                        </v-btn>
-                    </v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        text
+                        color="teal darken-1"
+                        @click='resizeViewpoint()'
+                    >
+                        Resize
+                    </v-btn>
+                    <v-btn
+                        text
+                        @click='resizeDialog = false'
+                    >
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
 
@@ -157,6 +180,10 @@ export default {
             jointGraph: null,
             jointPaper: null,
 
+            // Error dialog;
+            errorDialog: false,
+            errorMessage: 'error',
+
             // Click menu;
             jointMenu: false,
             menuContext: '',
@@ -194,7 +221,7 @@ export default {
             let _this = this;
 
             switch (this.menuContext) {
-                case 'VM_ELEMENT':
+                case 'VM_ELEMENT': {
                     return [
                         {
                             name: 'New View Connection',
@@ -220,8 +247,8 @@ export default {
                             }
                         }
                     ];
-
-                case 'VM_LINK':
+                }
+                case 'VM_LINK': {
                     let removeConnection = 
                         {
                             name:'Remove Connection',
@@ -274,8 +301,8 @@ export default {
                         : [removeConnection, addLabel];
 
                     return menu;
-                
-                case 'VM_BLANK':
+                }
+                case 'VM_BLANK': {
                     return [
                         {
                             name: 'New View',
@@ -286,8 +313,8 @@ export default {
                             }
                         }
                     ];
-                
-                case 'CFG_BLANK':
+                }
+                case 'CFG_BLANK': {
                     return [
                         {
                             name: 'Back',
@@ -299,7 +326,7 @@ export default {
                                     EVENTBUS.$emit('INVOKE_ENTERVIEW', null);
                                     _this.renderViewModel();
                                 } else {
-
+                                    // TODO Hierarchical component return;
                                 }
                             }
                         },
@@ -313,8 +340,8 @@ export default {
                             }
                         }
                     ];
-                
-                default: return []; 
+                }
+                default: { return []; } 
             }
         }
     },
@@ -474,7 +501,7 @@ export default {
             });
 
             // Cell (viewpoint): left double click; 
-            this.jointPaper.on('element:pointerdblclick', (elementView, evt) => {
+            this.jointPaper.on('element:pointerdblclick', (elementView) => {
                 EVENTBUS.$emit('INVOKE_ENTERVIEW', elementView.model.attr().label.text);
             });
 
@@ -674,7 +701,9 @@ export default {
 
 
         EVENTBUS.$on('ERROR_CONFIGNOTFOUND', function(id, name) {
-            // TODO Display error message;
+            _this.errorDialog = true;
+            _this.errorMessage = 'Configuration not found';
+
             _this.jointGraph.clear();
             _this.renderConfiguration(id, name);
         })

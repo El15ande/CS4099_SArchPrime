@@ -217,7 +217,7 @@ export default class ArchDataAdapator {
     };
 
     addComponent(parent, cname) {
-        let parentConfig = this.getConfiguration(parent.sid, parent.sname+'??');
+        let parentConfig = this.getConfiguration(parent.sid, parent.sname);
         
         if(parentConfig) {
             let component = this.makeComponent();
