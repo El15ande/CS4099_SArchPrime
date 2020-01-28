@@ -6,6 +6,7 @@ export default class ArchDataAdapator {
         this.archQueue = [];
     };
 
+    // Get the last element in archQueue;
     qlast = function() {
         let last = null;
 
@@ -14,6 +15,8 @@ export default class ArchDataAdapator {
         return last;
     }
 
+    // Push payload into archQueue;
+    //  payload: item to be pushed;
     qpush = function(payload) {
         let lastItem = this.qlast();
 
@@ -23,11 +26,13 @@ export default class ArchDataAdapator {
         }
     }
 
+    // Pop the last element in archQueue;
     qpop = function() {
         this.archQueue.pop();
         console.log('QPOP', this.archQueue);
     }
 
+    // Clear current archQueue;
     qclear = function() {
         this.archQueue.length = 0;
         console.log('QCLEAR');
@@ -237,6 +242,9 @@ export default class ArchDataAdapator {
         Configurations;
     */
 
+    // Get configuration/component (containing component & connector arraies) through the archQueue and identification;
+    //  cid: configuration/component unique id;
+    //  cname: configuration/component name;
     getConfiguration = function(cid, cname) {
         if(cid === 0) { // Viewpoint data;
             return this.data[cname];
@@ -256,6 +264,9 @@ export default class ArchDataAdapator {
         }
     };
 
+    // Add a new component to current configuration;
+    //  parent: parent configuration;
+    //  cname: new component name;
     addComponent = function(parent, cname) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
 
