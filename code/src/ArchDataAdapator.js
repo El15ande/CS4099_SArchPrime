@@ -22,20 +22,23 @@ export default class ArchDataAdapator {
 
         if(lastItem === null || lastItem.cid !== payload.cid || lastItem.cname !== payload.cname) {
             this.archQueue.push(payload);
-            console.log('QPUSH', this.archQueue);
         }
+
+        return this;
     }
 
     // Pop the last element in archQueue;
     qpop = function() {
         this.archQueue.pop();
-        console.log('QPOP', this.archQueue);
+
+        return this;
     }
 
     // Clear current archQueue;
     qclear = function() {
         this.archQueue.length = 0;
-        console.log('QCLEAR');
+
+        return this;
     }
 
 
@@ -269,8 +272,6 @@ export default class ArchDataAdapator {
     //  cname: new component name;
     addComponent = function(parent, cname) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
-
-        console.log(parentConfig);
         
         if(parentConfig) {
             let component = this.makeComponent();
@@ -281,6 +282,23 @@ export default class ArchDataAdapator {
 
             parentConfig.component.push(component);
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+
+        return this;
+    };
+
+    updateComponent = function(attr, cid, cname, v) {
+        let component = this.getConfiguration(cid, cname);
+
+        if(component) {
+            switch(attr) {
+                case 'position': {
+                    component.canvas.x = v.x;
+                    component.canvas.y = v.y;
+                    break;
+                }
+                default: { break; }
+            }
+        }
 
         return this;
     }

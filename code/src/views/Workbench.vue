@@ -237,8 +237,8 @@ export default {
                         },
 
                         {
-                            name: 'Resize',
-                            description: 'Resize the viewpoint',
+                            name: 'Customise',
+                            description: 'Customise the viewpoint pattern',
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.resizeDialog = true;
@@ -401,7 +401,7 @@ export default {
                 vpshape.attr({
                     label: { 
                         text: vp,
-                        'font-size': 20 // (viewpoint.canvas.width * viewpoint.canvas.height) / 1200
+                        'font-size': 20
                     }
                 });
                 vpshape.vpid = vp;
@@ -615,9 +615,9 @@ export default {
         // Hierarchical configuration setter;
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
-            let componentShape;
-
-            console.log('RENDER', configuration, cid, cname);
+            let componentShape, connectorShape;
+            let graphicComponents = [];
+            let graphicConnectors = [];
 
             if(configuration) {
                 this.jointGraph.clear();
@@ -628,6 +628,7 @@ export default {
                     componentShape = new ArchGraphComponent(data);
 
                     componentShape.addTo(this.jointGraph);
+                    graphicComponents.push(componentShape);
                 });
 
                 // Blank space: right click;
@@ -649,6 +650,16 @@ export default {
                 this.jointPaper.on('element:pointerdblclick', (elementView) => {
                     this.renderConfiguration(elementView.model.attributes.cpid, elementView.model.attr()['.label'].text);
                 });
+
+                // Component: drag & drop;
+                this.jointPaper.on('element:pointerup', (elementView) => {
+                    this.archDataAdapator.updateComponent(
+                        'position',
+                        elementView.model.attributes.cpid,
+                        elementView.model.attr()['.label'].text,
+                        elementView.model.attributes.position
+                    ).save();
+                });
             }  
         },
 
@@ -663,6 +674,7 @@ export default {
         deregisterConfiguration() {
             this.jointPaper.off('blank:contextmenu');
             this.jointPaper.off('element:pointerdblclick');
+            this.jointPaper.off('element:pointerup');
         }
     },
 
