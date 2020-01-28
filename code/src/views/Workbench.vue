@@ -326,7 +326,9 @@ export default {
                                     EVENTBUS.$emit('INVOKE_ENTERVIEW', null);
                                     _this.renderViewModel();
                                 } else {
-                                    // TODO Hierarchical component return;
+                                    _this.archDataAdapator.qpop();
+                                    let parent = _this.archDataAdapator.qlast();
+                                    _this.renderConfiguration(parent.cid, parent.cname);
                                 }
                             }
                         },
@@ -388,6 +390,7 @@ export default {
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
+            this.archDataAdapator.qclear();
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdapator.getViewpoint(vp);
@@ -615,6 +618,9 @@ export default {
             let componentShape;
 
             if(configuration) {
+                this.jointGraph.clear();
+                this.archDataAdapator.qpush({ cid, cname });
+
                 configuration.component.map((data) => {
                     componentShape = new ArchGraphComponent(data);
 
@@ -634,6 +640,11 @@ export default {
                         }
                     };
                     this.setMenuCoordinate(evt);
+                });
+
+                // Component: left double click;
+                this.jointPaper.on('element:pointerdblclick', (elementView) => {
+                    this.renderConfiguration(cid+1, elementView.model.attr()['.label'].text);
                 });
             }  
         },
@@ -714,6 +725,7 @@ export default {
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
         EVENTBUS.$off('DELIVER_ENTERVIEW');
+        EVENTBUS.$off('DELIVER_GOOVERVIEW');
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
 
         this.archDataAdapator.save();

@@ -3,8 +3,37 @@ import { EVENTBUS, AxiosRequest } from './main.js';
 export default class ArchDataAdapator {
     constructor(data) {
         this.data = data;
+        this.archQueue = [];
+    };
 
+    qlast = function() {
+        let last = null;
+
+        if(this.archQueue.length !== 0) last = this.archQueue[this.archQueue.length - 1];
+
+        return last;
     }
+
+    qpush = function(payload) {
+        let lastItem = this.qlast();
+
+        if(lastItem === null || lastItem.cid !== payload.cid || lastItem.cname !== payload.cname) {
+            this.archQueue.push(payload);
+            console.log('QPUSH', this.archQueue);
+        }
+    }
+
+    qpop = function() {
+        this.archQueue.pop();
+        console.log('QPOP', this.archQueue);
+    }
+
+    qclear = function() {
+        this.archQueue.length = 0;
+        console.log('QCLEAR');
+    }
+
+
 
     // Post current data to the server;
     save = function() {
@@ -189,11 +218,11 @@ export default class ArchDataAdapator {
                         c.target = after.newTarget;
                         break;
                     case 'alabel':
-                        c.labels = [];
+                        c.labels.length = 0;
                         c.labels.push(after);
                         break;
                     case 'rlabel':
-                        c.labels = [];
+                        c.labels.length = 0;
                         break;
                     default: break;
                 }
@@ -208,15 +237,22 @@ export default class ArchDataAdapator {
         Configurations;
     */
 
-    getConfiguration(cid, cname) {
+    getConfiguration = function(cid, cname) {
         if(cid === 0) { // Viewpoint data;
             return this.data[cname];
         } else { // Hierarhchical component data;
+            let configuration = this.data[this.archQueue[0].cname];
 
+            for(let i = 1; i < this.archQueue.length; i++) {
+                configuration = configuration.component[configuration.component.findIndex(cp => 
+                    (cp.cpid === this.archQueue[i].cid) && (cp.cpname === this.archQueue[i].cname))];
+            }
+            
+            return configuration.component[configuration.component.findIndex(cp => (cp.cpid === cid) && (cp.cpname === cname))];
         }
     };
 
-    addComponent(parent, cname) {
+    addComponent = function(parent, cname) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
         
         if(parentConfig) {
