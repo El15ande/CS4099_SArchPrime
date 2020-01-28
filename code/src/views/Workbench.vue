@@ -76,7 +76,7 @@
         </v-dialog>
 
         <v-dialog
-            v-model="resizeDialog"
+            v-model="customiseDialog"
             width='500'
         >
             <v-card>
@@ -84,7 +84,7 @@
                 <v-card-actions>
                     <v-col md='6'>
                         <v-text-field
-                            v-model="resizeWidth"
+                            v-model="customiseWidth"
                             outlined
                             label="Current width (block)" 
                         />
@@ -92,7 +92,7 @@
 
                     <v-col md='6'>
                         <v-text-field
-                            v-model="resizeHeight"
+                            v-model="customiseHeight"
                             outlined
                             label="Current height (block)" 
                         />
@@ -103,13 +103,13 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='resizeViewpoint()'
+                        @click='customise()'
                     >
                         Resize
                     </v-btn>
                     <v-btn
                         text
-                        @click='resizeDialog = false'
+                        @click='customiseDialog = false'
                     >
                         Cancel
                     </v-btn>
@@ -203,11 +203,15 @@ export default {
             labelInput: '',
 
             // Resize cache;
-            resizeDialog: false,
-            resizeWidth: 0,
-            resizeHeight: 0,
+            customiseDialog: false,
+            customiseWidth: 0,
+            customiseHeight: 0,
 
 
+
+            // Graphic elements/links array;
+            graphicComponents: [],
+            graphicConnectors: [],
 
             // Hierarchical component;
             componentDialog: false,
@@ -241,9 +245,9 @@ export default {
                             description: 'Customise the viewpoint pattern',
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.resizeDialog = true;
-                                _this.resizeWidth = _this.selectedComponent.ssize.width / 20;
-                                _this.resizeHeight = _this.selectedComponent.ssize.height / 20;
+                                _this.customiseDialog = true;
+                                _this.customiseWidth = _this.selectedComponent.ssize.width / 20;
+                                _this.customiseHeight = _this.selectedComponent.ssize.height / 20;
                             }
                         }
                     ];
@@ -314,6 +318,31 @@ export default {
                         }
                     ];
                 }
+                case 'CFG_ELEMENT': {
+                    return [
+                        {
+                            name: 'New Interface',
+                            description: 'Add a new interface to this component',
+                            action: function() {
+                                _this.jointMenu = false;
+                            }
+                        },
+
+                        {
+                            name: 'Customise',
+                            description: 'Customise the component pattern',
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.customiseDialog = true;
+                                _this.customiseWidth = _this.selectedComponent.ssize.width / 20;
+                                _this.customiseHeight = _this.selectedComponent.ssize.height / 20;
+                            }
+                        }
+                    ];
+                }
+                case 'CFG_LINK': {
+                    return [];
+                }
                 case 'CFG_BLANK': {
                     return [
                         {
@@ -372,6 +401,12 @@ export default {
             this.menuY = e.originalEvent.clientY;
         },
 
+        showMenu(flag, evt) {
+            this.jointMenu = true;
+            this.menuContext = flag;
+            this.setMenuCoordinate(evt);
+        },
+
         // Refresh workbench;
         renderViewModel() {
             setTimeout(() => {
@@ -391,6 +426,7 @@ export default {
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
             this.archDataAdapator.qclear();
+            this.graphicComponents = [];
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdapator.getViewpoint(vp);
@@ -510,8 +546,7 @@ export default {
 
             // Cell (viewpoint): right click;
             this.jointPaper.on('element:contextmenu', (elementView, evt) => {
-                this.jointMenu = true;
-                this.menuContext = 'VM_ELEMENT';
+                this.showMenu('VM_ELEMENT', evt);
                 this.selectedComponent = {
                     sid: elementView.model.vpid,
                     spos: {
@@ -520,14 +555,11 @@ export default {
                     },
                     ssize: elementView.model.attributes.size
                 };
-
-                this.setMenuCoordinate(evt);
             });
 
             // Link (connection): right click;
             this.jointPaper.on('link:contextmenu', (linkView, evt) => {
-                this.jointMenu = true;
-                this.menuContext = 'VM_LINK';
+                this.showMenu('VM_LINK', evt);
                 this.selectedConnector = {
                     lsource: linkView.sourceView 
                         ? linkView.sourceView.model.vpid
@@ -538,19 +570,15 @@ export default {
                     llabel: linkView.model.attributes.labels
                 };
                 this.selectedConnectorModel = linkView.model;
-
-                this.setMenuCoordinate(evt);
             });
 
             // Blank space: right click;
             this.jointPaper.on('blank:contextmenu', (evt) => {
-                this.jointMenu = true;
-                this.menuContext = 'VM_BLANK';
+                this.showMenu('VM_BLANK', evt);
                 this.selectedComponent.spos = {
                     x: evt.offsetX,
                     y: evt.offsetY
                 }
-                this.setMenuCoordinate(evt);
             });
         },
         
@@ -582,19 +610,33 @@ export default {
             this.renderViewModel();
         },
 
-        resizeViewpoint() {
-            this.resizeDialog = false;
+        customise() {
+            this.customiseDialog = false;
 
-            this.archDataAdapator.updateViewpoint(
-                'resize',
-                this.selectedComponent.sid,
-                {
-                    width: Math.ceil(this.resizeWidth) * 20,
-                    height: Math.ceil(this.resizeHeight) * 20
-                }
-            ).save();
+            if(this.menuContext === 'VM_ELEMENT') {
+                this.archDataAdapator.updateViewpoint(
+                    'size',
+                    this.selectedComponent.sid,
+                    {
+                        width: Math.ceil(this.customiseWidth) * 20,
+                        height: Math.ceil(this.customiseHeight) * 20
+                    }
+                ).save();
 
-            this.renderViewModel();
+                this.renderViewModel();
+            } else if(this.menuContext === 'CFG_ELEMENT') {
+                this.archDataAdapator.updateComponent(
+                    'size',
+                    this.selectedComponent.sid,
+                    this.selectedComponent.sname,
+                    {
+                        width: Math.ceil(this.customiseWidth) * 20,
+                        height: Math.ceil(this.customiseHeight) * 20
+                    }
+                ).save();
+
+                this.renderConfiguration(this.selectedComponent.sparent.cid, this.selectedComponent.sparent.cname);
+            }
         },
 
         deregisterViewModel() {
@@ -607,7 +649,7 @@ export default {
             this.jointPaper.off('blank:contextmenu');
 
             this.selectedComponent = {};
-            this.selctedConnector = {};
+            this.selectedConnector = {};
         },
 
 
@@ -616,25 +658,23 @@ export default {
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
             let componentShape, connectorShape;
-            let graphicComponents = [];
-            let graphicConnectors = [];
 
             if(configuration) {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
                 this.archDataAdapator.qpush({ cid, cname });
+                this.graphicComponents = [];
 
                 configuration.component.map((data) => {
                     componentShape = new ArchGraphComponent(data);
 
                     componentShape.addTo(this.jointGraph);
-                    graphicComponents.push(componentShape);
+                    this.graphicComponents.push(componentShape);
                 });
 
                 // Blank space: right click;
                 this.jointPaper.on('blank:contextmenu', (evt) => {
-                    this.jointMenu = true;
-                    this.menuContext = 'CFG_BLANK';
+                    this.showMenu('CFG_BLANK', evt);
                     this.selectedComponent = {
                         sid: cid,
                         sname: cname,
@@ -643,7 +683,6 @@ export default {
                             y: evt.offsetY
                         }
                     };
-                    this.setMenuCoordinate(evt);
                 });
 
                 // Component: left double click;
@@ -659,6 +698,21 @@ export default {
                         elementView.model.attr()['.label'].text,
                         elementView.model.attributes.position
                     ).save();
+                });
+
+                // Component: right click;
+                this.jointPaper.on('element:contextmenu', (elementView, evt) => {
+                    this.showMenu('CFG_ELEMENT', evt);
+                    this.selectedComponent = {
+                        sid: elementView.model.attributes.cpid,
+                        sname: elementView.model.attr()['.label'].text,
+                        spos: {
+                            x: evt.offsetX,
+                            y: evt.offsetY
+                        },
+                        ssize: elementView.model.attributes.size,
+                        sparent: { cid, cname }
+                    };
                 });
             }  
         },
