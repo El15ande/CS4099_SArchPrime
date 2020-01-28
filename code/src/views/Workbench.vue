@@ -617,8 +617,11 @@ export default {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
             let componentShape;
 
+            console.log('RENDER', configuration, cid, cname);
+
             if(configuration) {
                 this.jointGraph.clear();
+                this.deregisterConfiguration();
                 this.archDataAdapator.qpush({ cid, cname });
 
                 configuration.component.map((data) => {
@@ -644,7 +647,7 @@ export default {
 
                 // Component: left double click;
                 this.jointPaper.on('element:pointerdblclick', (elementView) => {
-                    this.renderConfiguration(cid+1, elementView.model.attr()['.label'].text);
+                    this.renderConfiguration(elementView.model.attributes.cpid, elementView.model.attr()['.label'].text);
                 });
             }  
         },
@@ -656,6 +659,11 @@ export default {
             
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
+
+        deregisterConfiguration() {
+            this.jointPaper.off('blank:contextmenu');
+            this.jointPaper.off('element:pointerdblclick');
+        }
     },
 
     watch: {

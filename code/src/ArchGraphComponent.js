@@ -3,6 +3,8 @@ import * as JOINT from 'jointjs'
 export default class ArchGraphComponent {
     constructor(data) {
         this.jointComponent = new JOINT.shapes.devs.Model({
+            cpid: data.cpid,
+            
             attrs: {
                 '.label': {
                     text: data.cpname,

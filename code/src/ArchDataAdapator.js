@@ -247,13 +247,19 @@ export default class ArchDataAdapator {
                 configuration = configuration.component[configuration.component.findIndex(cp => 
                     (cp.cpid === this.archQueue[i].cid) && (cp.cpname === this.archQueue[i].cname))];
             }
+
+            let index = configuration.component.findIndex(cp => (cp.cpid === cid) && (cp.cpname === cname));
             
-            return configuration.component[configuration.component.findIndex(cp => (cp.cpid === cid) && (cp.cpname === cname))];
+            return (index === -1)
+                ? configuration 
+                : configuration.component[index];
         }
     };
 
     addComponent = function(parent, cname) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
+
+        console.log(parentConfig);
         
         if(parentConfig) {
             let component = this.makeComponent();
