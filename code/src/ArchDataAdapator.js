@@ -251,7 +251,7 @@ export default class ArchDataAdapator {
             let index = configuration.component.findIndex(cp => (cp.cpid === cid) && (cp.cpname === cname));
             
             return (index === -1)
-                ? configuration 
+                ? configuration
                 : configuration.component[index];
         }
     };

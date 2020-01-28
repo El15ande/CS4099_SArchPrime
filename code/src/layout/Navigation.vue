@@ -64,8 +64,8 @@ export default {
                     icon: 'mdi-view-dashboard-variant' 
                 },
                 {
-                    to: '/configuration',
-                    title: 'Configuration',
+                    to: '/Customisation',
+                    title: 'Customisation',
                     icon: 'mdi-settings-outline'
                 }
             ],
