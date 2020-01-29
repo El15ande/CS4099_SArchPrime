@@ -2,13 +2,10 @@ import * as JOINT from 'jointjs'
 
 export default class ArchGraphComponent {
     constructor(data) {
-        this.jointComponent = new JOINT.shapes.devs.Model({
-            cpid: data.cpid,
-            
+        this.jointComponent = new JOINT.shapes.standard.Rectangle({
             attrs: {
-                '.label': {
+                label: {
                     text: data.cpname,
-                    'y': data.canvas.height / 2 - 5, // Font position;
                     'font-size': 20 // Font size;
                 },
             },
@@ -23,15 +20,28 @@ export default class ArchGraphComponent {
                 height: data.canvas.height
             },
 
-            inPorts: [],
+            ports: {
+                groups: {
+                    'input': {
+                        position: { name: 'top' }
+                    },
+                    'output': {
+                        position: { name: 'bottom' }
+                    }
+                }
+            },
 
-            outPorts: []
+
+
+            cpid: data.cpid,
         });
-    }
+
+        this.cpname = data.cpname;
+    };
 
     // Add the component to paper;
     //  paper: joint paper;
     addTo(paper) {
         this.jointComponent.addTo(paper);
-    }
+    };
 }

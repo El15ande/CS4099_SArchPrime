@@ -168,6 +168,7 @@
 import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataAdapator from '../ArchDataAdapator.js';
 import ArchGraphComponent from '../ArchGraphComponent.js';
+import ArchGraphInterface from '../ArchGraphInterface.js';
 import $ from 'jquery';
 import * as JOINT from 'jointjs';
 
@@ -325,6 +326,10 @@ export default {
                             description: 'Add a new interface to this component',
                             action: function() {
                                 _this.jointMenu = false;
+
+                                _this.graphicComponents[0].jointComponent.addPort({
+                                    group: 'input'
+                                });
                             }
                         },
 
@@ -430,8 +435,8 @@ export default {
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdapator.getViewpoint(vp);
-                vpshape = new JOINT.shapes.standard.Rectangle();
 
+                vpshape = new JOINT.shapes.standard.Rectangle();
                 vpshape.position(viewpoint.canvas.x, viewpoint.canvas.y);
                 vpshape.resize(viewpoint.canvas.width, viewpoint.canvas.height);
                 vpshape.attr({
@@ -441,6 +446,24 @@ export default {
                     }
                 });
                 vpshape.vpid = vp;
+
+                /*vpshape = new JOINT.shapes.standard.Rectangle({
+                    vpid: vp,
+                    attrs: {
+                        label: { 
+                            text: vp,
+                            'font-size': 20
+                        }
+                    },
+                    position: {
+                        x: viewpoint.canvas.x,
+                        y: viewpoint.canvas.y
+                    },
+                    size: {
+                        width: viewpoint.canvas.width,
+                        height: viewpoint.canvas.height
+                    }
+                });*/
                 
                 vpshape.addTo(this.jointGraph);
             });
@@ -610,6 +633,7 @@ export default {
             this.renderViewModel();
         },
 
+        // Customise component style;
         customise() {
             this.customiseDialog = false;
 
@@ -687,7 +711,7 @@ export default {
 
                 // Component: left double click;
                 this.jointPaper.on('element:pointerdblclick', (elementView) => {
-                    this.renderConfiguration(elementView.model.attributes.cpid, elementView.model.attr()['.label'].text);
+                    this.renderConfiguration(elementView.model.attributes.cpid, elementView.model.attr().label.text);
                 });
 
                 // Component: drag & drop;
@@ -695,7 +719,7 @@ export default {
                     this.archDataAdapator.updateComponent(
                         'position',
                         elementView.model.attributes.cpid,
-                        elementView.model.attr()['.label'].text,
+                        elementView.model.attr().label.text,
                         elementView.model.attributes.position
                     ).save();
                 });
@@ -705,7 +729,7 @@ export default {
                     this.showMenu('CFG_ELEMENT', evt);
                     this.selectedComponent = {
                         sid: elementView.model.attributes.cpid,
-                        sname: elementView.model.attr()['.label'].text,
+                        sname: elementView.model.attr().label.text,
                         spos: {
                             x: evt.offsetX,
                             y: evt.offsetY

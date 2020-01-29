@@ -112,7 +112,22 @@ export default class ArchDataAdapator {
                 Component id & name;
             */
             cpid: 0,
-            cpname: ''
+            cpname: '',
+
+            /*
+                Component interfaces;
+            */
+           cpintf: []
+        }
+    };
+
+    makeInterface = function() {
+        return {
+            /*
+                Interface type;
+            */
+           itype: '',
+           
         }
     };
 
