@@ -161,15 +161,20 @@
             <v-card>
                 <v-card-title>Create new interface</v-card-title>
                 <v-card-actions>
-                    <v-col md='12'>
-                        <v-select
-                            v-model="newInterfaceType"
-                            :items="interfaceItems"
-                            :rules="['Required']"
-                            label="Interface type"
-                        >    
-                        </v-select>
-                    </v-col>
+                    <v-select
+                        v-model="newInterfaceType"
+                        :items="interfaceItems"
+                        :rules="['Required']"
+                        label="Interface type"
+                    >    
+                    </v-select>
+                </v-card-actions>
+                <v-card-actions>
+                    <v-text-field
+                        v-model="newInterfaceName"
+                        outlined
+                        label="Interface name" 
+                    />
                 </v-card-actions>
                 <v-card-actions>
                     <v-spacer />
@@ -258,6 +263,7 @@ export default {
             interfaceDialog: false,
             interfaceItems: ['Input', 'Output'],
             newInterfaceType: '',
+            newInterfaceName: ''
         }
     },
 
@@ -761,6 +767,10 @@ export default {
                     ).save();
                 });
 
+                /*this.jointPaper.on('element:magnet:contextmenu', (elementView, evt) => {
+                    console.log(elementView);
+                });*/
+
                 // Component: right click;
                 this.jointPaper.on('element:contextmenu', (elementView, evt) => {
                     this.showMenu('CFG_ELEMENT', evt);
@@ -775,10 +785,6 @@ export default {
                         sparent: { cid, cname }
                     };
                 });
-
-                this.jointPaper.on('element:magnet:contextmenu', (elementView, evt) => {
-                    console.log(elementView);
-                });
             }  
         },
 
@@ -790,8 +796,16 @@ export default {
 
         addInterface() {
             this.interfaceDialog = false;
-            
-            console.log(this.newInterfaceType);
+            this.archDataAdapator.updateComponent(
+                'aintf',
+                this.selectedComponent.sid,
+                this.selectedComponent.sname,
+                {
+                    itype: this.newInterfaceType,
+                    iname: this.newInterfaceName
+                }
+            ).save();
+            this.renderConfiguration(this.selectedComponent.sparent.cid, this.selectedComponent.sparent.cname);
         },
 
         deregisterConfiguration() {

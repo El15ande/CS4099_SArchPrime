@@ -1,4 +1,5 @@
 import * as JOINT from 'jointjs'
+import ArchGraphInterface from './ArchGraphInterface';
 
 export default class ArchGraphComponent {
     constructor(data) {
@@ -22,28 +23,32 @@ export default class ArchGraphComponent {
 
             ports: {
                 groups: {
-                    'input': {
+                    'Input': {
                         position: { name: 'top' },
                         attrs: {
                             '.joint-port-body': { magnet: true }
                         }
                     },
-                    'output': {
+                    'Output': {
                         position: { name: 'bottom' },
                         attrs: {
                             '.joint-port-body': { magnet: true }
                         }
                     }
-                },
-                items: [
-                    { group: 'input' }
-                ]
+                }
             },
 
             cpid: data.cpid,
         });
 
         this.cpname = data.cpname;
+        this.jointInterfaces = [];
+
+        data.cpintf.map((intf) => { 
+            let port = new ArchGraphInterface(intf);
+            this.jointInterfaces.push(port);
+            this.jointComponent.addPort(port.jointInterface);
+        });
     };
 
     // Add the component to paper;

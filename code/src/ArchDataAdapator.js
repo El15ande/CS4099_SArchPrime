@@ -127,6 +127,11 @@ export default class ArchDataAdapator {
                 Interface type;
             */
            itype: '',
+
+            /*
+                Interface name;
+            */
+            iname: '',
            
         }
     };
@@ -314,6 +319,13 @@ export default class ArchDataAdapator {
                 case 'size': {
                     component.canvas.width = v.width;
                     component.canvas.height = v.height;
+                    break;
+                }
+                case 'aintf': {
+                    let _interface = this.makeInterface();
+                    _interface.itype = v.itype;
+                    _interface.iname = v.iname;
+                    component.cpintf.push(_interface);
                     break;
                 }
                 default: { break; }
