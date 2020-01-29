@@ -136,21 +136,57 @@
                     </v-col>
                 </v-card-actions>
                 <v-card-actions>
-                        <v-spacer />
-                        <v-btn
-                            text
-                            color="teal darken-1"
-                            @click='addComponent()'
-                        >
-                            Add/Edit
-                        </v-btn>
-                        <v-btn
-                            text
-                            @click='componentDialog = false'
-                        >
-                            Cancel
-                        </v-btn>
-                    </v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        text
+                        color="teal darken-1"
+                        @click='addComponent()'
+                    >
+                        Add/Edit
+                    </v-btn>
+                    <v-btn
+                        text
+                        @click='componentDialog = false'
+                    >
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog
+            v-model="interfaceDialog"
+            width='500'
+        >
+            <v-card>
+                <v-card-title>Create new interface</v-card-title>
+                <v-card-actions>
+                    <v-col md='12'>
+                        <v-select
+                            v-model="newInterfaceType"
+                            :items="interfaceItems"
+                            :rules="['Required']"
+                            label="Interface type"
+                        >    
+                        </v-select>
+                    </v-col>
+                </v-card-actions>
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                        text
+                        color="teal darken-1"
+                        @click='addInterface()'
+                    >
+                        Add
+                    </v-btn>
+                    <v-btn
+                        text
+                        @click='interfaceDialog = false'
+                    >
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </div>
@@ -218,6 +254,10 @@ export default {
             componentDialog: false,
             newComponentName: '',
 
+            // Interface;
+            interfaceDialog: false,
+            interfaceItems: ['Input', 'Output'],
+            newInterfaceType: '',
         }
     },
 
@@ -326,10 +366,7 @@ export default {
                             description: 'Add a new interface to this component',
                             action: function() {
                                 _this.jointMenu = false;
-
-                                _this.graphicComponents[0].jointComponent.addPort({
-                                    group: 'input'
-                                });
+                                _this.interfaceDialog = true;
                             }
                         },
 
@@ -738,15 +775,23 @@ export default {
                         sparent: { cid, cname }
                     };
                 });
+
+                this.jointPaper.on('element:magnet:contextmenu', (elementView, evt) => {
+                    console.log(elementView);
+                });
             }  
         },
 
         addComponent() {
             this.componentDialog = false;
-
             this.archDataAdapator.addComponent(this.selectedComponent, this.newComponentName).save();
-            
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
+        },
+
+        addInterface() {
+            this.interfaceDialog = false;
+            
+            console.log(this.newInterfaceType);
         },
 
         deregisterConfiguration() {

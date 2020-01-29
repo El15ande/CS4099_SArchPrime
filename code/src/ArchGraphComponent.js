@@ -23,15 +23,22 @@ export default class ArchGraphComponent {
             ports: {
                 groups: {
                     'input': {
-                        position: { name: 'top' }
+                        position: { name: 'top' },
+                        attrs: {
+                            '.joint-port-body': { magnet: true }
+                        }
                     },
                     'output': {
-                        position: { name: 'bottom' }
+                        position: { name: 'bottom' },
+                        attrs: {
+                            '.joint-port-body': { magnet: true }
+                        }
                     }
-                }
+                },
+                items: [
+                    { group: 'input' }
+                ]
             },
-
-
 
             cpid: data.cpid,
         });
