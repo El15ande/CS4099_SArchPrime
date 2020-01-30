@@ -9,7 +9,7 @@ DOER
 Technology Stacks  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1. Client-side implementation](#1-client-side-implmentation)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2. Server-side implementation](#2-server-side-implementation)  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3. Architecture data representation: JSON](#3-architecture-data representation-json)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3. Architecture data representation: JSON](#3-architecture-data-representation-json)  
 
 ---
 
@@ -49,9 +49,9 @@ Technology Stacks
 
 2.2 __Secondary objectives__: improve user experience & software quality  
 - [ ] 1. Improve user experience based on the first evaluation
-Add IO function: the product diagram / visualisation can be imported or exported for reuse.
-- [ ] 2. Implement extension tool(s) that provide further software engineering behaviours. (e.g. Agile developments, existing software engineering tools connection)
-- [ ] 3. Conduct the second user evaluation on the overall tool, evaluate the quality and robustness of the system.
+- [ ] 2. Add IO function: the product diagram / visualisation can be imported or exported for reuse.
+- [ ] 3. Implement extension tool(s) that provide further software engineering behaviours. (e.g. Agile developments, existing software engineering tools connection)
+- [ ] 4. Conduct the second user evaluation on the overall tool, evaluate the quality and robustness of the system.
 
 2.3 __Tertiary objectives__: support further user behaviours
 - [ ] 1. Improve software quality furthermore based on the second evaluation.

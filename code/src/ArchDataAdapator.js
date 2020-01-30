@@ -129,6 +129,11 @@ export default class ArchDataAdapator {
            itype: '',
 
             /*
+                Interface position;
+            */
+           ipos: '',
+
+            /*
                 Interface name;
             */
             iname: '',
@@ -324,6 +329,7 @@ export default class ArchDataAdapator {
                 case 'aintf': {
                     let _interface = this.makeInterface();
                     _interface.itype = v.itype;
+                    _interface.ipos = v.ipos;
                     _interface.iname = v.iname;
                     component.cpintf.push(_interface);
                     break;

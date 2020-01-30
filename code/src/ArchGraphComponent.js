@@ -23,16 +23,44 @@ export default class ArchGraphComponent {
 
             ports: {
                 groups: {
-                    'Input': {
-                        position: { name: 'top' },
+                    'Left': {
+                        position: { name: 'left' },
+                        label: {
+                            position: { name: 'bottom' }
+                        },
                         attrs: {
-                            '.joint-port-body': { magnet: true }
+                            '.joint-port-body': { magnet: true },
+                            '.joint-port-label': { fontSize: 15 }
                         }
                     },
-                    'Output': {
-                        position: { name: 'bottom' },
+                    'Right': {
+                        position: { name: 'right' },
+                        label: {
+                            position: { name: 'bottom' }
+                        },
                         attrs: {
-                            '.joint-port-body': { magnet: true }
+                            '.joint-port-body': { magnet: true },
+                            '.joint-port-label': { fontSize: 15 }
+                        }
+                    },
+                    'Top': {
+                        position: { name: 'top' },
+                        label: {
+                            position: { name: 'inside' }
+                        },
+                        attrs: {
+                            '.joint-port-body': { magnet: true },
+                            '.joint-port-label': { fontSize: 15 }
+                        }
+                    },
+                    'Bottom': {
+                        position: { name: 'bottom' },
+                        label: {
+                            position: { name: 'inside' }
+                        },
+                        attrs: {
+                            '.joint-port-body': { magnet: true },
+                            '.joint-port-label': { fontSize: 15 }
                         }
                     }
                 }

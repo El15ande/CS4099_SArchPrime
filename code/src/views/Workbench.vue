@@ -162,10 +162,10 @@
                 <v-card-title>Create new interface</v-card-title>
                 <v-card-actions>
                     <v-select
-                        v-model="newInterfaceType"
+                        v-model="newInterfacePos"
                         :items="interfaceItems"
                         :rules="['Required']"
-                        label="Interface type"
+                        label="Interface position"
                     >    
                     </v-select>
                 </v-card-actions>
@@ -261,8 +261,8 @@ export default {
 
             // Interface;
             interfaceDialog: false,
-            interfaceItems: ['Input', 'Output'],
-            newInterfaceType: '',
+            interfaceItems: ['Left', 'Right', 'Top', 'Bottom'],
+            newInterfacePos: '',
             newInterfaceName: ''
         }
     },
@@ -801,10 +801,13 @@ export default {
                 this.selectedComponent.sid,
                 this.selectedComponent.sname,
                 {
-                    itype: this.newInterfaceType,
-                    iname: this.newInterfaceName
+                    ipos: this.newInterfacePos,
+                    iname: this.newInterfaceName,
+                    itype: '' // TODO itype;
                 }
             ).save();
+            this.newInterfacePos = '';
+            this.newInterfaceName = '';
             this.renderConfiguration(this.selectedComponent.sparent.cid, this.selectedComponent.sparent.cname);
         },
 
