@@ -6,10 +6,13 @@
             :position-x="menuX"
             :position-y="menuY"
         >
-            <v-list>
+            <v-list
+                max-width='300'
+            >
                 <v-list-item 
                     v-for='(item, i) in menu'
                     :key='i'
+                    :class='item.colourclass'
                     @click.stop='item.action'
                 >
                     <v-list-item-content>
@@ -203,6 +206,26 @@
     .v-content__wrap {
         border: 1px solid #CFD8DC;
     }
+
+    /* Hierarchy change background (indigo accent-1) */
+    .bg_hierarchy {
+        background-color: #8C9EFF;
+    }
+
+    /* Creation background (teal accent-1) */
+    .bg_create {
+        background-color: #A7FFEB;
+    }
+
+    /* Deletion background (pink lighten-5) */
+    .bg_delete {
+        background-color: #FF80AB;
+    }
+    
+    /* Editing background (cyan accent-1) */
+    .bg_edit {
+        background-color: #84FFFF;
+    }
 </style>
 
 <script>
@@ -277,6 +300,7 @@ export default {
                         {
                             name: 'New View Connection',
                             description: 'Create a new connection between views',
+                            colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.addConnection(
@@ -290,6 +314,7 @@ export default {
                         {
                             name: 'Customise',
                             description: 'Customise the viewpoint pattern',
+                            colourclass: ['bg_edit'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.customiseDialog = true;
@@ -304,6 +329,7 @@ export default {
                         {
                             name:'Remove Connection',
                             description: 'Remove this connection',
+                            colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.deleteConnection(
@@ -318,6 +344,7 @@ export default {
                         {
                             name: 'Add Label',
                             description: 'Add label to this connection',
+                            colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
@@ -329,6 +356,7 @@ export default {
                         {
                             name: 'Edit Label',
                             description: 'Edit label',
+                            colourclass: ['bg_edit'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.labelDialog = true;
@@ -341,6 +369,7 @@ export default {
                         {
                             name: 'Remove Label',
                             description: 'Remove label from this connection',
+                            colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.removeConnectionLabel();
@@ -348,8 +377,8 @@ export default {
                         };
 
                     let menu = _this.selectedConnector.llabel.length > 0
-                        ? [removeConnection, editLabel, removeLabel]
-                        : [removeConnection, addLabel];
+                        ? [editLabel, removeLabel, removeConnection]
+                        : [addLabel, removeConnection];
 
                     return menu;
                 }
@@ -358,6 +387,7 @@ export default {
                         {
                             name: 'New View',
                             description: 'Create a new view',
+                            colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
                                 EVENTBUS.$emit('INVOKE_CREATEVIEW');
@@ -370,6 +400,7 @@ export default {
                         {
                             name: 'New Interface',
                             description: 'Add a new interface to this component',
+                            colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.interfaceDialog = true;
@@ -379,11 +410,31 @@ export default {
                         {
                             name: 'Customise',
                             description: 'Customise the component pattern',
+                            colourclass: ['bg_edit'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.customiseDialog = true;
                                 _this.customiseWidth = _this.selectedComponent.ssize.width / 20;
                                 _this.customiseHeight = _this.selectedComponent.ssize.height / 20;
+                            }
+                        }
+                    ];
+                }
+                case 'CFG_PORT': {
+                    return [
+                        {
+                            name: 'Remove interface',
+                            description: 'Remove this interface',
+                            colourclass: ['bg_delete'],
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.archDataAdapator.updateComponent(
+                                    'rintf',
+                                    _this.selectedComponent.sid,
+                                    _this.selectedComponent.sname,
+                                    _this.selectedComponent.sintf
+                                ).save();
+                                _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
                             }
                         }
                     ];
@@ -396,6 +447,7 @@ export default {
                         {
                             name: 'Back',
                             description: 'Return back to previous level',
+                            colourclass: ['bg_hierarchy'],
                             action: function() {
                                 _this.jointMenu = false;
                                 
@@ -413,6 +465,7 @@ export default {
                         {
                             name: 'New component',
                             description: 'Create a new component',
+                            colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.componentDialog = true;
@@ -767,10 +820,6 @@ export default {
                     ).save();
                 });
 
-                /*this.jointPaper.on('element:magnet:contextmenu', (elementView, evt) => {
-                    console.log(elementView);
-                });*/
-
                 // Component: right click;
                 this.jointPaper.on('element:contextmenu', (elementView, evt) => {
                     this.showMenu('CFG_ELEMENT', evt);
@@ -783,6 +832,28 @@ export default {
                         },
                         ssize: elementView.model.attributes.size,
                         sparent: { cid, cname }
+                    };
+                });
+
+                this.jointPaper.on('element:magnet:contextmenu', (elementView, evt, magnet) => {
+                    let target = elementView.model.getPort(magnet.getAttribute('port'));
+                    evt.stopPropagation();
+
+                    this.showMenu('CFG_PORT', evt);
+                    this.selectedComponent = {
+                        sid: elementView.model.attributes.cpid,
+                        sname: elementView.model.attr().label.text,
+                        spos: {
+                            x: evt.offsetX,
+                            y: evt.offsetY
+                        },
+                        ssize: elementView.model.attributes.size,
+                        sparent: { cid, cname },
+
+                        sintf: {
+                            ipos: target.group,
+                            iname: target.attrs.text.text
+                        }
                     };
                 });
             }  
@@ -877,7 +948,7 @@ export default {
 
             _this.jointGraph.clear();
             _this.renderConfiguration(id, name);
-        })
+        });
     },
 
     beforeDestroy() {

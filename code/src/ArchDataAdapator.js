@@ -334,6 +334,10 @@ export default class ArchDataAdapator {
                     component.cpintf.push(_interface);
                     break;
                 }
+                case 'rintf': {
+                    component.cpintf = component.cpintf.filter((intf) => { return !(intf.ipos === v.ipos && intf.iname === v.iname); });
+                    break;
+                }
                 default: { break; }
             }
         }

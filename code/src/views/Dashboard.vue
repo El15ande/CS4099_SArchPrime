@@ -55,7 +55,7 @@
             </v-col>
             <v-col :cols=4>
                 <v-card shaped>
-                    <v-card-title>Start a new architechture</v-card-title>
+                    <v-card-title>Start a new architecture</v-card-title>
                     <v-card-actions>
                         <v-btn
                             text
