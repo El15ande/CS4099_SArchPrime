@@ -26,7 +26,10 @@ export default class ArchGraphComponent {
                     'Left': {
                         position: { name: 'left' },
                         label: {
-                            position: { name: 'bottom' }
+                            position: { 
+                                name: 'bottom',
+                                args: { y: 25 }
+                            }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },
@@ -36,7 +39,10 @@ export default class ArchGraphComponent {
                     'Right': {
                         position: { name: 'right' },
                         label: {
-                            position: { name: 'bottom' }
+                            position: { 
+                                name: 'bottom',
+                                args: { y: 25 }
+                            }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },

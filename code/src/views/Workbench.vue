@@ -169,8 +169,15 @@
                         :items="interfaceItems"
                         :rules="['Required']"
                         label="Interface position"
-                    >    
-                    </v-select>
+                    />
+                </v-card-actions>
+                <v-card-actions>
+                    <v-select
+                        v-model="newInterfaceType"
+                        :items="interfaceTypes"
+                        :rules="['Required']"
+                        label="Interface type"
+                    />
                 </v-card-actions>
                 <v-card-actions>
                     <v-text-field
@@ -282,7 +289,9 @@ export default {
             interfaceDialog: false,
             interfaceDialogTitle: '',
             interfaceItems: ['Left', 'Right', 'Top', 'Bottom'],
+            interfaceTypes: ['Input', 'Output'],
             newInterfacePos: '',
+            newInterfaceType: '',
             newInterfaceName: ''
         }
     },
@@ -891,10 +900,11 @@ export default {
                 {
                     ipos: this.newInterfacePos,
                     iname: this.newInterfaceName,
-                    itype: '' // TODO itype;
+                    itype: this.newInterfaceType
                 }
             ).save();
             this.newInterfacePos = '';
+            this.newInterfaceType = '';
             this.newInterfaceName = '';
             this.renderConfiguration(this.selectedComponent.sparent.cid, this.selectedComponent.sparent.cname);
         },
