@@ -326,7 +326,7 @@ export default class ArchDataAdapator {
         let parentConfig = this.getConfiguration(c.sparent.sid, c.sparent.sname);
 
         if(parentConfig) parentConfig.component = parentConfig.component.filter((cp) => { return !(c.sid === cp.cpid && c.sname === cp.cpname); });
-        else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+        else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.parent.sid, c.parent.sname);
 
         return this;
     }
@@ -357,7 +357,7 @@ export default class ArchDataAdapator {
                 case 'aintf': {
                     let _interface = this.makeInterface();
                     _interface.itype = v.itype;
-                    _interface.ipos = v.ipos;
+                    _interface.ipos = v.ipos ? v.ipos : 'Top';
                     _interface.iname = v.iname;
                     component.cpintf.push(_interface);
                     break;
@@ -368,7 +368,7 @@ export default class ArchDataAdapator {
                 }
                 default: { break; }
             }
-        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', cid, cname);
 
         return this;
     }
