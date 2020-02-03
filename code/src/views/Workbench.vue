@@ -274,10 +274,6 @@ export default {
 
 
 
-            // Graphic elements/links array;
-            graphicComponents: [],
-            graphicConnectors: [],
-
             // Hierarchical component;
             componentDialog: false,
             newComponentName: '',
@@ -305,8 +301,7 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.addConnection(
-                                    _this.selectedComponent.sid, 
-                                    _this.selectedComponent.spos
+                                    _this.selectedComponent
                                 ).save();
                                 _this.renderViewModel();
                             }
@@ -377,8 +372,10 @@ export default {
                             }
                         };
 
+                    console.log(_this.selectedConnector);
+
                     let menu = _this.selectedConnector.llabel.length > 0
-                        ? [editLabel, removeLabel, removeConnection]
+                        ? [removeLabel, removeConnection, editLabel]
                         : [addLabel, removeConnection];
 
                     return menu;
@@ -415,6 +412,10 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
+                                _this.archDataAdapator.deleteComponent(
+                                    _this.selectedComponent
+                                );
+                                _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
                             }
                         },
 
@@ -538,7 +539,6 @@ export default {
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
             this.archDataAdapator.qclear();
-            this.graphicComponents = [];
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdapator.getViewpoint(vp);
@@ -794,13 +794,11 @@ export default {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
                 this.archDataAdapator.qpush({ cid, cname });
-                this.graphicComponents = [];
 
                 configuration.component.map((data) => {
                     componentShape = new ArchGraphComponent(data);
 
                     componentShape.addTo(this.jointGraph);
-                    this.graphicComponents.push(componentShape);
                 });
 
                 // Blank space: right click;

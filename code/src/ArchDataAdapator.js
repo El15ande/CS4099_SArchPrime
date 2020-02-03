@@ -148,7 +148,7 @@ export default class ArchDataAdapator {
     };
 
 
-    
+
     /*
         Viewpoints;
     */
@@ -321,6 +321,15 @@ export default class ArchDataAdapator {
 
         return this;
     };
+
+    deleteComponent = function(c) {
+        let parentConfig = this.getConfiguration(c.sparent.sid, c.sparent.sname);
+
+        if(parentConfig) parentConfig.component = parentConfig.component.filter((cp) => { return !(c.sid === cp.cpid && c.sname === cp.cpname); });
+        else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+
+        return this;
+    }
     
     // Update component data;
     //  attr: connection attribute that will be changed;
@@ -359,7 +368,7 @@ export default class ArchDataAdapator {
                 }
                 default: { break; }
             }
-        }
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;
     }
