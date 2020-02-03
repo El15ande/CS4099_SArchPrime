@@ -83,7 +83,7 @@
             width='500'
         >
             <v-card>
-                <v-card-title>Resize</v-card-title>
+                <v-card-title>Customise</v-card-title>
                 <v-card-actions>
                     <v-col md='6'>
                         <v-text-field
@@ -108,7 +108,7 @@
                         color="teal darken-1"
                         @click='customise()'
                     >
-                        Resize
+                        Change
                     </v-btn>
                     <v-btn
                         text
@@ -162,7 +162,7 @@
             width='500'
         >
             <v-card>
-                <v-card-title>Create new interface</v-card-title>
+                <v-card-title>{{ interfaceDialogTitle }}</v-card-title>
                 <v-card-actions>
                     <v-select
                         v-model="newInterfacePos"
@@ -267,7 +267,7 @@ export default {
             labelDialogTitle: '',
             labelInput: '',
 
-            // Resize cache;
+            // Customise cache;
             customiseDialog: false,
             customiseWidth: 0,
             customiseHeight: 0,
@@ -284,6 +284,7 @@ export default {
 
             // Interface;
             interfaceDialog: false,
+            interfaceDialogTitle: '',
             interfaceItems: ['Left', 'Right', 'Top', 'Bottom'],
             newInterfacePos: '',
             newInterfaceName: ''
@@ -325,21 +326,6 @@ export default {
                     ];
                 }
                 case 'VM_LINK': {
-                    let removeConnection = 
-                        {
-                            name:'Remove Connection',
-                            description: 'Remove this connection',
-                            colourclass: ['bg_delete'],
-                            action: function() {
-                                _this.jointMenu = false;
-                                _this.archDataAdapator.deleteConnection(
-                                    _this.selectedConnector.lsource, 
-                                    _this.selectedConnector.ltarget
-                                ).save();
-                                _this.renderViewModel();
-                            }
-                        };
-
                     let addLabel = 
                         {
                             name: 'Add Label',
@@ -347,8 +333,8 @@ export default {
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.labelDialog = true;
                                 _this.labelDialogTitle = 'Add Label'
+                                _this.labelDialog = true;
                             }
                         };
                     
@@ -359,8 +345,8 @@ export default {
                             colourclass: ['bg_edit'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.labelDialog = true;
                                 _this.labelDialogTitle = 'Edit Label'
+                                _this.labelDialog = true;
                                 _this.labelInput = _this.selectedConnector.llabel[0].attrs.text.text;
                             }
                         };
@@ -373,6 +359,21 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.removeConnectionLabel();
+                            }
+                        };
+                    
+                    let removeConnection = 
+                        {
+                            name:'Remove Connection',
+                            description: 'Remove this connection',
+                            colourclass: ['bg_delete'],
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.archDataAdapator.deleteConnection(
+                                    _this.selectedConnector.lsource, 
+                                    _this.selectedConnector.ltarget
+                                ).save();
+                                _this.renderViewModel();
                             }
                         };
 
@@ -403,7 +404,17 @@ export default {
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
+                                _this.interfaceDialogTitle = 'Create new interface';
                                 _this.interfaceDialog = true;
+                            }
+                        },
+
+                        {
+                            name: 'Remove component',
+                            description: 'Remove this component',
+                            colourclass: ['bg_delete'],
+                            action: function() {
+                                _this.jointMenu = false;
                             }
                         },
 
@@ -855,6 +866,14 @@ export default {
                             iname: target.attrs.text.text
                         }
                     };
+                });
+
+                this.jointPaper.on('link:connect', (linkView, evt) => {
+                    console.log('link:connect', linkView);
+                });
+
+                this.jointPaper.on('link:disconnect', (linkView, evt) => {
+                    console.log('disconnect', linkView);
                 });
             }  
         },

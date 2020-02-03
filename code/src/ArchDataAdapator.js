@@ -141,8 +141,14 @@ export default class ArchDataAdapator {
         }
     };
 
+    makeConnector = function() {
+        return {
+
+        }
+    };
 
 
+    
     /*
         Viewpoints;
     */
@@ -175,6 +181,11 @@ export default class ArchDataAdapator {
     //  vpname: target viewpoint name;
     deleteViewpoint = function(vpname) {
         delete this.data[vpname];
+
+        this.data.connections.map((conn) => {
+            if(conn.source === vpname) conn.source = { x: 0, y: 0 };
+            if(conn.target === vpname) conn.target = { x: 0, y: 0 };
+        });
 
         return this;
     };
@@ -310,7 +321,15 @@ export default class ArchDataAdapator {
 
         return this;
     };
-
+    
+    // Update component data;
+    //  attr: connection attribute that will be changed;
+    //      position: change canvas position;
+    //      size: adjust canvas size;
+    //      aintf: add a new interface to this component;
+    //      rintf: remove the target interface;
+    //  cid, cname: component key;
+    //  v: new value;
     updateComponent = function(attr, cid, cname, v) {
         let component = this.getConfiguration(cid, cname);
 
