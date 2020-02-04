@@ -193,7 +193,7 @@
                         color="teal darken-1"
                         @click='addInterface()'
                     >
-                        Add
+                        Add/Edit
                     </v-btn>
                     <v-btn
                         text
@@ -267,6 +267,8 @@ export default {
             
             // Connector cache;
             selectedConnector: {},
+
+
 
             // Connection label cache;
             selectedConnectorModel: null,
@@ -456,6 +458,20 @@ export default {
                                     _this.selectedComponent.sintf
                                 ).save();
                                 _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
+                            }
+                        },
+
+                        {
+                            name: 'Customise',
+                            description: 'Customise the interface pattern',
+                            colourclass: ['bg_edit'],
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.interfaceDialogTitle = 'Edit interface';
+                                _this.newInterfacePos = _this.selectedComponent.sintf.ipos;
+                                _this.newInterfaceType = _this.selectedComponent.sintf.itype;
+                                _this.newInterfaceName = _this.selectedComponent.sintf.iname;
+                                _this.interfaceDialog = true;
                             }
                         }
                     ];
@@ -869,6 +885,7 @@ export default {
                         sparent: { cid, cname },
 
                         sintf: {
+                            itype: target.attrs.itype,
                             ipos: target.group,
                             iname: target.attrs.text.text
                         }
@@ -887,22 +904,39 @@ export default {
 
         addComponent() {
             this.componentDialog = false;
+
             this.archDataAdapator.addComponent(this.selectedComponent, this.newComponentName).save();
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
 
         addInterface() {
             this.interfaceDialog = false;
-            this.archDataAdapator.updateComponent(
-                'aintf',
-                this.selectedComponent.sid,
-                this.selectedComponent.sname,
-                {
-                    ipos: this.newInterfacePos,
-                    iname: this.newInterfaceName,
-                    itype: this.newInterfaceType
-                }
-            ).save();
+
+            if(this.selectedComponent.sintf) { // Edit exist interface;
+                this.archDataAdapator.updateComponent(
+                    'eintf',
+                    this.selectedComponent.sid,
+                    this.selectedComponent.sname,
+                    {
+                        oldintf: this.selectedComponent.sintf,
+                        itype: this.newInterfaceType,
+                        ipos: this.newInterfacePos,
+                        iname: this.newInterfaceName
+                    }
+                ).save();
+            } else { // Add new interface;
+                this.archDataAdapator.updateComponent(
+                    'aintf',
+                    this.selectedComponent.sid,
+                    this.selectedComponent.sname,
+                    {
+                        itype: this.newInterfaceType,
+                        ipos: this.newInterfacePos,
+                        iname: this.newInterfaceName
+                    }
+                ).save();
+            }
+
             this.newInterfacePos = '';
             this.newInterfaceType = '';
             this.newInterfaceName = '';

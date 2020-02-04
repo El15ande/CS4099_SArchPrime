@@ -11,13 +11,13 @@ export default class ArchGraphInterface {
                     
                     stroke: '#000000',
                     fill: '#FFFFFF'
-                }
+                },
+
+                itype: data.itype
             },
 
             markup: `<path class="custom-port"/>`
         }
-
-        this.itype = data.itype;
     };
 
     _getD(itype, ipos) {
@@ -27,11 +27,11 @@ export default class ArchGraphInterface {
             case 'Top': {
                 return isInput 
                     ? 'M 0 -10 20 -10 10 10 Z'
-                    : 'M 0 -10 20 -10 10 -10 Z';
+                    : 'M 0 10 20 10 10 -10 Z';
             }
             case 'Bottom': {
                 return isInput 
-                    ? 'M 0 -10 20 -10 10 -10 Z'
+                    ? 'M 0 10 20 10 10 -10 Z'
                     : 'M 0 -10 20 -10 10 10 Z';
             }
             case 'Left': {

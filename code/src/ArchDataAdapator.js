@@ -366,6 +366,20 @@ export default class ArchDataAdapator {
                     component.cpintf = component.cpintf.filter((intf) => { return !(intf.ipos === v.ipos && intf.iname === v.iname); });
                     break;
                 }
+                case 'eintf': {
+                    component.cpintf = component.cpintf.map((intf) => {
+                        let _intf = Object.assign({}, intf);
+
+                        if(JSON.stringify(intf) === JSON.stringify(v.oldintf)) {
+                            _intf.itype = v.itype;
+                            _intf.ipos = v.ipos;
+                            _intf.iname = v.iname;
+                        }
+
+                        return _intf;
+                    });
+                    break;
+                }
                 default: { break; }
             }
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', cid, cname);
