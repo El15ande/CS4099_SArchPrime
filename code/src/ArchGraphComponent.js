@@ -1,4 +1,4 @@
-import * as JOINT from 'jointjs'
+import * as JOINT from 'jointjs';
 import ArchGraphInterface from './ArchGraphInterface';
 
 export default class ArchGraphComponent {
@@ -83,11 +83,11 @@ export default class ArchGraphComponent {
             this.jointInterfaces.push(port);
             this.jointComponent.addPort(port.jointInterface);
         });
-    };
+    }
 
     // Add the component to paper;
     //  paper: joint paper;
     addTo(paper) {
         this.jointComponent.addTo(paper);
-    };
+    }
 }

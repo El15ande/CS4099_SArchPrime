@@ -425,7 +425,7 @@ export default {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.deleteComponent(
                                     _this.selectedComponent
-                                );
+                                ).save();
                                 _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
                             }
                         },
@@ -885,6 +885,7 @@ export default {
                         sparent: { cid, cname },
 
                         sintf: {
+                            iid: target.attrs.iid,
                             itype: target.attrs.itype,
                             ipos: target.group,
                             iname: target.attrs.text.text

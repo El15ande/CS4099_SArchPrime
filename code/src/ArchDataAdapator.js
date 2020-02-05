@@ -4,7 +4,7 @@ export default class ArchDataAdapator {
     constructor(data) {
         this.data = data;
         this.archQueue = [];
-    };
+    }
 
     // Get the last element in archQueue;
     qlast = function() {
@@ -13,7 +13,7 @@ export default class ArchDataAdapator {
         if(this.archQueue.length !== 0) last = this.archQueue[this.archQueue.length - 1];
 
         return last;
-    }
+    };
 
     // Push payload into archQueue;
     //  payload: item to be pushed;
@@ -25,21 +25,21 @@ export default class ArchDataAdapator {
         }
 
         return this;
-    }
+    };
 
     // Pop the last element in archQueue;
     qpop = function() {
         this.archQueue.pop();
 
         return this;
-    }
+    };
 
     // Clear current archQueue;
     qclear = function() {
         this.archQueue.length = 0;
 
         return this;
-    }
+    };
 
 
 
@@ -109,9 +109,13 @@ export default class ArchDataAdapator {
            connector: [],
 
             /*
-                Component id & name;
+                Component unique id;
             */
             cpid: 0,
+
+            /*
+                Component name;
+            */
             cpname: '',
 
             /*
@@ -123,6 +127,11 @@ export default class ArchDataAdapator {
 
     makeInterface = function() {
         return {
+            /*
+                Interface unique id;
+            */
+           iid: 0,
+
             /*
                 Interface type;
             */
@@ -325,8 +334,10 @@ export default class ArchDataAdapator {
     deleteComponent = function(c) {
         let parentConfig = this.getConfiguration(c.sparent.sid, c.sparent.sname);
 
-        if(parentConfig) parentConfig.component = parentConfig.component.filter((cp) => { return !(c.sid === cp.cpid && c.sname === cp.cpname); });
-        else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.parent.sid, c.parent.sname);
+        if(parentConfig) {
+            parentConfig.component = parentConfig.component.filter((cp) => { return !(c.sid === cp.cpid && c.sname === cp.cpname); });
+            parentConfig.component = parentConfig.component.map((cp, index) => { return Object.assign({}, cp, { cpid: index + 1 }); });
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.parent.sid, c.parent.sname);
 
         return this;
     }
@@ -356,21 +367,24 @@ export default class ArchDataAdapator {
                 }
                 case 'aintf': {
                     let _interface = this.makeInterface();
-                    _interface.itype = v.itype;
+
+                    _interface.iid = component.cpintf.length + 1;
+                    _interface.itype = v.itype ? v.itype : 'Input';
                     _interface.ipos = v.ipos ? v.ipos : 'Top';
                     _interface.iname = v.iname;
                     component.cpintf.push(_interface);
                     break;
                 }
                 case 'rintf': {
-                    component.cpintf = component.cpintf.filter((intf) => { return !(intf.ipos === v.ipos && intf.iname === v.iname); });
+                    component.cpintf = component.cpintf.filter((intf) => { return intf.iid !== v.iid; });
+                    component.cpintf = component.cpintf.map((intf, index) => { return Object.assign({}, intf, { iid: index + 1 }); });
                     break;
                 }
                 case 'eintf': {
                     component.cpintf = component.cpintf.map((intf) => {
                         let _intf = Object.assign({}, intf);
 
-                        if(JSON.stringify(intf) === JSON.stringify(v.oldintf)) {
+                        if(v.oldintf.iid === intf.iid) {
                             _intf.itype = v.itype;
                             _intf.ipos = v.ipos;
                             _intf.iname = v.iname;

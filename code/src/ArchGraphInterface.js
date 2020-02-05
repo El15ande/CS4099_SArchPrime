@@ -12,13 +12,14 @@ export default class ArchGraphInterface {
                     stroke: '#000000',
                     fill: '#FFFFFF'
                 },
-
+                
+                iid: data.iid,
                 itype: data.itype
             },
 
             markup: `<path class="custom-port"/>`
         }
-    };
+    }
 
     _getD(itype, ipos) {
         let isInput = itype === 'Input';
@@ -46,5 +47,5 @@ export default class ArchGraphInterface {
             }
             default: { return 'M 0 -10 20 -10 10 10 Z'; }
         }
-    };
+    }
 }
