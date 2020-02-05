@@ -7,7 +7,7 @@ export default class ArchGraphComponent {
             attrs: {
                 label: {
                     text: data.cpname,
-                    'font-size': 20 // Font size;
+                    'font-size': 20
                 },
             },
 
@@ -87,7 +87,7 @@ export default class ArchGraphComponent {
         data.cpintf.map((intf) => { 
             let port = new ArchGraphInterface(intf);
             this.jointInterfaces.push(port);
-            this.jointComponent.addPort(port.jointInterface);
+            this.jointComponent.addPort(port.jointPort);
         });
     }
 

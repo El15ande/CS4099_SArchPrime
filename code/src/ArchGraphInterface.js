@@ -1,6 +1,6 @@
 export default class ArchGraphInterface {
     constructor(data) {
-        this.jointInterface = {
+        this.jointPort = {
             group: data.ipos,
 
             attrs: { 

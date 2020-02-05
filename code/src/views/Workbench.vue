@@ -240,6 +240,7 @@ import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataAdapator from '../ArchDataAdapator.js';
 import ArchGraphComponent from '../ArchGraphComponent.js';
 import ArchGraphInterface from '../ArchGraphInterface.js';
+import ArchGraphConnector from '../ArchGraphConnector.js';
 import $ from 'jquery';
 import * as JOINT from 'jointjs';
 
@@ -813,7 +814,7 @@ export default {
         // Hierarchical configuration setter;
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
-            let componentShape, connectorShape;
+            let componentShape, connectorShape, connectorSrc, connectorTar;
 
             if(configuration) {
                 this.jointGraph.clear();
@@ -827,22 +828,21 @@ export default {
                 });
 
                 configuration.connector.map((data) => {
-                    connectorShape = new JOINT.shapes.devs.Link(); 
-                    
                     this.jointGraph.getElements().map((e) => {
                         if(data.source.cpid === e.attributes.cpid) {
                             e.getPorts().map((p) => { 
-                                if(data.source.iid === p.attrs.iid) connectorShape.source({ id: e.id, port: p.id });
+                                if(data.source.iid === p.attrs.iid) connectorSrc = { id: e.id, port: p.id };
                             });
                         }
                         
                         if(data.target.cpid === e.attributes.cpid) {
                             e.getPorts().map((p) => {
-                                if(data.target.iid === p.attrs.iid) connectorShape.target({ id: e.id, port: p.id });
+                                if(data.target.iid === p.attrs.iid) connectorTar = { id: e.id, port: p.id };
                             });
                         }
                     });
-
+                    
+                    connectorShape = new ArchGraphConnector({ source: connectorSrc, target: connectorTar }); 
                     connectorShape.addTo(this.jointGraph);
                 });
 
