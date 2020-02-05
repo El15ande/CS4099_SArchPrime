@@ -52,7 +52,10 @@ export default class ArchGraphComponent {
                     'Top': {
                         position: { name: 'top' },
                         label: {
-                            position: { name: 'inside' }
+                            position: { 
+                                name: 'inside',
+                                args: { offset: 15 } 
+                            }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },
@@ -62,7 +65,10 @@ export default class ArchGraphComponent {
                     'Bottom': {
                         position: { name: 'bottom' },
                         label: {
-                            position: { name: 'inside' }
+                            position: { 
+                                name: 'inside',
+                                args: { offset: 15 } 
+                            }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },

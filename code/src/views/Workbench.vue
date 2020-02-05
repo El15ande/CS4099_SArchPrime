@@ -826,6 +826,26 @@ export default {
                     componentShape.addTo(this.jointGraph);
                 });
 
+                configuration.connector.map((data) => {
+                    connectorShape = new JOINT.shapes.devs.Link(); 
+                    
+                    this.jointGraph.getElements().map((e) => {
+                        if(data.source.cpid === e.attributes.cpid) {
+                            e.getPorts().map((p) => { 
+                                if(data.source.iid === p.attrs.iid) connectorShape.source({ id: e.id, port: p.id });
+                            });
+                        }
+                        
+                        if(data.target.cpid === e.attributes.cpid) {
+                            e.getPorts().map((p) => {
+                                if(data.target.iid === p.attrs.iid) connectorShape.target({ id: e.id, port: p.id });
+                            });
+                        }
+                    });
+
+                    connectorShape.addTo(this.jointGraph);
+                });
+
                 // Blank space: right click;
                 this.jointPaper.on('blank:contextmenu', (evt) => {
                     this.showMenu('CFG_BLANK', evt);
@@ -893,8 +913,15 @@ export default {
                     };
                 });
 
-                this.jointPaper.on('link:connect', (linkView, evt) => {
-                    console.log('link:connect', linkView);
+                this.jointPaper.on('link:connect', (linkView) => {
+                    console.log(linkView);
+                    this.archDataAdapator.addConnector(
+                        { cid, cname },
+                        linkView.sourceView.model.attributes.cpid, 
+                        linkView.sourceView.model.getPort(linkView.sourceMagnet.getAttribute('port')).attrs.iid,
+                        linkView.targetView.model.attributes.cpid, 
+                        linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid,
+                    ).save();
                 });
 
                 this.jointPaper.on('link:disconnect', (linkView, evt) => {

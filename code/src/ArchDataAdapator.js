@@ -152,7 +152,15 @@ export default class ArchDataAdapator {
 
     makeConnector = function() {
         return {
+            source: {
+                cpid: 0,
+                iid: 0
+            },
 
+            target: {
+                cpid: 0,
+                iid: 0
+            }
         }
     };
 
@@ -340,7 +348,7 @@ export default class ArchDataAdapator {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.parent.sid, c.parent.sname);
 
         return this;
-    }
+    };
     
     // Update component data;
     //  attr: connection attribute that will be changed;
@@ -399,5 +407,19 @@ export default class ArchDataAdapator {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', cid, cname);
 
         return this;
-    }
+    };
+
+    addConnector(parent, srccid, srciid, tarcid, tariid) {
+        let parentConfig = this.getConfiguration(parent.cid, parent.cname);
+
+        if(parentConfig) {
+            let connector = this.makeConnector();
+            connector.source = { cpid: srccid, iid: srciid };
+            connector.target = { cpid: tarcid, iid: tariid };
+
+            parentConfig.connector.push(connector);
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+
+        return this;
+    };
 }
