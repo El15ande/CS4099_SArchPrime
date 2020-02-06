@@ -1,6 +1,25 @@
 <template>
     <div>
         <v-menu
+            :close-on-click='false'
+            :close-on-content-click='false'
+            :position-x="treeViewX"
+            :position-y="treeViewY"
+            :value='true'
+        >
+            <v-treeview
+                dark
+                hoverable
+                selected-color='indigo lighten-4'
+                :items='treeViewItems'
+            >
+                <template v-slot:prepend="{ item }">
+                    <v-icon>{{ item.icon }}</v-icon>
+                </template>
+            </v-treeview>
+        </v-menu>
+
+        <v-menu
             v-model="jointMenu"
             absolute
             :position-x="menuX"
@@ -214,6 +233,10 @@
         border: 1px solid #CFD8DC;
     }
 
+    .v-treeview-node {
+        background-color: #3949AB;
+    }
+
     /* Hierarchy change background (indigo accent-1) */
     .bg_hierarchy {
         background-color: #8C9EFF;
@@ -252,6 +275,10 @@ export default {
 
             jointGraph: null,
             jointPaper: null,
+            
+            treeViewX: 1600,
+            treeViewY: 85,
+            treeViewItems: [],
 
             // Error dialog;
             errorDialog: false,
@@ -565,6 +592,7 @@ export default {
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
             this.archDataAdapator.qclear();
+            this.treeViewItems = [];
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdapator.getViewpoint(vp);
@@ -817,9 +845,13 @@ export default {
             let componentShape, connectorShape, connectorSrc, connectorTar;
 
             if(configuration) {
+                let treeIndex = 0;
+
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
                 this.archDataAdapator.qpush({ cid, cname });
+                
+                this.treeViewItems = this.archDataAdapator.getTree(cid, cname);
 
                 configuration.component.map((data) => {
                     componentShape = new ArchGraphComponent(data);
@@ -914,7 +946,6 @@ export default {
                 });
 
                 this.jointPaper.on('link:connect', (linkView) => {
-                    console.log(linkView);
                     this.archDataAdapator.addConnector(
                         { cid, cname },
                         linkView.sourceView.model.attributes.cpid, 
@@ -926,6 +957,10 @@ export default {
 
                 this.jointPaper.on('link:disconnect', (linkView, evt) => {
                     console.log('disconnect', linkView);
+                });
+
+                this.jointPaper.on('link:contextmenu', (linkView) => {
+                    console.log('lcontext', linkView);
                 });
             }  
         },

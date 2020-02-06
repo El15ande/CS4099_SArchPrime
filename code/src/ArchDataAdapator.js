@@ -320,6 +320,33 @@ export default class ArchDataAdapator {
         }
     };
 
+    // Get treeview items;
+    getTree = function(cid, cname) {
+        let treeItem;
+        let configuration = this.getConfiguration(cid, cname);
+
+        let makeTree = function(cp) {
+            let item = { name: cp.cpname, icon:'mdi-arrow-right-bold-box' };
+            
+            if(cp.component.length > 0) {
+                item.icon = 'mdi-arrow-down-bold-box';
+                item.children = [];
+                cp.component.map(scp => item.children.push(makeTree(scp)));
+            }
+
+            return item;
+        }
+
+        if(configuration.component.length > 0) {
+            treeItem = { name: cname, icon: 'mdi-home-analytics', children: []};
+            configuration.component.map(cp => treeItem.children.push(makeTree(cp)));
+        }
+
+        return treeItem
+            ? [treeItem]
+            : [{ name: cname }];
+    }
+
     // Add a new component to current configuration;
     //  parent: parent configuration;
     //  cname: new component name;
@@ -409,6 +436,10 @@ export default class ArchDataAdapator {
         return this;
     };
 
+    // Add a new connector to current configuration;
+    //  parent: parent configuration;
+    //  srccid, srciid: source port ids;
+    //  tarcid, tariid: target port ids;
     addConnector(parent, srccid, srciid, tarcid, tariid) {
         let parentConfig = this.getConfiguration(parent.cid, parent.cname);
 
@@ -421,5 +452,5 @@ export default class ArchDataAdapator {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;
-    };
+    }
 }
