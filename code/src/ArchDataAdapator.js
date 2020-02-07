@@ -323,7 +323,7 @@ export default class ArchDataAdapator {
     // Get treeview items;
     getTree = function() {
         let treeItem;
-        let configuration = this.getConfiguration(this.archQueue[0].cid, this.archQueue[0].cname); // this.getConfiguration(cid, cname);
+        let configuration = this.getConfiguration(this.archQueue[0].cid, this.archQueue[0].cname);
 
         let makeTree = function(cp, parent) {
             let item = { cid: cp.cpid, name: cp.cpname, icon:'mdi-arrow-right-bold-box', parent };
@@ -366,6 +366,8 @@ export default class ArchDataAdapator {
         return this;
     };
 
+    // Remove a component from current configuration;
+    //  c: component to be removed;
     deleteComponent = function(c) {
         let parentConfig = this.getConfiguration(c.sparent.sid, c.sparent.sname);
 
@@ -383,6 +385,7 @@ export default class ArchDataAdapator {
     //      size: adjust canvas size;
     //      aintf: add a new interface to this component;
     //      rintf: remove the target interface;
+    //      eintf: edit interface data;
     //  cid, cname: component key;
     //  v: new value;
     updateComponent = function(attr, cid, cname, v) {

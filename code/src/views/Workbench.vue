@@ -804,6 +804,7 @@ export default {
             }
         },
 
+        // Deregister viewpoint/connection events;
         deregisterViewModel() {
             this.jointPaper.off('element:pointerup');
             this.jointPaper.off('link:pointerdown');
@@ -943,6 +944,7 @@ export default {
             }  
         },
 
+        // Jump to configuration from the menu;
         jumpConfiguration(cid, cname) {
             let queue = [];
             let target;
@@ -963,10 +965,11 @@ export default {
                 this.archDataAdapator.qclear();
                 queue.map(i => this.archDataAdapator.qpush(i));
             }
-            
+
             this.renderConfiguration(cid, cname);
         },
 
+        // Add a new component in current configuration;
         addComponent() {
             this.componentDialog = false;
 
@@ -974,6 +977,7 @@ export default {
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
 
+        // Add a new interface in selected component;
         addInterface() {
             this.interfaceDialog = false;
 
@@ -1008,10 +1012,17 @@ export default {
             this.renderConfiguration(this.selectedComponent.sparent.cid, this.selectedComponent.sparent.cname);
         },
 
+        // Deregister current component/connector evemts;
         deregisterConfiguration() {
             this.jointPaper.off('blank:contextmenu');
             this.jointPaper.off('element:pointerdblclick');
             this.jointPaper.off('element:pointerup');
+            this.jointPaper.off('element:contextmenu');
+            this.jointPaper.off('element:magnet:contextmenu');
+            this.jointPaper.off('link:connect');
+
+            this.selectedComponent = {};
+            this.selectedConnector = {};
         }
     },
 
