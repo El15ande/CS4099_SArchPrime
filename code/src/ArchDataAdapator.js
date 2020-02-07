@@ -311,7 +311,7 @@ export default class ArchDataAdapator {
                 configuration = configuration.component[configuration.component.findIndex(cp => 
                     (cp.cpid === this.archQueue[i].cid) && (cp.cpname === this.archQueue[i].cname))];
             }
-
+            
             let index = configuration.component.findIndex(cp => (cp.cpid === cid) && (cp.cpname === cname));
             
             return (index === -1)
@@ -325,26 +325,26 @@ export default class ArchDataAdapator {
         let treeItem;
         let configuration = this.getConfiguration(cid, cname);
 
-        let makeTree = function(cp) {
-            let item = { name: cp.cpname, icon:'mdi-arrow-right-bold-box' };
+        let makeTree = function(cp, parent) {
+            let item = { cid: cp.cpid, name: cp.cpname, icon:'mdi-arrow-right-bold-box', parent };
             
             if(cp.component.length > 0) {
                 item.icon = 'mdi-arrow-down-bold-box';
                 item.children = [];
-                cp.component.map(scp => item.children.push(makeTree(scp)));
+                cp.component.map(scp => item.children.push(makeTree(scp, item)));
             }
 
             return item;
         }
 
         if(configuration.component.length > 0) {
-            treeItem = { name: cname, icon: 'mdi-home-analytics', children: []};
-            configuration.component.map(cp => treeItem.children.push(makeTree(cp)));
+            treeItem = { cid, name: cname, icon: 'mdi-home-analytics', children: []};
+            configuration.component.map(cp => treeItem.children.push(makeTree(cp, treeItem)));
         }
 
         return treeItem
             ? [treeItem]
-            : [{ name: cname }];
+            : [{ cid, name: cname, icon: 'mdi-home-analytics'}];
     }
 
     // Add a new component to current configuration;

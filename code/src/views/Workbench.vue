@@ -14,7 +14,7 @@
                 :items='treeViewItems'
             >
                 <template v-slot:prepend="{ item }">
-                    <v-icon>{{ item.icon }}</v-icon>
+                    <a @click="jumpConfiguration(item.cid, item.name)"><v-icon>{{ item.icon }}</v-icon></a>
                 </template>
             </v-treeview>
         </v-menu>
@@ -411,8 +411,6 @@ export default {
                             }
                         };
 
-                    console.log(_this.selectedConnector);
-
                     let menu = _this.selectedConnector.llabel.length > 0
                         ? [removeLabel, removeConnection, editLabel]
                         : [addLabel, removeConnection];
@@ -607,24 +605,6 @@ export default {
                     }
                 });
                 vpshape.vpid = vp;
-
-                /*vpshape = new JOINT.shapes.standard.Rectangle({
-                    vpid: vp,
-                    attrs: {
-                        label: { 
-                            text: vp,
-                            'font-size': 20
-                        }
-                    },
-                    position: {
-                        x: viewpoint.canvas.x,
-                        y: viewpoint.canvas.y
-                    },
-                    size: {
-                        width: viewpoint.canvas.width,
-                        height: viewpoint.canvas.height
-                    }
-                });*/
                 
                 vpshape.addTo(this.jointGraph);
             });
@@ -956,13 +936,32 @@ export default {
                 });
 
                 this.jointPaper.on('link:disconnect', (linkView, evt) => {
-                    console.log('disconnect', linkView);
                 });
 
                 this.jointPaper.on('link:contextmenu', (linkView) => {
-                    console.log('lcontext', linkView);
                 });
             }  
+        },
+
+        jumpConfiguration(cid, cname) {
+            let queue = [];
+            let target;
+
+            let traverse = function(item) {
+                if(item.cid === cid && item.name === cname) target = item;
+                else if(item.children) item.children.map(sitem => traverse(sitem));
+            }
+
+            let rpush = function(item) {
+                queue.push({ cid: item.cid, cname: item.name });
+                if(item.parent) rpush(item.parent);
+            }
+
+            this.treeViewItems[0].children.map(item => traverse(item));
+            if(target) rpush(target);
+
+            this.archDataAdapator.archQueue = queue.reverse();
+            this.renderConfiguration(cid, cname);
         },
 
         addComponent() {
