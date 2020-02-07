@@ -964,6 +964,9 @@ export default {
                 rpush(target);
                 this.archDataAdapator.qclear();
                 queue.map(i => this.archDataAdapator.qpush(i));
+            } else {
+                let temp = this.archDataAdapator.archQueue[0];
+                this.archDataAdapator.qclear().qpush(temp);
             }
 
             this.renderConfiguration(cid, cname);
