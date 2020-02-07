@@ -321,9 +321,9 @@ export default class ArchDataAdapator {
     };
 
     // Get treeview items;
-    getTree = function(cid, cname) {
+    getTree = function() {
         let treeItem;
-        let configuration = this.getConfiguration(cid, cname);
+        let configuration = this.getConfiguration(this.archQueue[0].cid, this.archQueue[0].cname); // this.getConfiguration(cid, cname);
 
         let makeTree = function(cp, parent) {
             let item = { cid: cp.cpid, name: cp.cpname, icon:'mdi-arrow-right-bold-box', parent };
@@ -338,13 +338,13 @@ export default class ArchDataAdapator {
         }
 
         if(configuration.component.length > 0) {
-            treeItem = { cid, name: cname, icon: 'mdi-home-analytics', children: []};
+            treeItem = { cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics', children: []};
             configuration.component.map(cp => treeItem.children.push(makeTree(cp, treeItem)));
         }
 
         return treeItem
             ? [treeItem]
-            : [{ cid, name: cname, icon: 'mdi-home-analytics'}];
+            : [{ cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics'}];
     }
 
     // Add a new component to current configuration;

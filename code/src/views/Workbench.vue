@@ -831,7 +831,7 @@ export default {
                 this.deregisterConfiguration();
                 this.archDataAdapator.qpush({ cid, cname });
                 
-                this.treeViewItems = this.archDataAdapator.getTree(cid, cname);
+                this.treeViewItems = this.archDataAdapator.getTree();
 
                 configuration.component.map((data) => {
                     componentShape = new ArchGraphComponent(data);
@@ -953,14 +953,17 @@ export default {
             }
 
             let rpush = function(item) {
-                queue.push({ cid: item.cid, cname: item.name });
                 if(item.parent) rpush(item.parent);
+                queue.push({ cid: item.cid, cname: item.name });
             }
 
             this.treeViewItems[0].children.map(item => traverse(item));
-            if(target) rpush(target);
-
-            this.archDataAdapator.archQueue = queue.reverse();
+            if(target) {
+                rpush(target);
+                this.archDataAdapator.qclear();
+                queue.map(i => this.archDataAdapator.qpush(i));
+            }
+            
             this.renderConfiguration(cid, cname);
         },
 
