@@ -92,7 +92,7 @@ export default class ArchDataAdapator {
             /*
                 Link labels
             */
-           labels: []
+           label: ''
         }
     };
 
@@ -279,11 +279,10 @@ export default class ArchDataAdapator {
                         c.target = after.newTarget;
                         break;
                     case 'alabel':
-                        c.labels.length = 0;
-                        c.labels.push(after);
+                        c.label = after;
                         break;
                     case 'rlabel':
-                        c.labels.length = 0;
+                        c.label = '';
                         break;
                     default: break;
                 }

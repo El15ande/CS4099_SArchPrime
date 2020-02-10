@@ -410,7 +410,7 @@ export default {
                             }
                         };
 
-                    let menu = _this.selectedConnector.llabel.length > 0
+                    let menu = _this.selectedConnector.llabel
                         ? [removeLabel, removeConnection, editLabel]
                         : [addLabel, removeConnection];
 
@@ -633,14 +633,9 @@ export default {
                         x: c.target.x,
                         y: c.target.y
                     });
-                if(c.labels) {
-                    let labelArr = c.labels.map((l) => {
-                        return {
-                            attrs: { text: { text: l } }
-                        };
-                    });
-                    conshape.labels(labelArr);
-                }
+                if(c.label) conshape.appendLabel({ 
+                    attrs: { text: { text: c.label } }
+                });
 
                 conshape.addTo(this.jointGraph);
             });
