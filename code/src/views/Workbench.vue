@@ -508,7 +508,9 @@ export default {
                             description: 'Remove this component',
                             colourclass: ['bg_delete'],
                             action: function() {
-                                console.log(_this.selectedConnector)
+                                _this.jointMenu = false;
+                                _this.archDataAdapator.removeConnector(_this.selectedConnector).save();
+                                _this.renderConfiguration(_this.selectedConnector.sparent.cid, _this.selectedConnector.sparent.cname);
                             }
                         }
                     ];
@@ -833,10 +835,12 @@ export default {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
             let componentShape, connectorShape, connectorSrc, connectorTar;
 
+            let sparent = { cid, cname };
+
             if(configuration) {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
-                this.archDataAdapator.qpush({ cid, cname });
+                this.archDataAdapator.qpush(sparent);
                 
                 this.treeViewItems = this.archDataAdapator.getTree();
 
@@ -904,7 +908,7 @@ export default {
                             y: evt.offsetY
                         },
                         ssize: elementView.model.attributes.size,
-                        sparent: { cid, cname }
+                        sparent
                     };
                 });
 
@@ -921,7 +925,7 @@ export default {
                             y: evt.offsetY
                         },
                         ssize: elementView.model.attributes.size,
-                        sparent: { cid, cname },
+                        sparent,
 
                         sintf: {
                             iid: target.attrs.iid,
@@ -934,7 +938,7 @@ export default {
 
                 this.jointPaper.on('link:connect', (linkView) => {
                     this.archDataAdapator.addConnector(
-                        { cid, cname },
+                        sparent,
                         linkView.sourceView.model.attributes.cpid, 
                         linkView.sourceView.model.getPort(linkView.sourceMagnet.getAttribute('port')).attrs.iid,
                         linkView.targetView.model.attributes.cpid, 
@@ -955,7 +959,8 @@ export default {
                         target: {
                             cpid: linkView.targetView.model.attributes.cpid, 
                             iid: linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid
-                        }
+                        },
+                        sparent
                     }
                 });
             }  
@@ -1054,8 +1059,6 @@ export default {
     },
 
     mounted() {
-        let _this = this;
-
         this.setTopBar();
 
         this.jointGraph = new JOINT.dia.Graph;
@@ -1117,6 +1120,8 @@ export default {
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
 
         this.archDataAdapator.save();
+
+        // location.reload();
     }
 }
 </script>

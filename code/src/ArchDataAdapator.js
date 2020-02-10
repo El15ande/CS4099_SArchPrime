@@ -456,4 +456,20 @@ export default class ArchDataAdapator {
 
         return this;
     }
+
+    removeConnector(c) {
+        let parentConfig = this.getConfiguration(c.sparent.cid, c.sparent.cname);
+
+        if(parentConfig) {
+            parentConfig.connector = parentConfig.connector.filter((cn) => { 
+                return !(c.source.cpid === cn.source.cpid 
+                    && c.source.iid === cn.source.iid
+                    && c.target.cpid === cn.target.cpid
+                    && c.target.iid === cn.target.iid
+                ); 
+            });
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+
+        return this;
+    }
 }
