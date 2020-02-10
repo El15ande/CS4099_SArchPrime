@@ -262,7 +262,6 @@
 import { EVENTBUS, AxiosRequest } from '../main.js';
 import ArchDataAdapator from '../ArchDataAdapator.js';
 import ArchGraphComponent from '../ArchGraphComponent.js';
-import ArchGraphInterface from '../ArchGraphInterface.js';
 import ArchGraphConnector from '../ArchGraphConnector.js';
 import $ from 'jquery';
 import * as JOINT from 'jointjs';
@@ -403,7 +402,7 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataAdapator.deleteConnection(
+                                _this.archDataAdapator.removeConnection(
                                     _this.selectedConnector.lsource, 
                                     _this.selectedConnector.ltarget
                                 ).save();
@@ -449,7 +448,7 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataAdapator.deleteComponent(
+                                _this.archDataAdapator.removeComponent(
                                     _this.selectedComponent
                                 ).save();
                                 _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
@@ -503,7 +502,16 @@ export default {
                     ];
                 }
                 case 'CFG_LINK': {
-                    return [];
+                    return [
+                        {
+                            name: 'Remove Connector',
+                            description: 'Remove this component',
+                            colourclass: ['bg_delete'],
+                            action: function() {
+                                console.log(_this.selectedConnector)
+                            }
+                        }
+                    ];
                 }
                 case 'CFG_BLANK': {
                     return [
@@ -536,7 +544,7 @@ export default {
                         }
                     ];
                 }
-                default: { return []; } 
+                default: { return []; }
             }
         }
     },
@@ -826,8 +834,6 @@ export default {
             let componentShape, connectorShape, connectorSrc, connectorTar;
 
             if(configuration) {
-                let treeIndex = 0;
-
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
                 this.archDataAdapator.qpush({ cid, cname });
@@ -936,10 +942,21 @@ export default {
                     ).save();
                 });
 
-                this.jointPaper.on('link:disconnect', (linkView, evt) => {
-                });
+                // this.jointPaper.on('link:disconnect', (linkView, evt) => {});
 
-                this.jointPaper.on('link:contextmenu', (linkView) => {
+                this.jointPaper.on('link:contextmenu', (linkView, evt) => {
+                    this.showMenu('CFG_LINK', evt);
+                    
+                    this.selectedConnector = {
+                        source: {
+                            cpid: linkView.sourceView.model.attributes.cpid, 
+                            iid: linkView.sourceView.model.getPort(linkView.sourceMagnet.getAttribute('port')).attrs.iid
+                        },
+                        target: {
+                            cpid: linkView.targetView.model.attributes.cpid, 
+                            iid: linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid
+                        }
+                    }
                 });
             }  
         },
@@ -1054,40 +1071,40 @@ export default {
         });
         setTimeout(() => { this.setViewModel(); }, 400);
         
-        EVENTBUS.$on('FETCH_ARCHVIEWS', function() {
+        EVENTBUS.$on('FETCH_ARCHVIEWS', () => {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', _this.archDataAdapator.getViewpoints());
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdapator.getViewpoints());
             }, 200);
         });
 
-        EVENTBUS.$on('DELIVER_CREATEVIEW', function(payload) {
-            _this.archDataAdapator.addViewpoint(payload).save();
-            _this.renderViewModel();
+        EVENTBUS.$on('DELIVER_CREATEVIEW', (payload) => {
+            this.archDataAdapator.addViewpoint(payload).save();
+            this.renderViewModel();
         });
 
-        EVENTBUS.$on('DELIVER_REMOVEVIEW', function(payload) {
-            _this.archDataAdapator.deleteViewpoint(payload).save();
-            _this.renderViewModel();
+        EVENTBUS.$on('DELIVER_REMOVEVIEW', (payload) => {
+            this.archDataAdapator.removeViewpoint(payload).save();
+            this.renderViewModel();
         });
 
-        EVENTBUS.$on('DELIVER_ENTERVIEW', function(payload) {
-            _this.jointGraph.clear();
-            _this.deregisterViewModel();
-            _this.renderConfiguration(0, payload);
+        EVENTBUS.$on('DELIVER_ENTERVIEW', (payload) => {
+            this.jointGraph.clear();
+            this.deregisterViewModel();
+            this.renderConfiguration(0, payload);
         });
 
-        EVENTBUS.$on('DELIVER_GOOVERVIEW', function() {
-            _this.renderViewModel();
+        EVENTBUS.$on('DELIVER_GOOVERVIEW', () => {
+            this.renderViewModel();
         });
 
 
 
-        EVENTBUS.$on('ERROR_CONFIGNOTFOUND', function(id, name) {
-            _this.errorDialog = true;
-            _this.errorMessage = 'Configuration not found';
+        EVENTBUS.$on('ERROR_CONFIGNOTFOUND', (id, name) => {
+            this.errorDialog = true;
+            this.errorMessage = 'Configuration not found';
 
-            _this.jointGraph.clear();
-            _this.renderConfiguration(id, name);
+            this.jointGraph.clear();
+            this.renderConfiguration(id, name);
         });
     },
 
@@ -1100,7 +1117,6 @@ export default {
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
 
         this.archDataAdapator.save();
-        location.reload();
     }
 }
 </script>

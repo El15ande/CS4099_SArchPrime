@@ -196,7 +196,7 @@ export default class ArchDataAdapator {
 
     // Delete a unique viewpoint;
     //  vpname: target viewpoint name;
-    deleteViewpoint = function(vpname) {
+    removeViewpoint = function(vpname) {
         delete this.data[vpname];
 
         this.data.connections.map((conn) => {
@@ -253,7 +253,7 @@ export default class ArchDataAdapator {
     // Delete a connection;
     //  source: source viewpoint;
     //  target: target viewpoint;
-    deleteConnection = function(source, target) {
+    removeConnection = function(source, target) {
         this.data.connections = this.data.connections.filter((c) => {
             return JSON.stringify({ source, target }) !== JSON.stringify({ source: c.source, target: c.target });
         });
@@ -368,7 +368,7 @@ export default class ArchDataAdapator {
 
     // Remove a component from current configuration;
     //  c: component to be removed;
-    deleteComponent = function(c) {
+    removeComponent = function(c) {
         let parentConfig = this.getConfiguration(c.sparent.sid, c.sparent.sname);
 
         if(parentConfig) {

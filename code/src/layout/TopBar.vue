@@ -178,8 +178,6 @@ export default {
     },
 
     mounted() {
-        let _this = this;
-        
         sessionStorage.setItem('topbarHeight', this.$el.offsetHeight);
 
         if(this.$route.name === 'Workbench') {
@@ -187,16 +185,16 @@ export default {
             EVENTBUS.$emit('FETCH_ARCHVIEWS');
         }
 
-        EVENTBUS.$on('RETURN_ARCHVIEWS', function(payload) {
-            _this.archViews = payload;
+        EVENTBUS.$on('RETURN_ARCHVIEWS', (payload) => {
+            this.archViews = payload;
         });
 
-        EVENTBUS.$on('INVOKE_CREATEVIEW', function() {
-            _this.createViewDialog = true;
+        EVENTBUS.$on('INVOKE_CREATEVIEW', () => {
+            this.createViewDialog = true;
         });
 
-        EVENTBUS.$on('INVOKE_ENTERVIEW', function(payload) {
-            _this.selectedView = payload;
+        EVENTBUS.$on('INVOKE_ENTERVIEW', (payload) => {
+            this.selectedView = payload;
         });
     },
 
