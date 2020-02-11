@@ -40,7 +40,7 @@ Technology Stacks
 - [x] 2. Support hierarchical features on architecture components. (progress: hierarchical architecture component)
 - [x] 3. Provide visualisation on architecture components.
 - [x] 4. Implement an architecture connector design tool that provides interactions among architectural components. (revealing the relationship by component definitions and supporting manually connection) (progress: hierarchical architecture component with intra-components connector)
-- [ ] 5. Support hierarchical features on connectors. (progress: a single architecture view - hierarchical architecture component with inter-components connector)
+- [x] 5. Support hierarchical features on connectors. (progress: a single architecture view - hierarchical architecture component with inter-components connector)
 - [x] 6. Provide visualisation on connectors.
 - [x] 7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
 - [ ] 8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
