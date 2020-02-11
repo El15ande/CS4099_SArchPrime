@@ -152,6 +152,10 @@ export default class ArchDataAdapator {
 
     makeConnector = function() {
         return {
+
+            /*
+                Source & target component/interface;
+            */
             source: {
                 cpid: 0,
                 iid: 0
@@ -160,7 +164,12 @@ export default class ArchDataAdapator {
             target: {
                 cpid: 0,
                 iid: 0
-            }
+            },
+
+            /*
+                connector label
+            */
+            cnlabel: ''
         }
     };
 
@@ -214,15 +223,17 @@ export default class ArchDataAdapator {
     //  vpname: target viewpoint name;
     updateViewpoint = function(attr, vpname, v) {
         switch (attr) {
-            case 'position':
+            case 'position': {
                 this.data[vpname].canvas.x = v.x;
                 this.data[vpname].canvas.y = v.y;
                 break;
-            case 'size':
+            }
+            case 'size': {
                 this.data[vpname].canvas.width = v.width;
                 this.data[vpname].canvas.height = v.height;
                 break;
-            default: break;
+            }
+            default: { break; }
         }
 
         return this;
@@ -274,17 +285,20 @@ export default class ArchDataAdapator {
         this.data.connections.map((c) => {
             if(JSON.stringify(oldConnection) === JSON.stringify({ source: c.source, target: c.target })) {
                 switch(attr) {
-                    case 'link':
+                    case 'link': {
                         c.source = after.newSource;
                         c.target = after.newTarget;
                         break;
-                    case 'alabel':
+                    }
+                    case 'alabel': {
                         c.label = after;
                         break;
-                    case 'rlabel':
+                    }
+                    case 'rlabel': {
                         c.label = '';
                         break;
-                    default: break;
+                    }
+                    default: { break; }
                 }
             }
         });
@@ -454,8 +468,10 @@ export default class ArchDataAdapator {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;
-    }
+    };
 
+    // Remove a connector from current configuration;
+    //  c: connector to be removed
     removeConnector(c) {
         let parentConfig = this.getConfiguration(c.sparent.cid, c.sparent.cname);
 
@@ -467,7 +483,27 @@ export default class ArchDataAdapator {
                     && c.target.iid === cn.target.iid
                 ); 
             });
-        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.sparent.sid, c.sparent.sname);
+
+        return this;
+    };
+
+    updateConnector(attr, parent, before, after) {
+        let parentConfig = this.getConfiguration(parent.cid, parent.cname);
+
+        if(parentConfig) {
+            parentConfig.connector.map((cn) => {
+                if(JSON.stringify(before) === JSON.stringify({ source: cn.source, target: cn.target })) {
+                    switch (attr) {
+                        case 'alabel': {
+                            cn.cnlabel = after;
+                            break;
+                        }
+                        default: { break; }
+                    }
+                }
+            });
+        } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname); 
 
         return this;
     }

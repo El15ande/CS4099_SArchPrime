@@ -83,7 +83,7 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='addConnectionLabel()'
+                        @click='addConnectorLabel()'
                     >
                         Add/Edit
                     </v-btn>
@@ -298,7 +298,6 @@ export default {
 
 
             // Connection label cache;
-            selectedConnectorModel: null,
             labelDialog: false,
             labelDialogTitle: '',
             labelInput: '',
@@ -410,11 +409,9 @@ export default {
                             }
                         };
 
-                    let menu = _this.selectedConnector.llabel
+                    return _this.selectedConnector.llabel
                         ? [removeLabel, removeConnection, editLabel]
                         : [addLabel, removeConnection];
-
-                    return menu;
                 }
                 case 'VM_BLANK': {
                     return [
@@ -502,18 +499,31 @@ export default {
                     ];
                 }
                 case 'CFG_LINK': {
-                    return [
-                        {
-                            name: 'Remove Connector',
-                            description: 'Remove this component',
-                            colourclass: ['bg_delete'],
-                            action: function() {
-                                _this.jointMenu = false;
-                                _this.archDataAdapator.removeConnector(_this.selectedConnector).save();
-                                _this.renderConfiguration(_this.selectedConnector.sparent.cid, _this.selectedConnector.sparent.cname);
-                            }
+                    let removeConnector = {
+                        name: 'Remove Connector',
+                        description: 'Remove this component',
+                        colourclass: ['bg_delete'],
+                        action: function() {
+                            _this.jointMenu = false;
+                            _this.archDataAdapator.removeConnector(_this.selectedConnector).save();
+                            _this.renderConfiguration(_this.selectedConnector.sparent.cid, _this.selectedConnector.sparent.cname);
                         }
-                    ];
+                    };
+                    
+                    let addLabel = {
+                        name: 'Add Label',
+                        description: 'Add label to this connector',
+                        colourclass: ['bg_create'],
+                        action: function() {
+                            _this.jointMenu = false;
+                            _this.labelDialogTitle = 'Add Label'
+                            _this.labelDialog = true;
+                        }
+                    }
+
+                    return _this.selectedConnector.cnlabel
+                        ? [removeConnector]
+                        : [addLabel, removeConnector];
                 }
                 case 'CFG_BLANK': {
                     return [
@@ -633,9 +643,8 @@ export default {
                         x: c.target.x,
                         y: c.target.y
                     });
-                if(c.label) conshape.appendLabel({ 
-                    attrs: { text: { text: c.label } }
-                });
+                
+                if(c.label) conshape.appendLabel({ attrs: { text: { text: c.label } } });
 
                 conshape.addTo(this.jointGraph);
             });
@@ -738,7 +747,6 @@ export default {
                         : linkView.targetPoint,
                     llabel: linkView.model.attributes.labels
                 };
-                this.selectedConnectorModel = linkView.model;
             });
 
             // Blank space: right click;
@@ -752,21 +760,29 @@ export default {
         },
         
         // Add link (connection) label;
-        addConnectionLabel() {
+        addConnectorLabel() {
             this.labelDialog = false;
 
-            this.selectedConnectorModel.appendLabel({ 
-                attrs: { text: { text: this.labelInput } } 
-            });
+            if(this.menuContext === 'VM_LINK') {
+                this.archDataAdapator.updateConnection(
+                    'alabel',
+                    this.selectedConnector,
+                    this.labelInput
+                ).save();
 
-            this.archDataAdapator.updateConnection(
-                'alabel',
-                this.selectedConnector,
-                this.labelInput
-            ).save();
+                this.renderViewModel();
+            } else {
+                this.archDataAdapator.updateConnector(
+                    'alabel',
+                    this.selectedConnector.sparent,
+                    { source: this.selectedConnector.source, target: this.selectedConnector.target },
+                    this.labelInput
+                ).save();
+
+                this.renderConfiguration(this.selectedConnector.sparent.cid, this.selectedConnector.sparent.cname);
+            }
 
             this.labelInput = '';
-            this.renderViewModel();
         },
 
         // Remove link (connection) label;
@@ -860,7 +876,7 @@ export default {
                         }
                     });
                     
-                    connectorShape = new ArchGraphConnector({ source: connectorSrc, target: connectorTar }); 
+                    connectorShape = new ArchGraphConnector({ source: connectorSrc, target: connectorTar, label: data.cnlabel }); 
                     connectorShape.addTo(this.jointGraph);
                 });
 
@@ -955,6 +971,7 @@ export default {
                             cpid: linkView.targetView.model.attributes.cpid, 
                             iid: linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid
                         },
+                        cnlabel: linkView.model.attributes.labels,
                         sparent
                     }
                 });
@@ -1115,8 +1132,7 @@ export default {
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
 
         this.archDataAdapator.save();
-
-        // location.reload();
+        location.reload();
     }
 }
 </script>

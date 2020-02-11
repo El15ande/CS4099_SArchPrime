@@ -6,6 +6,8 @@ export default class ArchGraphConnector {
             source: data.source,
             target: data.target
         });
+        
+        if(data.label) this.jointConnector.appendLabel({ attrs: { text: { text: data.label } } });
     }
 
     // Add the component to paper;
