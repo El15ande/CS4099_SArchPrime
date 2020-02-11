@@ -488,6 +488,12 @@ export default class ArchDataAdapator {
         return this;
     };
 
+    // Update connector data;
+    //  attr: connection attribute that will be changed;
+    //      alabel: add label to the connector;
+    //      rlabel: remove label from the connector;
+    //  before: data 1;
+    //  after: data 2;
     updateConnector(attr, parent, before, after) {
         let parentConfig = this.getConfiguration(parent.cid, parent.cname);
 
@@ -497,6 +503,10 @@ export default class ArchDataAdapator {
                     switch (attr) {
                         case 'alabel': {
                             cn.cnlabel = after;
+                            break;
+                        }
+                        case 'rlabel': {
+                            cn.cnlabel = '';
                             break;
                         }
                         default: { break; }

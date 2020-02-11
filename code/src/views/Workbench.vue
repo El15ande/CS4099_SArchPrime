@@ -390,7 +390,7 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.removeConnectionLabel();
+                                _this.removeConnectorLabel();
                             }
                         };
                     
@@ -519,10 +519,32 @@ export default {
                             _this.labelDialogTitle = 'Add Label'
                             _this.labelDialog = true;
                         }
+                    };
+
+                    let removeLabel = {
+                        name: 'Remove Label',
+                        description: 'Remove label from this connector',
+                        colourclass: ['bg_delete'],
+                        action: function() {
+                            _this.jointMenu = false;
+                            _this.removeConnectorLabel();
+                        }
+                    };
+
+                    let editLabel = {
+                        name: 'Edit Label',
+                        description: 'Edit label',
+                        colourclass: ['bg_edit'],
+                        action: function() {
+                            _this.jointMenu = false;
+                            _this.labelDialogTitle = 'Edit Label'
+                            _this.labelDialog = true;
+                            _this.labelInput = _this.selectedConnector.cnlabel[0].attrs.text.text;
+                        }
                     }
 
                     return _this.selectedConnector.cnlabel
-                        ? [removeConnector]
+                        ? [removeLabel, removeConnector, editLabel]
                         : [addLabel, removeConnector];
                 }
                 case 'CFG_BLANK': {
@@ -759,7 +781,7 @@ export default {
             });
         },
         
-        // Add link (connection) label;
+        // Add link (connection/connector) label;
         addConnectorLabel() {
             this.labelDialog = false;
 
@@ -785,14 +807,24 @@ export default {
             this.labelInput = '';
         },
 
-        // Remove link (connection) label;
-        removeConnectionLabel() {
-            this.archDataAdapator.updateConnection(
-                'rlabel',
-                this.selectedConnector
-            ).save();
+        // Remove link (connection/connector) label;
+        removeConnectorLabel() {
+            if(this.menuContext === 'VM_LINK') {
+                this.archDataAdapator.updateConnection(
+                    'rlabel',
+                    this.selectedConnector
+                ).save();
 
-            this.renderViewModel();
+                this.renderViewModel();
+            } else {
+                this.archDataAdapator.updateConnector(
+                    'rlabel',
+                    this.selectedConnector.sparent,
+                    { source: this.selectedConnector.source, target: this.selectedConnector.target }
+                );
+
+                this.renderConfiguration(this.selectedConnector.sparent.cid, this.selectedConnector.sparent.cname);
+            }
         },
 
         // Customise component style;
