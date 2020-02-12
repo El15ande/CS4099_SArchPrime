@@ -338,7 +338,8 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.archDataAdapator.addConnection(
-                                    _this.selectedComponent
+                                    _this.selectedComponent.sid,
+                                    _this.selectedComponent.spos
                                 ).save();
                                 _this.renderViewModel();
                             }
