@@ -333,7 +333,7 @@ export default {
                     return [
                         {
                             name: 'New View Connection',
-                            description: 'Create a new connection between views',
+                            description: 'Create a new connection from this view',
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -362,7 +362,7 @@ export default {
                     let addLabel = 
                         {
                             name: 'Add Label',
-                            description: 'Add label to this connection',
+                            description: 'Add a label to this connection',
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -374,7 +374,7 @@ export default {
                     let editLabel = 
                         {
                             name: 'Edit Label',
-                            description: 'Edit label',
+                            description: 'Edit the label pattern',
                             colourclass: ['bg_edit'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -387,7 +387,7 @@ export default {
                     let removeLabel =
                         {
                             name: 'Remove Label',
-                            description: 'Remove label from this connection',
+                            description: 'Remove the label from this connection',
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -397,8 +397,8 @@ export default {
                     
                     let removeConnection = 
                         {
-                            name:'Remove Connection',
-                            description: 'Remove this connection',
+                            name:'Remove View Connection',
+                            description: 'Remove the connection',
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -431,7 +431,7 @@ export default {
                     return [
                         {
                             name: 'New Interface',
-                            description: 'Add a new interface to this component',
+                            description: 'Add an interface to this component',
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -441,8 +441,8 @@ export default {
                         },
 
                         {
-                            name: 'Remove component',
-                            description: 'Remove this component',
+                            name: 'Remove Component',
+                            description: 'Remove the component',
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -469,8 +469,8 @@ export default {
                 case 'CFG_PORT': {
                     return [
                         {
-                            name: 'Remove interface',
-                            description: 'Remove this interface',
+                            name: 'Remove Interface',
+                            description: 'Remove the interface',
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -502,7 +502,7 @@ export default {
                 case 'CFG_LINK': {
                     let removeConnector = {
                         name: 'Remove Connector',
-                        description: 'Remove this component',
+                        description: 'Remove the component',
                         colourclass: ['bg_delete'],
                         action: function() {
                             _this.jointMenu = false;
@@ -513,7 +513,7 @@ export default {
                     
                     let addLabel = {
                         name: 'Add Label',
-                        description: 'Add label to this connector',
+                        description: 'Add a label to this connector',
                         colourclass: ['bg_create'],
                         action: function() {
                             _this.jointMenu = false;
@@ -524,7 +524,7 @@ export default {
 
                     let removeLabel = {
                         name: 'Remove Label',
-                        description: 'Remove label from this connector',
+                        description: 'Remove the label from this connector',
                         colourclass: ['bg_delete'],
                         action: function() {
                             _this.jointMenu = false;
@@ -534,7 +534,7 @@ export default {
 
                     let editLabel = {
                         name: 'Edit Label',
-                        description: 'Edit label',
+                        description: 'Edit the label pattern',
                         colourclass: ['bg_edit'],
                         action: function() {
                             _this.jointMenu = false;
@@ -552,7 +552,7 @@ export default {
                     return [
                         {
                             name: 'Back',
-                            description: 'Return back to previous level',
+                            description: 'Return to previous architecture level',
                             colourclass: ['bg_hierarchy'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -569,7 +569,7 @@ export default {
                         },
 
                         {
-                            name: 'New component',
+                            name: 'New Component',
                             description: 'Create a new component',
                             colourclass: ['bg_create'],
                             action: function() {
