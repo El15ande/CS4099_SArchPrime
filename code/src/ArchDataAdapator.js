@@ -537,6 +537,8 @@ export default class ArchDataAdapator {
         canvasses.forEach((c) => {
             if(c.x < canvas.x) canvas.x = c.x;
             if(c.y < canvas.y) canvas.y = c.y;
+        });
+        canvasses.forEach((c) => {
             if(c.x+c.width > canvas.x+canvas.width) canvas.width = c.x + c.width - canvas.x;
             if(c.y+c.height > canvas.y+canvas.height) canvas.height = c.y + c.height - canvas.y;
         });

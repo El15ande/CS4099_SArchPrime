@@ -6,13 +6,16 @@ export default class ArchGraphComponent {
         this.jointComponent = new JOINT.shapes.standard.Rectangle({
             attrs: {
                 body: {
-                    'fill-opacity': intera ? 0 : 1
+                    'stroke': intera ? '#9FA8DA' : '#333333',
+                    'fill': intera ? '#9FA8DA' : '#FFFFFF',
+                    'fill-opacity': intera ? 0.05 : 1
                 },
-                label: {
-                    text: data.cpname,
-                    'font-size': 20,
-                    'fill': intera ? '#9FA8DA' : '#333333'
-                }
+                label: intera 
+                    ? {} 
+                    : {
+                        text: data.cpname ? data.cpname : null,
+                        'font-size': 20
+                    }
             },
 
             position: {
@@ -82,7 +85,7 @@ export default class ArchGraphComponent {
                 }
             },
 
-            cpid: data.cpid,
+            cpid: intera ? intera : (data.cpid ? data.cpid : -1)
         });
 
         this.cpname = data.cpname;

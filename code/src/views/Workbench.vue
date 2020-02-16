@@ -678,7 +678,7 @@ export default {
                     'position',
                     elementView.model.attr().label.text, 
                     elementView.model.attributes.position
-                ).save();
+                )
             });
 
             // Link (connection): drag & drop;
@@ -877,8 +877,7 @@ export default {
         // Hierarchical configuration setter;
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
-            let componentShape, connectorShape, connectorSrc, connectorTar;
-            let interaCanvas, interaConfig;
+            let componentShape, connectorShape, connectorSrc, connectorTar, interaConfig;
             let sparent = { cid, cname };
 
             if(configuration) {
@@ -889,13 +888,11 @@ export default {
                 this.treeViewItems = this.archDataAdapator.getTree(); // Treeview;
 
                 if(configuration.component.length > 0) {
-                    interaCanvas = this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; })); // Intera configuration;
+                    // Intera configuration;
                     interaConfig = new ArchGraphComponent({
-                        canvas: interaCanvas,
-                        cpid: `intera_${cid}`,
-                        cpname: `intera_${cname}`,
+                        canvas: this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; })),
                         cpintf: configuration.cpintf ? [...configuration.cpintf] : []
-                    }, true);
+                    }, 'interaConfig');
                     interaConfig.addTo(this.jointGraph);
 
                     configuration.component.map((data) => {
@@ -949,7 +946,21 @@ export default {
                         elementView.model.attributes.cpid,
                         elementView.model.attr().label.text,
                         elementView.model.attributes.position
-                    ).save();
+                    );
+
+                    // Update intera configuration;
+                    let configuration = this.archDataAdapator.getConfiguration(cid, cname);
+                    let interaConfig;
+
+                    if(configuration) {
+                        this.jointGraph.getElements().map((e) => {
+                            if(e.attributes.cpid === 'interaConfig') {
+                                interaConfig = this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; }));
+                                e.position(interaConfig.x, interaConfig.y);
+                                e.resize(interaConfig.width, interaConfig.height);
+                            }
+                        });
+                    }                    
                 });
 
                 // Component: right click;
