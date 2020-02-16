@@ -878,7 +878,7 @@ export default {
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdapator.getConfiguration(cid, cname);
             let componentShape, connectorShape, connectorSrc, connectorTar;
-
+            let interaCanvas, interaConfig;
             let sparent = { cid, cname };
 
             if(configuration) {
@@ -886,14 +886,25 @@ export default {
                 this.deregisterConfiguration();
                 this.archDataAdapator.qpush(sparent);
                 
-                this.treeViewItems = this.archDataAdapator.getTree();
+                this.treeViewItems = this.archDataAdapator.getTree(); // Treeview;
 
-                configuration.component.map((data) => {
-                    componentShape = new ArchGraphComponent(data);
+                if(configuration.component.length > 0) {
+                    interaCanvas = this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; })); // Intera configuration;
+                    interaConfig = new ArchGraphComponent({
+                        canvas: interaCanvas,
+                        cpid: `intera_${cid}`,
+                        cpname: `intera_${cname}`,
+                        cpintf: configuration.cpintf ? [...configuration.cpintf] : []
+                    }, true);
+                    interaConfig.addTo(this.jointGraph);
 
-                    componentShape.addTo(this.jointGraph);
-                });
+                    configuration.component.map((data) => {
+                        componentShape = new ArchGraphComponent(data);
 
+                        componentShape.addTo(this.jointGraph);
+                    });
+                }
+                
                 configuration.connector.map((data) => {
                     this.jointGraph.getElements().map((e) => {
                         if(data.source.cpid === e.attributes.cpid) {

@@ -6,7 +6,20 @@ export default class ArchDataAdapator {
         this.archQueue = [];
     }
 
-    // Get the last element in archQueue;
+    // Post current data to the server;
+    save = function() {
+        AxiosRequest('POST', `arch/${this.data.name}`, this.data);
+
+        return this;
+    };
+
+
+
+    /*
+        archQueue;
+    */
+
+    // Get last item in queue;
     qlast = function() {
         let last = null;
 
@@ -15,7 +28,7 @@ export default class ArchDataAdapator {
         return last;
     };
 
-    // Push payload into archQueue;
+    // Push an item into queue;
     //  payload: item to be pushed;
     qpush = function(payload) {
         let lastItem = this.qlast();
@@ -27,14 +40,14 @@ export default class ArchDataAdapator {
         return this;
     };
 
-    // Pop the last element in archQueue;
+    // Pop last item in queue;
     qpop = function() {
         this.archQueue.pop();
 
         return this;
     };
 
-    // Clear current archQueue;
+    // Clear current queue;
     qclear = function() {
         this.archQueue.length = 0;
 
@@ -43,24 +56,21 @@ export default class ArchDataAdapator {
 
 
 
-    // Post current data to the server;
-    save = function() {
-        AxiosRequest('POST', `arch/${this.data.name}`, this.data);
+    /*
+        JSON object constructors;
+    */
 
-        return this;
-    };
-
-    makeCanvas = function() {
+    makeCanvas = function(x, y, w, h) {
         return {
-            x: 0,
-            y: 0,
-            width: 240,
-            height: 120
+            x: x ? x : 0,
+            y: y ? y : 0,
+            width: w ? w : 0,
+            height: h ? h : 0
         };
     };
 
     makeViewpoint = function() {
-        let canvas = this.makeCanvas();
+        let canvas = this.makeCanvas(0, 0, 240, 120);
 
         return {
             canvas,
@@ -97,7 +107,7 @@ export default class ArchDataAdapator {
     };
 
     makeComponent = function() {
-        let canvas = this.makeCanvas();
+        let canvas = this.makeCanvas(0, 0, 240, 120);
 
         return {
             canvas,
@@ -176,7 +186,7 @@ export default class ArchDataAdapator {
 
 
     /*
-        Viewpoints;
+        Viewpoints (top-level component);
     */
     
     // Get all viewpoints names;
@@ -240,7 +250,7 @@ export default class ArchDataAdapator {
     };
 
     /*
-        Viewpoint connections;
+        Viewpoint connections (top-level connector);
     */
 
     // Get all connections between viewpoints;
@@ -308,7 +318,7 @@ export default class ArchDataAdapator {
 
 
     /*
-        Configurations;
+        Configurations (hierarchical component & connector);
     */
 
     // Get configuration/component (containing component & connector arraies) through the archQueue and identification;
@@ -516,5 +526,23 @@ export default class ArchDataAdapator {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname); 
 
         return this;
+    };
+
+    /*
+        Intera;
+    */
+    getInteraCanvas(canvasses) {
+        let canvas = {...canvasses[0]};
+        
+        canvasses.forEach((c) => {
+            if(c.x < canvas.x) canvas.x = c.x;
+            if(c.y < canvas.y) canvas.y = c.y;
+            if(c.x+c.width > canvas.x+canvas.width) canvas.width = c.x + c.width - canvas.x;
+            if(c.y+c.height > canvas.y+canvas.height) canvas.height = c.y + c.height - canvas.y;
+        });
+        canvas.x -= 20; canvas.y -= 20;
+        canvas.width += 40; canvas.height += 40;
+
+        return canvas;
     }
 }

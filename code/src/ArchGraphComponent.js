@@ -2,13 +2,17 @@ import * as JOINT from 'jointjs';
 import ArchGraphInterface from './ArchGraphInterface';
 
 export default class ArchGraphComponent {
-    constructor(data) {
+    constructor(data, intera) {
         this.jointComponent = new JOINT.shapes.standard.Rectangle({
             attrs: {
+                body: {
+                    'fill-opacity': intera ? 0 : 1
+                },
                 label: {
                     text: data.cpname,
-                    'font-size': 20
-                },
+                    'font-size': 20,
+                    'fill': intera ? '#9FA8DA' : '#333333'
+                }
             },
 
             position: {
