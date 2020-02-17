@@ -34,52 +34,58 @@ export default class ArchGraphComponent {
                         position: { name: 'left' },
                         label: {
                             position: { 
-                                name: 'bottom',
-                                args: { y: 25 }
+                                name: intera ? 'left' : 'bottom',
+                                args: { y: intera ? 10 : 25 }
                             }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },
-                            '.joint-port-label': { fontSize: 15 }
+                            '.joint-port-label': { fontSize: intera ? 20 : 12 }
                         }
                     },
                     'Right': {
                         position: { name: 'right' },
                         label: {
                             position: { 
-                                name: 'bottom',
-                                args: { y: 25 }
+                                name: intera ? 'right' : 'bottom',
+                                args: { y: intera ? 10 : 25 }
                             }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },
-                            '.joint-port-label': { fontSize: 15 }
+                            '.joint-port-label': { fontSize: intera ? 20 : 12 }
                         }
                     },
                     'Top': {
                         position: { name: 'top' },
                         label: {
                             position: { 
-                                name: 'inside',
-                                args: { offset: 15 } 
+                                name: 'top',
+                                args: {
+                                    x: 8, 
+                                    y: intera ? -20 : 20 
+                                } 
                             }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },
-                            '.joint-port-label': { fontSize: 15 }
+                            '.joint-port-label': { fontSize: intera ? 20 : 12 }
                         }
                     },
                     'Bottom': {
                         position: { name: 'bottom' },
                         label: {
                             position: { 
-                                name: 'inside',
-                                args: { offset: 15 } 
+                                name: 'bottom',
+                                args: {
+                                    x: 8, 
+                                    y: intera ? 20 : -20 
+                                }
                             }
                         },
                         attrs: {
                             '.joint-port-body': { magnet: true },
-                            '.joint-port-label': { fontSize: 15 }
+                            '.joint-port-label': { fontSize: intera ? 20 : 12 }
                         }
                     }
                 }
@@ -92,7 +98,7 @@ export default class ArchGraphComponent {
         this.jointInterfaces = [];
 
         data.cpintf.map((intf) => { 
-            let port = new ArchGraphInterface(intf);
+            let port = new ArchGraphInterface(intf, intera);
             this.jointInterfaces.push(port);
             this.jointComponent.addPort(port.jointPort);
         });

@@ -971,17 +971,30 @@ export default {
 
                 // Component: right click;
                 this.jointPaper.on('element:contextmenu', (elementView, evt) => {
-                    this.showMenu('CFG_ELEMENT', evt);
-                    this.selectedComponent = {
-                        sid: elementView.model.attributes.cpid,
-                        sname: elementView.model.attr().label.text,
-                        spos: {
-                            x: evt.offsetX,
-                            y: evt.offsetY
-                        },
-                        ssize: elementView.model.attributes.size,
-                        sparent
-                    };
+                    this.showMenu(
+                        elementView.model.attributes.cpid === 'interaConfig' ? 'CFG_BLANK' : 'CFG_ELEMENT',
+                        evt
+                    );
+
+                    this.selectedComponent = elementView.model.attributes.cpid === 'interaConfig'
+                        ? {
+                            sid: cid,
+                            sname: cname,
+                            spos: {
+                                x: evt.offsetX,
+                                y: evt.offsetY
+                            }
+                        }
+                        : {
+                            sid: elementView.model.attributes.cpid,
+                            sname: elementView.model.attr().label.text,
+                            spos: {
+                                x: evt.offsetX,
+                                y: evt.offsetY
+                            },
+                            ssize: elementView.model.attributes.size,
+                            sparent
+                        };
                 });
 
                 this.jointPaper.on('element:magnet:contextmenu', (elementView, evt, magnet) => {

@@ -1,5 +1,5 @@
 export default class ArchGraphInterface {
-    constructor(data) {
+    constructor(data, intera) {
         this.jointPort = {
             group: data.ipos,
 
@@ -9,8 +9,9 @@ export default class ArchGraphInterface {
                     magnet: true,
                     d: this._getD(data.itype, data.ipos),
                     
-                    stroke: '#000000',
-                    fill: '#FFFFFF'
+                    stroke: intera ? '#9FA8DA' : '#000000',
+                    strokeWidth: intera ? 2 : 1,
+                    fill: intera ? '#9FA8DA' : '#ffffff'
                 },
                 
                 iid: data.iid,
