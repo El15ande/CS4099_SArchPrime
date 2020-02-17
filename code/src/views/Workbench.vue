@@ -256,6 +256,10 @@
     .bg_edit {
         background-color: #84FFFF;
     }
+
+    .tool-remove {
+        display: none;
+    }
 </style>
 
 <script>
@@ -941,16 +945,18 @@ export default {
 
                 // Component: drag & drop;
                 this.jointPaper.on('element:pointerup', (elementView) => {
-                    this.archDataAdapator.updateComponent(
-                        'position',
-                        elementView.model.attributes.cpid,
-                        elementView.model.attr().label.text,
-                        elementView.model.attributes.position
-                    );
-
                     // Update intera configuration;
                     let configuration = this.archDataAdapator.getConfiguration(cid, cname);
                     let interaConfig;
+
+                    if(elementView.model.attributes.cpid !== 'interaConfig') {
+                        this.archDataAdapator.updateComponent(
+                            'position',
+                            elementView.model.attributes.cpid,
+                            elementView.model.attr().label.text,
+                            elementView.model.attributes.position
+                        );
+                    }
 
                     if(configuration) {
                         this.jointGraph.getElements().map((e) => {
@@ -1011,8 +1017,6 @@ export default {
                         linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid,
                     ).save();
                 });
-
-                // this.jointPaper.on('link:disconnect', (linkView, evt) => {});
 
                 this.jointPaper.on('link:contextmenu', (linkView, evt) => {
                     this.showMenu('CFG_LINK', evt);
@@ -1137,7 +1141,11 @@ export default {
             height: this.$el.offsetParent.clientHeight,
 
             gridSize: 20,
-            drawGrid: { name: 'mesh' }
+            drawGrid: { name: 'mesh' },
+
+            interactive: function(cellView) {
+                return cellView.model.attributes.cpid !== 'interaConfig';
+            }
         });
         setTimeout(() => { this.setViewModel(); }, 400);
         
