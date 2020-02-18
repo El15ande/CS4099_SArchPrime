@@ -186,7 +186,7 @@ export default {
         }
 
         EVENTBUS.$on('RETURN_ARCHVIEWS', (payload) => {
-            this.archViews = payload;
+            payload.forEach((item, index) => this.$set(this.archViews, index, item) );
         });
 
         EVENTBUS.$on('INVOKE_CREATEVIEW', () => {

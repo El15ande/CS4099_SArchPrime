@@ -228,7 +228,8 @@ export default class ArchDataAdapator {
 
     // Update viewpoint data;
     //  attr: viewpoint attribute that will be changed;
-    //      position: viepwoint position;
+    //      position: viewpoint position;
+    //      customise: viewpoint name & size;
     //  v: new value;
     //  vpname: target viewpoint name;
     updateViewpoint = function(attr, vpname, v) {
@@ -238,9 +239,20 @@ export default class ArchDataAdapator {
                 this.data[vpname].canvas.y = v.y;
                 break;
             }
-            case 'size': {
+            case 'customise': {
                 this.data[vpname].canvas.width = v.width;
                 this.data[vpname].canvas.height = v.height;
+
+                if(vpname !== v.name) {
+                    this.data.indices[this.data.indices.indexOf(vpname)] = v.name;
+                    Object.defineProperty(this.data, v.name, Object.getOwnPropertyDescriptor(this.data, vpname));
+                    delete this.data[vpname];
+
+                    this.data.connections.map((cn) => {
+                        if(cn.source === vpname) cn.source = v.name;
+                        if(cn.target === vpname) cn.target = v.name;
+                    });
+                }
                 break;
             }
             default: { break; }
@@ -405,7 +417,7 @@ export default class ArchDataAdapator {
     // Update component data;
     //  attr: connection attribute that will be changed;
     //      position: change canvas position;
-    //      size: adjust canvas size;
+    //      customise: rename & canvas size;
     //      aintf: add a new interface to this component;
     //      rintf: remove the target interface;
     //      eintf: edit interface data;
@@ -421,7 +433,8 @@ export default class ArchDataAdapator {
                     component.canvas.y = v.y;
                     break;
                 }
-                case 'size': {
+                case 'customise': {
+                    component.cpname = v.name;
                     component.canvas.width = v.width;
                     component.canvas.height = v.height;
                     break;

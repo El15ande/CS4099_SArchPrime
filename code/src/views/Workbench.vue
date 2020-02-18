@@ -104,20 +104,34 @@
             <v-card>
                 <v-card-title>Customise</v-card-title>
                 <v-card-actions>
-                    <v-col md='6'>
-                        <v-text-field
-                            v-model="customiseWidth"
-                            outlined
-                            label="Current width (block)" 
-                        />
-                    </v-col>
+                    <v-col cols="12">
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field
+                                    v-model="newComponentName"
+                                    outlined
+                                    label="Component name"
+                                />
+                            </v-col>
+                        </v-row>
 
-                    <v-col md='6'>
-                        <v-text-field
-                            v-model="customiseHeight"
-                            outlined
-                            label="Current height (block)" 
-                        />
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    v-model="customiseWidth"
+                                    outlined
+                                    label="Current width (block)" 
+                                />
+                            </v-col>
+
+                            <v-col cols="6">
+                                <v-text-field
+                                    v-model="customiseHeight"
+                                    outlined
+                                    label="Current height (block)" 
+                                />
+                            </v-col>
+                        </v-row>
                     </v-col>
                 </v-card-actions>
                 <v-card-actions>
@@ -358,6 +372,7 @@ export default {
                                 _this.customiseDialog = true;
                                 _this.customiseWidth = _this.selectedComponent.ssize.width / 20;
                                 _this.customiseHeight = _this.selectedComponent.ssize.height / 20;
+                                _this.newComponentName = _this.selectedComponent.sid;
                             }
                         }
                     ];
@@ -466,6 +481,7 @@ export default {
                                 _this.customiseDialog = true;
                                 _this.customiseWidth = _this.selectedComponent.ssize.width / 20;
                                 _this.customiseHeight = _this.selectedComponent.ssize.height / 20;
+                                _this.newComponentName = _this.selectedComponent.sname;
                             }
                         }
                     ];
@@ -580,7 +596,16 @@ export default {
                                 _this.jointMenu = false;
                                 _this.componentDialog = true;
                             }
-                        }
+                        },
+
+                        /*{
+                            name: 'New Intera Component',
+                            description: 'Create a wrapper component',
+                            colourclass: ['bg_create'],
+                            action: function() {
+                                _this.jointMenu = false;
+                            }
+                        }*/
                     ];
                 }
                 default: { return []; }
@@ -838,21 +863,24 @@ export default {
 
             if(this.menuContext === 'VM_ELEMENT') {
                 this.archDataAdapator.updateViewpoint(
-                    'size',
+                    'customise',
                     this.selectedComponent.sid,
                     {
+                        name: this.newComponentName,
                         width: Math.ceil(this.customiseWidth) * 20,
-                        height: Math.ceil(this.customiseHeight) * 20
+                        height: Math.ceil(this.customiseHeight) * 20,
                     }
                 ).save();
 
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdapator.getViewpoints())
                 this.renderViewModel();
             } else if(this.menuContext === 'CFG_ELEMENT') {
                 this.archDataAdapator.updateComponent(
-                    'size',
+                    'customise',
                     this.selectedComponent.sid,
                     this.selectedComponent.sname,
                     {
+                        name: this.newComponentName,
                         width: Math.ceil(this.customiseWidth) * 20,
                         height: Math.ceil(this.customiseHeight) * 20
                     }
@@ -860,6 +888,8 @@ export default {
 
                 this.renderConfiguration(this.selectedComponent.sparent.cid, this.selectedComponent.sparent.cname);
             }
+
+            this.newComponentName = '';
         },
 
         // Deregister viewpoint/connection events;
@@ -1083,6 +1113,8 @@ export default {
             this.componentDialog = false;
 
             this.archDataAdapator.addComponent(this.selectedComponent, this.newComponentName).save();
+
+            this.newComponentName = '';
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
 
