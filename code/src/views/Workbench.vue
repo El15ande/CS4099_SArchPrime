@@ -603,15 +603,14 @@ export default {
                             }
                         },
 
-                        // TODO Intera component wrapper;
-                        /*{
+                        {
                             name: 'New Intera Component',
                             description: 'Create a wrapper component',
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
                             }
-                        }*/
+                        }
                     ];
                 }
                 default: { return []; }
@@ -1223,6 +1222,7 @@ export default {
         EVENTBUS.$on('DELIVER_ENTERVIEW', (payload) => {
             this.jointGraph.clear();
             this.deregisterViewModel();
+            this.archDataAdapator.qclear();
             this.renderConfiguration(0, payload);
         });
 

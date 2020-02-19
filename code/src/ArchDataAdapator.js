@@ -217,6 +217,7 @@ export default class ArchDataAdapator {
     //  vpname: target viewpoint name;
     removeViewpoint = function(vpname) {
         delete this.data[vpname];
+        this.data.indices = this.data.indices.filter((i) => { return i != vpname; });
 
         this.data.connections.map((conn) => {
             if(conn.source === vpname) conn.source = { x: 0, y: 0 };
