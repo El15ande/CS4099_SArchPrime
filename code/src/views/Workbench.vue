@@ -600,15 +600,7 @@ export default {
                             action: function() {
                                 _this.jointMenu = false;
                                 _this.componentDialog = true;
-                            }
-                        },
-
-                        {
-                            name: 'New Intera Component',
-                            description: 'Create a wrapper component',
-                            colourclass: ['bg_create'],
-                            action: function() {
-                                _this.jointMenu = false;
+                                _this.newComponentName = '';
                             }
                         }
                     ];
@@ -984,7 +976,7 @@ export default {
                     let configuration = this.archDataAdapator.getConfiguration(cid, cname);
                     let interaConfig;
 
-                    if(elementView.model.attributes.cpid !== 'interaConfig') {
+                    if(elementView.model.attributes.cpname !== 'interaConfig') {
                         this.archDataAdapator.updateComponent(
                             'position',
                             elementView.model.attributes.cpid,
@@ -995,7 +987,7 @@ export default {
 
                     if(configuration) {
                         this.jointGraph.getElements().map((e) => {
-                            if(e.attributes.cpid === 'interaConfig') {
+                            if(e.attributes.cpname === 'interaConfig') {
                                 interaConfig = this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; }));
                                 e.position(interaConfig.x, interaConfig.y);
                                 e.resize(interaConfig.width, interaConfig.height);
@@ -1007,11 +999,11 @@ export default {
                 // Component: right click;
                 this.jointPaper.on('element:contextmenu', (elementView, evt) => {
                     this.showMenu(
-                        elementView.model.attributes.cpid === 'interaConfig' ? 'CFG_BLANK' : 'CFG_ELEMENT',
+                        elementView.model.attributes.cpname === 'interaConfig' ? 'CFG_BLANK' : 'CFG_ELEMENT',
                         evt
                     );
 
-                    this.selectedComponent = elementView.model.attributes.cpid === 'interaConfig'
+                    this.selectedComponent = elementView.model.attributes.cpname === 'interaConfig'
                         ? {
                             sid: cid,
                             sname: cname,
@@ -1198,7 +1190,7 @@ export default {
             drawGrid: { name: 'mesh' },
 
             interactive: function(cellView) {
-                return cellView.model.attributes.cpid !== 'interaConfig';
+                return cellView.model.attributes.cpname !== 'interaConfig';
             }
         });
         setTimeout(() => { this.setViewModel(); }, 400);

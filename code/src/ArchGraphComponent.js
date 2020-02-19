@@ -91,10 +91,9 @@ export default class ArchGraphComponent {
                 }
             },
 
-            cpid: intera ? intera : (data.cpid ? data.cpid : -1)
+            cpid: intera ? 'INTERA' : (data.cpid ? data.cpid : -1),
+            cpname: intera ? intera : (data.cpname ? data.cpname : ''),
         });
-
-        this.cpname = data.cpname;
         this.jointInterfaces = [];
 
         data.cpintf.map((intf) => { 
@@ -108,5 +107,7 @@ export default class ArchGraphComponent {
     //  paper: joint paper;
     addTo(paper) {
         this.jointComponent.addTo(paper);
+
+        if(this.jointComponent.attributes.cpid !== 'INTERA') this.jointComponent.attributes.z = 100 + this.jointComponent.attributes.cpid;
     }
 }
