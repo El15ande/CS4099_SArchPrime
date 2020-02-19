@@ -47,10 +47,10 @@
             width='500'
         >
             <v-card outlined>
-                <v-card-title>Error</v-card-title>
+                <v-card-title>An error has occurred.</v-card-title>
                 <v-card-text>
-                    <div>Code: {{ errorMessage }}.</div>
-                    <div>Please retry.</div>
+                    <div>Error message: {{ errorMessage }}.</div>
+                    <div>{{ errorHint }}</div>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
@@ -300,6 +300,7 @@ export default {
             // Error dialog;
             errorDialog: false,
             errorMessage: 'error',
+            errorHint: '',
 
             // Click menu;
             jointMenu: false,
@@ -598,6 +599,7 @@ export default {
                             }
                         },
 
+                        // TODO Intera component wrapper;
                         /*{
                             name: 'New Intera Component',
                             description: 'Create a wrapper component',
@@ -1052,13 +1054,17 @@ export default {
                 });
 
                 this.jointPaper.on('link:connect', (linkView) => {
-                    this.archDataAdapator.addConnector(
-                        sparent,
-                        linkView.sourceView.model.attributes.cpid, 
-                        linkView.sourceView.model.getPort(linkView.sourceMagnet.getAttribute('port')).attrs.iid,
-                        linkView.targetView.model.attributes.cpid, 
-                        linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid,
-                    ).save();
+                    if(linkView.sourceMagnet && linkView.targetMagnet) {
+                        this.archDataAdapator.addConnector(
+                            sparent,
+                            linkView.sourceView.model.attributes.cpid, 
+                            linkView.sourceView.model.getPort(linkView.sourceMagnet.getAttribute('port')).attrs.iid,
+                            linkView.targetView.model.attributes.cpid, 
+                            linkView.targetView.model.getPort(linkView.targetMagnet.getAttribute('port')).attrs.iid,
+                        ).save();
+
+                        this.renderConfiguration(cid, cname);
+                    } else EVENTBUS.$emit('ERROR_NULLCONNECTOR', cid, cname);
                 });
 
                 this.jointPaper.on('link:contextmenu', (linkView, evt) => {
@@ -1224,9 +1230,17 @@ export default {
 
         EVENTBUS.$on('ERROR_CONFIGNOTFOUND', (id, name) => {
             this.errorDialog = true;
-            this.errorMessage = 'Configuration not found';
+            this.errorMessage = 'CONFIGURATION NOT FOUND';
+            this.errorHint = 'Please retry.';
 
-            this.jointGraph.clear();
+            this.renderConfiguration(id, name);
+        });
+
+        EVENTBUS.$on('ERROR_NULLCONNECTOR', (id, name) => {
+            this.errorDialog = true;
+            this.errorMessage = 'INVALID CONNECTOR SOURCE/TARGET';
+            this.errorHint = 'Connector needs to be built between 2 interfaces.';
+
             this.renderConfiguration(id, name);
         });
     },
@@ -1238,6 +1252,7 @@ export default {
         EVENTBUS.$off('DELIVER_ENTERVIEW');
         EVENTBUS.$off('DELIVER_GOOVERVIEW');
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
+        EVENTBUS.$off('ERROR_NULLCONNECTOR');
 
         this.archDataAdapator.save();
         location.reload();
