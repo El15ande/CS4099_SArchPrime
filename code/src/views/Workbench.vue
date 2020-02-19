@@ -50,7 +50,7 @@
                 <v-card-title>An error has occurred.</v-card-title>
                 <v-card-text>
                     <div>Error message: {{ errorMessage }}.</div>
-                    <div>{{ errorHint }}</div>
+                    <div class="error-hint">{{ errorHint }}</div>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
@@ -273,6 +273,10 @@
 
     .tool-remove {
         display: none;
+    }
+    
+    .error-hint {
+        font-weight: 750;
     }
 </style>
 
