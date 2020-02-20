@@ -83,12 +83,7 @@ export default class ArchDataAdaptor {
             /*
                 Connectors array;
             */
-            connector: [],
-            
-            /*
-                Intera component array;
-            */
-            cpintera: []
+            connector: []
         };
     };
 
@@ -136,9 +131,7 @@ export default class ArchDataAdaptor {
             /*
                 Component interfaces;
             */
-            cpintf: [],
-
-            cpintera: [],
+            cpintf: []
         }
     };
 
@@ -393,28 +386,17 @@ export default class ArchDataAdaptor {
     // Add a new component to current configuration;
     //  parent: parent configuration;
     //  cname: new component name;
-    addComponent = function(parent, cname, ctype) {
+    addComponent = function(parent, cname) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
         
         if(parentConfig) {
-            if(ctype === 'Intera (borderline)') {
-                parentConfig.cpintera.push({
-                    icname: cname,
-                    icpos: {
-                        x: parent.spos.x,
-                        y: parent.spos.y
-                    },
-                    icids: []
-                }); 
-            } else {
-                let component = this.makeComponent();
-                component.canvas.x = parent.spos.x;
-                component.canvas.y = parent.spos.y;
-                component.cpid = parentConfig.component.length + 1;
-                component.cpname = cname;
+            let component = this.makeComponent();
+            component.canvas.x = parent.spos.x;
+            component.canvas.y = parent.spos.y;
+            component.cpid = parentConfig.component.length + 1;
+            component.cpname = cname;
 
-                parentConfig.component.push(component);
-            }
+            parentConfig.component.push(component);
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;

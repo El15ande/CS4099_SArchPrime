@@ -163,13 +163,6 @@
                 <v-card-title>Create new component</v-card-title>
                 <v-card-actions>
                     <v-col md='12'>
-                        <v-select
-                            v-model="newComponentType"
-                            :items="componentTypes"
-                            :rules="['Required']"
-                            label="Component type"
-                        />
-
                         <v-text-field
                             v-model="newComponentName"
                             outlined
@@ -341,9 +334,7 @@ export default {
 
             // Hierarchical component;
             componentDialog: false,
-            componentTypes: ['Normal', 'Intera (borderline)'],
             newComponentName: '',
-            newComponentType: '',
 
 
             // Interface;
@@ -928,32 +919,13 @@ export default {
                 
                 this.treeViewItems = this.archDataAdaptor.getTree(); // Treeview;
 
-                if(configuration.component.length > 0 || configuration.cpintera.length > 0) {
+                if(configuration.component.length > 0) {
                     // Intera configuration;
                     interaConfig = new ArchGraphComponent({
                         canvas: this.archDataAdaptor.getInteraCanvas(configuration.component.map(c => { return c.canvas; })),
                         cpintf: configuration.cpintf ? [...configuration.cpintf] : []
                     }, 'interaConfig');
                     interaConfig.addTo(this.jointGraph);
-
-                    configuration.cpintera.map((data) => {
-                        if(data.icpos) {
-                            interaComponent = new ArchGraphComponent({
-                                canvas: {
-                                    width: 40,
-                                    height: 40,
-                                    x: data.icpos.x,
-                                    y: data.icpos.y
-                                },
-                                cpintf: [],
-                                cpname: data.icname
-                            }, 'interaComponent');
-
-                            interaComponent.addTo(this.jointGraph);
-                        } else {
-
-                        }
-                    });
 
                     configuration.component.map((data) => {
                         componentShape = new ArchGraphComponent(data);
@@ -1000,7 +972,7 @@ export default {
                 });
 
                 // Component: drag & drop;
-                this.jointPaper.on('element:pointerup', (elementView) => {
+                this.jointPaper.on('element:pointerup', (elementView, evt, x, y) => {
                     // Update intera configuration;
                     let configuration = this.archDataAdaptor.getConfiguration(cid, cname);
                     let interaConfig;
@@ -1142,10 +1114,9 @@ export default {
         addComponent() {
             this.componentDialog = false;
 
-            this.archDataAdaptor.addComponent(this.selectedComponent, this.newComponentName, this.newComponentType).save();
+            this.archDataAdaptor.addComponent(this.selectedComponent, this.newComponentName).save();
 
             this.newComponentName = '';
-            this.newComponentType = '';
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
 

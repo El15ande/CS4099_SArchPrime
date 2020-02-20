@@ -6,23 +6,15 @@ export default class ArchGraphComponent {
         this.jointComponent = new JOINT.shapes.standard.Rectangle({
             attrs: {
                 body: {
-                    'stroke': intera 
-                        ? ( intera === 'interaConfig' ? '#9FA8DA' : '#B0BEC5') 
-                        : '#333333',
-                    'fill': intera 
-                        ? ( intera === 'interaConfig' ? '#9FA8DA' : '#B0BEC5') 
-                        : '#FFFFFF',
+                    'stroke': intera ? '#9FA8DA' : '#333333',
+                    'fill': intera ? '#9FA8DA' : '#FFFFFF',
                     'fill-opacity': intera ? 0.05 : 1
                 },
                 label: intera 
-                    ? ( intera === 'interaComponent' 
-                        ? { 
-                            text: data.cpname 
-                        } 
-                        : {} ) 
+                    ? {}
                     : {
                         text: data.cpname ? data.cpname : null,
-                        'font-size': 20
+                        'font-size': this._getFontSize(data.canvas.width, data.canvas.height, data.cpname)
                     }
             },
 
@@ -100,7 +92,7 @@ export default class ArchGraphComponent {
             },
 
             cpid: intera ? 'INTERA' : (data.cpid ? data.cpid : -1),
-            cpname: data.cpname ? data.cpname : (intera ? intera : ''),
+            cpname: intera ? intera : (data.cpname ? data.cpname : ''),
         });
         this.jointInterfaces = [];
 
@@ -114,9 +106,14 @@ export default class ArchGraphComponent {
     // Add the component to paper;
     //  paper: joint paper;
     addTo(paper) {
-        if(this.jointComponent.attributes.cpid !== 'INTERA') {
-            this.jointComponent.attributes.z = 100 + this.jointComponent.attributes.cpid;
-        }
         this.jointComponent.addTo(paper);
+        this.jointComponent.attributes.z = 100 + this.jointComponent.attributes.cpid;
+    }
+
+    _getFontSize(w, h, str) {
+        if(h <= 20) return 12.5;
+        if(w/str.length <= 10.0) return w/str.length * 2;
+
+        return 20;
     }
 }
