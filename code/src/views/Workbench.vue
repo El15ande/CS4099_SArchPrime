@@ -163,6 +163,13 @@
                 <v-card-title>Create new component</v-card-title>
                 <v-card-actions>
                     <v-col md='12'>
+                        <v-select
+                            v-model="newComponentType"
+                            :items="componentTypes"
+                            :rules="['Required']"
+                            label="Component type"
+                        />
+
                         <v-text-field
                             v-model="newComponentName"
                             outlined
@@ -282,7 +289,7 @@
 
 <script>
 import { EVENTBUS, AxiosRequest } from '../main.js';
-import ArchDataAdapator from '../ArchDataAdapator.js';
+import ArchDataAdaptor from '../ArchDataAdaptor.js';
 import ArchGraphComponent from '../ArchGraphComponent.js';
 import ArchGraphConnector from '../ArchGraphConnector.js';
 import $ from 'jquery';
@@ -292,7 +299,7 @@ export default {
     data() {
         return {
             title: '',
-            archDataAdapator: {},
+            archDataAdaptor: {},
 
             jointGraph: null,
             jointPaper: null,
@@ -334,7 +341,10 @@ export default {
 
             // Hierarchical component;
             componentDialog: false,
+            componentTypes: ['Normal', 'Intera (borderline)'],
             newComponentName: '',
+            newComponentType: '',
+
 
             // Interface;
             interfaceDialog: false,
@@ -360,7 +370,7 @@ export default {
                             colourclass: ['bg_create'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataAdapator.addConnection(
+                                _this.archDataAdaptor.addConnection(
                                     _this.selectedComponent.sid,
                                     _this.selectedComponent.spos
                                 ).save();
@@ -426,7 +436,7 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataAdapator.removeConnection(
+                                _this.archDataAdaptor.removeConnection(
                                     _this.selectedConnector.lsource, 
                                     _this.selectedConnector.ltarget
                                 ).save();
@@ -470,7 +480,7 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataAdapator.removeComponent(
+                                _this.archDataAdaptor.removeComponent(
                                     _this.selectedComponent
                                 ).save();
                                 _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
@@ -499,7 +509,7 @@ export default {
                             colourclass: ['bg_delete'],
                             action: function() {
                                 _this.jointMenu = false;
-                                _this.archDataAdapator.updateComponent(
+                                _this.archDataAdaptor.updateComponent(
                                     'rintf',
                                     _this.selectedComponent.sid,
                                     _this.selectedComponent.sname,
@@ -531,7 +541,7 @@ export default {
                         colourclass: ['bg_delete'],
                         action: function() {
                             _this.jointMenu = false;
-                            _this.archDataAdapator.removeConnector(_this.selectedConnector).save();
+                            _this.archDataAdaptor.removeConnector(_this.selectedConnector).save();
                             _this.renderConfiguration(_this.selectedConnector.sparent.cid, _this.selectedConnector.sparent.cname);
                         }
                     };
@@ -586,8 +596,8 @@ export default {
                                     EVENTBUS.$emit('INVOKE_ENTERVIEW', null);
                                     _this.renderViewModel();
                                 } else {
-                                    _this.archDataAdapator.qpop();
-                                    let parent = _this.archDataAdapator.qlast();
+                                    _this.archDataAdaptor.qpop();
+                                    let parent = _this.archDataAdaptor.qlast();
                                     _this.renderConfiguration(parent.cid, parent.cname);
                                 }
                             }
@@ -625,7 +635,7 @@ export default {
 
             this.title = this.$route.params.name;
             AxiosRequest('get', `arch/${_this.title}`, null, (res) => {
-                if(res.data) _this.archDataAdapator = new ArchDataAdapator(res.data);
+                if(res.data) _this.archDataAdaptor = new ArchDataAdaptor(res.data);
             });
         },
 
@@ -652,17 +662,17 @@ export default {
 
        // View model configuration setter;
         setViewModel() {
-            let viewpoints = this.archDataAdapator.getViewpoints();
-            let connections = this.archDataAdapator.getConnections();
+            let viewpoints = this.archDataAdaptor.getViewpoints();
+            let connections = this.archDataAdaptor.getConnections();
             let viewpoint, vpshape, conshape;
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
-            this.archDataAdapator.qclear();
+            this.archDataAdaptor.qclear();
             this.treeViewItems = [];
 
             viewpoints.map((vp) => {
-                viewpoint = this.archDataAdapator.getViewpoint(vp);
+                viewpoint = this.archDataAdaptor.getViewpoint(vp);
 
                 vpshape = new JOINT.shapes.standard.Rectangle();
                 vpshape.position(viewpoint.canvas.x, viewpoint.canvas.y);
@@ -700,7 +710,7 @@ export default {
 
             // Cell (viewpoint): drag & drop;
             this.jointPaper.on('element:pointerup', (elementView) => {
-                this.archDataAdapator.updateViewpoint(
+                this.archDataAdaptor.updateViewpoint(
                     'position',
                     elementView.model.attr().label.text, 
                     elementView.model.attributes.position
@@ -726,7 +736,7 @@ export default {
                 
                 if(nearbyElements.length !== 0) {
                     if(linkView.sourcePoint.x === x && linkView.sourcePoint.y === y) {
-                        this.archDataAdapator.updateConnection(
+                        this.archDataAdaptor.updateConnection(
                             'link',
                             this.selectedConnector,
                             {
@@ -737,7 +747,7 @@ export default {
                             }
                         ).save();
                     } else if(linkView.targetPoint.x === x && linkView.targetPoint.y === y) {
-                        this.archDataAdapator.updateConnection(
+                        this.archDataAdaptor.updateConnection(
                             'link',
                             this.selectedConnector,
                             {
@@ -749,7 +759,7 @@ export default {
                         ).save();
                     }
                 } else {
-                    this.archDataAdapator.updateConnection(
+                    this.archDataAdaptor.updateConnection(
                         'link',
                         this.selectedConnector,
                         {
@@ -813,7 +823,7 @@ export default {
             this.labelDialog = false;
 
             if(this.menuContext === 'VM_LINK') {
-                this.archDataAdapator.updateConnection(
+                this.archDataAdaptor.updateConnection(
                     'alabel',
                     this.selectedConnector,
                     this.labelInput
@@ -821,7 +831,7 @@ export default {
 
                 this.renderViewModel();
             } else {
-                this.archDataAdapator.updateConnector(
+                this.archDataAdaptor.updateConnector(
                     'alabel',
                     this.selectedConnector.sparent,
                     { source: this.selectedConnector.source, target: this.selectedConnector.target },
@@ -837,14 +847,14 @@ export default {
         // Remove link (connection/connector) label;
         removeConnectorLabel() {
             if(this.menuContext === 'VM_LINK') {
-                this.archDataAdapator.updateConnection(
+                this.archDataAdaptor.updateConnection(
                     'rlabel',
                     this.selectedConnector
                 ).save();
 
                 this.renderViewModel();
             } else {
-                this.archDataAdapator.updateConnector(
+                this.archDataAdaptor.updateConnector(
                     'rlabel',
                     this.selectedConnector.sparent,
                     { source: this.selectedConnector.source, target: this.selectedConnector.target }
@@ -859,7 +869,7 @@ export default {
             this.customiseDialog = false;
 
             if(this.menuContext === 'VM_ELEMENT') {
-                this.archDataAdapator.updateViewpoint(
+                this.archDataAdaptor.updateViewpoint(
                     'customise',
                     this.selectedComponent.sid,
                     {
@@ -869,10 +879,10 @@ export default {
                     }
                 ).save();
 
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdapator.getViewpoints())
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdaptor.getViewpoints())
                 this.renderViewModel();
             } else if(this.menuContext === 'CFG_ELEMENT') {
-                this.archDataAdapator.updateComponent(
+                this.archDataAdaptor.updateComponent(
                     'customise',
                     this.selectedComponent.sid,
                     this.selectedComponent.sname,
@@ -907,24 +917,43 @@ export default {
 
         // Hierarchical configuration setter;
         renderConfiguration(cid, cname) {
-            let configuration = this.archDataAdapator.getConfiguration(cid, cname);
-            let componentShape, connectorShape, connectorSrc, connectorTar, interaConfig;
+            let configuration = this.archDataAdaptor.getConfiguration(cid, cname);
+            let componentShape, connectorShape, connectorSrc, connectorTar, interaConfig, interaComponent;
             let sparent = { cid, cname };
 
             if(configuration) {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
-                this.archDataAdapator.qpush(sparent);
+                this.archDataAdaptor.qpush(sparent);
                 
-                this.treeViewItems = this.archDataAdapator.getTree(); // Treeview;
+                this.treeViewItems = this.archDataAdaptor.getTree(); // Treeview;
 
-                if(configuration.component.length > 0) {
+                if(configuration.component.length > 0 || configuration.cpintera.length > 0) {
                     // Intera configuration;
                     interaConfig = new ArchGraphComponent({
-                        canvas: this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; })),
+                        canvas: this.archDataAdaptor.getInteraCanvas(configuration.component.map(c => { return c.canvas; })),
                         cpintf: configuration.cpintf ? [...configuration.cpintf] : []
                     }, 'interaConfig');
                     interaConfig.addTo(this.jointGraph);
+
+                    configuration.cpintera.map((data) => {
+                        if(data.icpos) {
+                            interaComponent = new ArchGraphComponent({
+                                canvas: {
+                                    width: 40,
+                                    height: 40,
+                                    x: data.icpos.x,
+                                    y: data.icpos.y
+                                },
+                                cpintf: [],
+                                cpname: data.icname
+                            }, 'interaComponent');
+
+                            interaComponent.addTo(this.jointGraph);
+                        } else {
+
+                        }
+                    });
 
                     configuration.component.map((data) => {
                         componentShape = new ArchGraphComponent(data);
@@ -973,11 +1002,11 @@ export default {
                 // Component: drag & drop;
                 this.jointPaper.on('element:pointerup', (elementView) => {
                     // Update intera configuration;
-                    let configuration = this.archDataAdapator.getConfiguration(cid, cname);
+                    let configuration = this.archDataAdaptor.getConfiguration(cid, cname);
                     let interaConfig;
 
-                    if(elementView.model.attributes.cpname !== 'interaConfig') {
-                        this.archDataAdapator.updateComponent(
+                    if(elementView.model.attributes.cpid !== 'INTERA') {
+                        this.archDataAdaptor.updateComponent(
                             'position',
                             elementView.model.attributes.cpid,
                             elementView.model.attr().label.text,
@@ -988,7 +1017,7 @@ export default {
                     if(configuration) {
                         this.jointGraph.getElements().map((e) => {
                             if(e.attributes.cpname === 'interaConfig') {
-                                interaConfig = this.archDataAdapator.getInteraCanvas(configuration.component.map(c => { return c.canvas; }));
+                                interaConfig = this.archDataAdaptor.getInteraCanvas(configuration.component.map(c => { return c.canvas; }));
                                 e.position(interaConfig.x, interaConfig.y);
                                 e.resize(interaConfig.width, interaConfig.height);
                             }
@@ -1050,7 +1079,7 @@ export default {
 
                 this.jointPaper.on('link:connect', (linkView) => {
                     if(linkView.sourceMagnet && linkView.targetMagnet) {
-                        this.archDataAdapator.addConnector(
+                        this.archDataAdaptor.addConnector(
                             sparent,
                             linkView.sourceView.model.attributes.cpid, 
                             linkView.sourceView.model.getPort(linkView.sourceMagnet.getAttribute('port')).attrs.iid,
@@ -1099,11 +1128,11 @@ export default {
             this.treeViewItems[0].children.map(item => traverse(item));
             if(target) {
                 rpush(target);
-                this.archDataAdapator.qclear();
-                queue.map(i => this.archDataAdapator.qpush(i));
+                this.archDataAdaptor.qclear();
+                queue.map(i => this.archDataAdaptor.qpush(i));
             } else {
-                let temp = this.archDataAdapator.archQueue[0];
-                this.archDataAdapator.qclear().qpush(temp);
+                let temp = this.archDataAdaptor.archQueue[0];
+                this.archDataAdaptor.qclear().qpush(temp);
             }
 
             this.renderConfiguration(cid, cname);
@@ -1113,9 +1142,10 @@ export default {
         addComponent() {
             this.componentDialog = false;
 
-            this.archDataAdapator.addComponent(this.selectedComponent, this.newComponentName).save();
+            this.archDataAdaptor.addComponent(this.selectedComponent, this.newComponentName, this.newComponentType).save();
 
             this.newComponentName = '';
+            this.newComponentType = '';
             this.renderConfiguration(this.selectedComponent.sid, this.selectedComponent.sname);
         },
 
@@ -1124,7 +1154,7 @@ export default {
             this.interfaceDialog = false;
 
             if(this.selectedComponent.sintf) { // Edit exist interface;
-                this.archDataAdapator.updateComponent(
+                this.archDataAdaptor.updateComponent(
                     'eintf',
                     this.selectedComponent.sid,
                     this.selectedComponent.sname,
@@ -1136,7 +1166,7 @@ export default {
                     }
                 ).save();
             } else { // Add new interface;
-                this.archDataAdapator.updateComponent(
+                this.archDataAdaptor.updateComponent(
                     'aintf',
                     this.selectedComponent.sid,
                     this.selectedComponent.sname,
@@ -1189,32 +1219,30 @@ export default {
             gridSize: 20,
             drawGrid: { name: 'mesh' },
 
-            interactive: function(cellView) {
-                return cellView.model.attributes.cpname !== 'interaConfig';
-            }
+            interactive: (cellView) => { return cellView.model.attributes.cpid !== 'INTERA'; }
         });
         setTimeout(() => { this.setViewModel(); }, 400);
         
         EVENTBUS.$on('FETCH_ARCHVIEWS', () => {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdapator.getViewpoints());
+                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdaptor.getViewpoints());
             }, 200);
         });
 
         EVENTBUS.$on('DELIVER_CREATEVIEW', (payload) => {
-            this.archDataAdapator.addViewpoint(payload).save();
+            this.archDataAdaptor.addViewpoint(payload).save();
             this.renderViewModel();
         });
 
         EVENTBUS.$on('DELIVER_REMOVEVIEW', (payload) => {
-            this.archDataAdapator.removeViewpoint(payload).save();
+            this.archDataAdaptor.removeViewpoint(payload).save();
             this.renderViewModel();
         });
 
         EVENTBUS.$on('DELIVER_ENTERVIEW', (payload) => {
             this.jointGraph.clear();
             this.deregisterViewModel();
-            this.archDataAdapator.qclear();
+            this.archDataAdaptor.qclear();
             this.renderConfiguration(0, payload);
         });
 
@@ -1250,7 +1278,7 @@ export default {
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
         EVENTBUS.$off('ERROR_NULLCONNECTOR');
 
-        this.archDataAdapator.save();
+        this.archDataAdaptor.save();
         location.reload();
     }
 }

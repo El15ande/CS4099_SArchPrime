@@ -1,6 +1,6 @@
 import { EVENTBUS, AxiosRequest } from './main.js';
 
-export default class ArchDataAdapator {
+export default class ArchDataAdaptor {
     constructor(data) {
         this.data = data;
         this.archQueue = [];
@@ -83,7 +83,12 @@ export default class ArchDataAdapator {
             /*
                 Connectors array;
             */
-            connector: []
+            connector: [],
+            
+            /*
+                Intera component array;
+            */
+            cpintera: []
         };
     };
 
@@ -102,7 +107,7 @@ export default class ArchDataAdapator {
             /*
                 Link labels
             */
-           label: ''
+            label: ''
         }
     };
 
@@ -115,8 +120,8 @@ export default class ArchDataAdapator {
             /*
                 Component & connector hierarchy;
             */
-           component: [],
-           connector: [],
+            component: [],
+            connector: [],
 
             /*
                 Component unique id;
@@ -131,7 +136,9 @@ export default class ArchDataAdapator {
             /*
                 Component interfaces;
             */
-           cpintf: []
+            cpintf: [],
+
+            cpintera: [],
         }
     };
 
@@ -140,17 +147,17 @@ export default class ArchDataAdapator {
             /*
                 Interface unique id;
             */
-           iid: 0,
+            iid: 0,
 
             /*
                 Interface type;
             */
-           itype: '',
+            itype: '',
 
             /*
                 Interface position;
             */
-           ipos: '',
+            ipos: '',
 
             /*
                 Interface name;
@@ -386,17 +393,28 @@ export default class ArchDataAdapator {
     // Add a new component to current configuration;
     //  parent: parent configuration;
     //  cname: new component name;
-    addComponent = function(parent, cname) {
+    addComponent = function(parent, cname, ctype) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
         
         if(parentConfig) {
-            let component = this.makeComponent();
-            component.canvas.x = parent.spos.x;
-            component.canvas.y = parent.spos.y;
-            component.cpid = parentConfig.component.length + 1;
-            component.cpname = cname;
+            if(ctype === 'Intera (borderline)') {
+                parentConfig.cpintera.push({
+                    icname: cname,
+                    icpos: {
+                        x: parent.spos.x,
+                        y: parent.spos.y
+                    },
+                    icids: []
+                }); 
+            } else {
+                let component = this.makeComponent();
+                component.canvas.x = parent.spos.x;
+                component.canvas.y = parent.spos.y;
+                component.cpid = parentConfig.component.length + 1;
+                component.cpname = cname;
 
-            parentConfig.component.push(component);
+                parentConfig.component.push(component);
+            }
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;

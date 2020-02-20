@@ -6,12 +6,20 @@ export default class ArchGraphComponent {
         this.jointComponent = new JOINT.shapes.standard.Rectangle({
             attrs: {
                 body: {
-                    'stroke': intera ? '#9FA8DA' : '#333333',
-                    'fill': intera ? '#9FA8DA' : '#FFFFFF',
+                    'stroke': intera 
+                        ? ( intera === 'interaConfig' ? '#9FA8DA' : '#B0BEC5') 
+                        : '#333333',
+                    'fill': intera 
+                        ? ( intera === 'interaConfig' ? '#9FA8DA' : '#B0BEC5') 
+                        : '#FFFFFF',
                     'fill-opacity': intera ? 0.05 : 1
                 },
                 label: intera 
-                    ? {} 
+                    ? ( intera === 'interaComponent' 
+                        ? { 
+                            text: data.cpname 
+                        } 
+                        : {} ) 
                     : {
                         text: data.cpname ? data.cpname : null,
                         'font-size': 20
@@ -92,7 +100,7 @@ export default class ArchGraphComponent {
             },
 
             cpid: intera ? 'INTERA' : (data.cpid ? data.cpid : -1),
-            cpname: intera ? intera : (data.cpname ? data.cpname : ''),
+            cpname: data.cpname ? data.cpname : (intera ? intera : ''),
         });
         this.jointInterfaces = [];
 
@@ -106,8 +114,9 @@ export default class ArchGraphComponent {
     // Add the component to paper;
     //  paper: joint paper;
     addTo(paper) {
+        if(this.jointComponent.attributes.cpid !== 'INTERA') {
+            this.jointComponent.attributes.z = 100 + this.jointComponent.attributes.cpid;
+        }
         this.jointComponent.addTo(paper);
-
-        if(this.jointComponent.attributes.cpid !== 'INTERA') this.jointComponent.attributes.z = 100 + this.jointComponent.attributes.cpid;
     }
 }
