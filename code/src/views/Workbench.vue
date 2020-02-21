@@ -20,6 +20,13 @@
         </v-menu>
 
         <v-menu
+            :position-x="constraintViewX"
+            :position-y="constraintViewY"
+            :value='true'
+        >
+        </v-menu>
+
+        <v-menu
             v-model="jointMenu"
             absolute
             :position-x="menuX"
@@ -298,8 +305,11 @@ export default {
             jointPaper: null,
             
             treeViewX: 1600,
-            treeViewY: 85,
+            treeViewY: 0,
             treeViewItems: [],
+
+            constraintViewX: 1200,
+            constraintViewY: 0,
 
             // Error dialog;
             errorDialog: false,
@@ -335,7 +345,6 @@ export default {
             // Hierarchical component;
             componentDialog: false,
             newComponentName: '',
-
 
             // Interface;
             interfaceDialog: false,
@@ -909,7 +918,7 @@ export default {
         // Hierarchical configuration setter;
         renderConfiguration(cid, cname) {
             let configuration = this.archDataAdaptor.getConfiguration(cid, cname);
-            let componentShape, connectorShape, connectorSrc, connectorTar, interaConfig, interaComponent;
+            let componentShape, connectorShape, connectorSrc, connectorTar, interaConfig;
             let sparent = { cid, cname };
 
             if(configuration) {
@@ -972,7 +981,7 @@ export default {
                 });
 
                 // Component: drag & drop;
-                this.jointPaper.on('element:pointerup', (elementView, evt, x, y) => {
+                this.jointPaper.on('element:pointerup', (elementView) => {
                     // Update intera configuration;
                     let configuration = this.archDataAdaptor.getConfiguration(cid, cname);
                     let interaConfig;
