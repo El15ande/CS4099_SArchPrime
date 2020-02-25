@@ -25,6 +25,12 @@ export default class ArchGraphInterface {
     _getD(itype, ipos) {
         let isInput = itype === 'Input';
 
+        if(itype === 'Non-directional') {
+            return (ipos === 'Top' || ipos === 'Bottom')
+                ? 'M 0 -10 -10 0 0 10 10 0 Z'
+                : 'M 0 0 -10 10 0 20 10 10 Z';
+        }
+
         switch(ipos) {
             case 'Top': {
                 return isInput 
@@ -38,13 +44,13 @@ export default class ArchGraphInterface {
             }
             case 'Left': {
                 return isInput
-                    ? 'M -10 0 -10 20 10 10'
-                    : 'M 10 0 10 20 -10 10';
+                    ? 'M -10 0 -10 20 10 10 Z'
+                    : 'M 10 0 10 20 -10 10 Z';
             }
             case 'Right': {
                 return isInput
-                    ? 'M 10 0 10 20 -10 10'
-                    : 'M -10 0 -10 20 10 10';
+                    ? 'M 10 0 10 20 -10 10 Z'
+                    : 'M -10 0 -10 20 10 10 Z';
             }
             default: { return 'M 0 -10 20 -10 10 10 Z'; }
         }

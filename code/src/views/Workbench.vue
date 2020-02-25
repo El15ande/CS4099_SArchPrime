@@ -3,6 +3,7 @@
         <v-menu
             :close-on-click='false'
             :close-on-content-click='false'
+            :disable-keys='true'
             :position-x="treeViewX"
             :position-y="treeViewY"
             :value='true'
@@ -350,7 +351,7 @@ export default {
             interfaceDialog: false,
             interfaceDialogTitle: '',
             interfaceItems: ['Left', 'Right', 'Top', 'Bottom'],
-            interfaceTypes: ['Input', 'Output'],
+            interfaceTypes: ['Input', 'Output', 'Non-directional'],
             newInterfacePos: '',
             newInterfaceType: '',
             newInterfaceName: ''
