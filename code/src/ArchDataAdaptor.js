@@ -386,13 +386,17 @@ export default class ArchDataAdaptor {
     // Add a new component to current configuration;
     //  parent: parent configuration;
     //  cname: new component name;
-    addComponent = function(parent, cname) {
+    addComponent = function(parent, cname, canvas) {
         let parentConfig = this.getConfiguration(parent.sid, parent.sname);
         
         if(parentConfig) {
             let component = this.makeComponent();
-            component.canvas.x = parent.spos.x;
-            component.canvas.y = parent.spos.y;
+            if(canvas) {
+                component.canvas = canvas;
+            } else {
+                component.canvas.x = parent.spos.x;
+                component.canvas.y = parent.spos.y;
+            }
             component.cpid = parentConfig.component.length + 1;
             component.cpname = cname;
 

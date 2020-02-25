@@ -476,6 +476,29 @@ export default {
                         },
 
                         {
+                            name: 'Replicate Component',
+                            description: 'Create a new component with the same size & name',
+                            colourclass: ['bg_create'],
+                            action: function() {
+                                _this.jointMenu = false;
+
+                                _this.archDataAdaptor.addComponent({
+                                    sid: _this.selectedComponent.sparent.cid,
+                                    sname: _this.selectedComponent.sparent.cname
+                                }, 
+                                `_${_this.selectedComponent.sname}`,
+                                {
+                                    x: _this.selectedComponent.spos.x,
+                                    y: _this.selectedComponent.spos.y,
+                                    width: _this.selectedComponent.ssize.width,
+                                    height: _this.selectedComponent.ssize.height
+                                });
+
+                                _this.renderConfiguration(_this.selectedComponent.sparent.cid, _this.selectedComponent.sparent.cname);
+                            }
+                        },
+
+                        {
                             name: 'Remove Component',
                             description: 'Remove the component',
                             colourclass: ['bg_delete'],
