@@ -304,7 +304,7 @@ export default {
             jointGraph: null,
             jointPaper: null,
             
-            treeViewX: 1600,
+            treeViewX: 360,
             treeViewY: 0,
             treeViewItems: [],
 
@@ -602,6 +602,17 @@ export default {
                                 }
                             }
                         },
+
+                        /*{
+                            name: "Relocate treeview",
+                            description: "Put the (purple) treeview menu here",
+                            colourclass: ['bg_edit'],
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.treeViewX = _this.selectedComponent.spos.x + 255;
+                                _this.treeViewY = _this.selectedComponent.spos.y + 65;
+                            }
+                        },*/
 
                         {
                             name: 'New Component',

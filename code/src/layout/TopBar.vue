@@ -16,31 +16,31 @@
                 dense
                 outlined
             />
+
+            <v-col 
+                cols="12" sm="3" 
+                style="padding-top: 15px;"
+            >
+                <v-menu>
+                    <template v-slot:activator="{ on }">
+                        <v-btn outlined v-on="on">VIEWS</v-btn>
+                    </template>
+
+                    <v-list>
+                        <v-list-item
+                            v-for="(item, i) in viewpointItems"
+                            :key="i"
+                            @click="item.action"
+                        >
+                            <v-list-item-icon>
+                                <v-icon v-text="item.icon" />
+                            </v-list-item-icon>
+                            <v-list-item-title>{{ item.text }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-col>     
         </v-toolbar-items>
-
-        <v-btn
-            icon
-            @click.stop='goOverview()'
-            v-if='inWorkbench'
-        >
-            <v-icon>mdi-file-document-box</v-icon>
-        </v-btn>
-
-        <v-btn 
-            icon
-            @click.stop='createViewDialog = true'
-            v-if='inWorkbench'
-        >
-            <v-icon>mdi-file-document-box-plus</v-icon>
-        </v-btn>
-
-        <v-btn 
-            icon
-            @click.stop='deleteViewDialog = true'
-            v-if="inWorkbench"
-        >
-            <v-icon>mdi-file-document-box-remove</v-icon>
-        </v-btn>
 
         <v-dialog
             v-model='createViewDialog'
@@ -117,6 +117,26 @@ export default {
         return {
             // Page title;
             title: this.$route.params.name || this.$route.name,
+
+            viewpointItems: [
+                { 
+                    text: 'Go to overview', 
+                    icon: 'mdi-file-document-box',
+                    action: this.goOverview 
+                },
+
+                {
+                    text: 'Create a new view',
+                    icon: 'mdi-file-document-box-plus',
+                    action: () => { this.createViewDialog = true }
+                },
+
+                {
+                    text: 'Remove the current view',
+                    icon: 'mdi-file-document-box-minus',
+                    action: () => { this.deleteViewDialog = true }
+                }
+            ],
 
             // Selection bar;
             inWorkbench: false,
