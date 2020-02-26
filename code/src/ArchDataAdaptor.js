@@ -20,10 +20,10 @@ export default class ArchDataAdaptor {
     */
 
     // Get last item in queue;
-    qlast = function() {
+    qlast = function(i = 1) {
         let last = null;
 
-        if(this.archQueue.length !== 0) last = this.archQueue[this.archQueue.length - 1];
+        if(this.archQueue.length !== 0) last = this.archQueue[this.archQueue.length - i];
 
         return last;
     };

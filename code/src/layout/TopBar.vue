@@ -18,7 +18,7 @@
             />
 
             <v-col 
-                cols="12" sm="3" 
+                cols="12" md="4" 
                 style="padding-top: 15px;"
             >
                 <v-menu>
@@ -39,8 +39,21 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-            </v-col>     
+            </v-col> 
         </v-toolbar-items>
+
+        <v-spacer />
+        <v-col 
+            cols="12" md="1"
+            style="padding-top: 15px;"
+        >
+            <v-btn
+                outlined 
+                color="success"
+            >
+                <v-icon left>mdi-help-circle-outline</v-icon>HELP
+            </v-btn>
+        </v-col>    
 
         <v-dialog
             v-model='createViewDialog'

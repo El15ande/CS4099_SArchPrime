@@ -1012,6 +1012,8 @@ export default {
 
                 // Component: left double click;
                 this.jointPaper.on('element:pointerdblclick', (elementView) => {
+                    if(elementView.model.attributes.cpid === 'INTERA') return;
+
                     this.renderConfiguration(elementView.model.attributes.cpid, elementView.model.attr().label.text);
                 });
 
@@ -1073,24 +1075,41 @@ export default {
                     let target = elementView.model.getPort(magnet.getAttribute('port'));
                     evt.stopPropagation();
 
-                    this.showMenu('CFG_PORT', evt);
-                    this.selectedComponent = {
-                        sid: elementView.model.attributes.cpid,
-                        sname: elementView.model.attr().label.text,
-                        spos: {
-                            x: evt.offsetX,
-                            y: evt.offsetY
-                        },
-                        ssize: elementView.model.attributes.size,
-                        sparent,
+                    if(elementView.model.attributes.cpname === 'interaConfig') {
+                        let parent = this.archDataAdaptor.getConfiguration(this.archDataAdaptor.qlast(2).cid, this.archDataAdaptor.qlast(2).cname);
+                        let interac = [];
 
-                        sintf: {
-                            iid: target.attrs.iid,
-                            itype: target.attrs.itype,
-                            ipos: target.group,
-                            iname: target.attrs.text.text
-                        }
-                    };
+                        parent.connector.map((cn) => {
+                            if(cn.source.cpid === cid && cn.source.iid === target.attrs.iid) {
+                                interac.push({ cpi: cn.target, label: cn.cnlabel });
+                            } else if(cn.target.cpid === cid && cn.target.iid === target.attrs.iid) {
+                                interac.push({ cpi: cn.source, label: cn.cnlabel });
+                            }
+                        });
+                        
+                        // TODO Intera connections;
+                        console.log(interac);
+                    } else {
+                        this.showMenu('CFG_PORT', evt);
+
+                        this.selectedComponent = {
+                            sid: elementView.model.attributes.cpid,
+                            sname: elementView.model.attr().label.text,
+                            spos: {
+                                x: evt.offsetX,
+                                y: evt.offsetY
+                            },
+                            ssize: elementView.model.attributes.size,
+                            sparent,
+
+                            sintf: {
+                                iid: target.attrs.iid,
+                                itype: target.attrs.itype,
+                                ipos: target.group,
+                                iname: target.attrs.text.text
+                            }
+                        };
+                    }
                 });
 
                 this.jointPaper.on('link:connect', (linkView) => {
