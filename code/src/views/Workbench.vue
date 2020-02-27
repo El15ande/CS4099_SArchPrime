@@ -555,6 +555,13 @@ export default {
                     ];
                 }
                 case 'CFG_INTERAPORT': {
+                    if(_this.interaConnections.length == 0) return [
+                        {
+                            name: `No related connections`,
+                            action: function() { _this.jointMenu = false; }
+                        }
+                    ];
+
                     return _this.interaConnections.map((ic) => {
                         return {
                             name: `Related connection: ${ic.name}`,
