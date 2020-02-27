@@ -381,7 +381,7 @@ export default class ArchDataAdaptor {
         return treeItem
             ? [treeItem]
             : [{ cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics'}];
-    }
+    };
 
     // Add a new component to current configuration;
     //  parent: parent configuration;
@@ -564,5 +564,5 @@ export default class ArchDataAdaptor {
         canvas.width += 40; canvas.height += 40;
 
         return canvas;
-    }
+    };
 }

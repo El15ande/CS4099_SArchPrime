@@ -21,20 +21,14 @@
         </v-menu>
 
         <v-menu
-            :position-x="constraintViewX"
-            :position-y="constraintViewY"
-            :value='true'
-        >
-        </v-menu>
-
-        <v-menu
             v-model="jointMenu"
             absolute
             :position-x="menuX"
             :position-y="menuY"
         >
             <v-list
-                max-width='300'
+                max-width='350'
+                :dense='menuContext === "CFG_INTERAPORT"'
             >
                 <v-list-item 
                     v-for='(item, i) in menu'
@@ -354,7 +348,9 @@ export default {
             interfaceTypes: ['Input', 'Output', 'Non-directional'],
             newInterfacePos: '',
             newInterfaceType: '',
-            newInterfaceName: ''
+            newInterfaceName: '',
+
+            interaConnections: []
         }
     },
 
@@ -557,6 +553,18 @@ export default {
                             }
                         }
                     ];
+                }
+                case 'CFG_INTERAPORT': {
+                    return _this.interaConnections.map((ic) => {
+                        return {
+                            name: `Related connection: ${ic.name}`,
+                            description: `Connection label: ${ic.label}`,
+                            action: function() {
+                                _this.jointMenu = false;
+                                _this.jumpConfiguration(ic.cpi.cpid, ic.name);
+                            }
+                        }
+                    });
                 }
                 case 'CFG_LINK': {
                     let removeConnector = {
@@ -1077,18 +1085,25 @@ export default {
 
                     if(elementView.model.attributes.cpname === 'interaConfig') {
                         let parent = this.archDataAdaptor.getConfiguration(this.archDataAdaptor.qlast(2).cid, this.archDataAdaptor.qlast(2).cname);
-                        let interac = [];
-
+                        this.interaConnections.length = 0;
+                        
                         parent.connector.map((cn) => {
                             if(cn.source.cpid === cid && cn.source.iid === target.attrs.iid) {
-                                interac.push({ cpi: cn.target, label: cn.cnlabel });
+                                this.interaConnections.push({ 
+                                    name: parent.component.filter((cp) => { return cp.cpid === cn.target.cpid; })[0].cpname, 
+                                    label: cn.cnlabel,
+                                    cpi: cn.target 
+                                });
                             } else if(cn.target.cpid === cid && cn.target.iid === target.attrs.iid) {
-                                interac.push({ cpi: cn.source, label: cn.cnlabel });
+                                this.interaConnections.push({ 
+                                    name: parent.component.filter((cp) => { return cp.cpid === cn.source.cpid; })[0].cpname, 
+                                    label: cn.cnlabel,
+                                    cpi: cn.source 
+                                });
                             }
                         });
-                        
-                        // TODO Intera connections;
-                        console.log(interac);
+
+                        this.showMenu('CFG_INTERAPORT', evt);
                     } else {
                         this.showMenu('CFG_PORT', evt);
 
