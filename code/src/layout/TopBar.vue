@@ -21,30 +21,6 @@
                 <v-menu>
                     <template v-slot:activator="{ on }">
                         <v-btn 
-                            outlined
-                            color="#1976d2"  
-                            v-on="on"
-                        >
-                            TREEVIEW
-                        </v-btn>
-                    </template>
-
-                    <v-treeview
-                        dark
-                        hoverable
-                        :items='treeViewItems'
-                    >
-                        <template v-slot:prepend="{ item }">
-                            <a @click="jumpView(item.cid, item.name)"><v-icon>{{ item.icon }}</v-icon></a>
-                        </template>
-                    </v-treeview>
-                </v-menu>
-            </v-col>
-            
-            <v-col style="padding-top: 15px;">
-                <v-menu>
-                    <template v-slot:activator="{ on }">
-                        <v-btn 
                             tile 
                             outlined
                             v-on="on"
@@ -67,20 +43,45 @@
                     </v-list>
                 </v-menu>
             </v-col>
-        </v-toolbar-items>
 
-        <v-spacer />
-        <v-col
-            offset-md="6"
-            style="padding-top: 15px;"
-        >
-            <v-btn
-                outlined 
-                color="success"
-            >
-                <v-icon left>mdi-help-circle-outline</v-icon>HELP
-            </v-btn>
-        </v-col>    
+            <v-col style="padding-top: 15px;">
+                <v-menu>
+                    <template v-slot:activator="{ on }">
+                        <v-btn 
+                            outlined
+                            color="#1976d2"  
+                            v-on="on"
+                        >
+                            TREEVIEW
+                        </v-btn>
+                    </template>
+
+                    <v-treeview
+                        dark
+                        hoverable
+                        :items='treeViewItems'
+                    >
+                        <template v-slot:prepend="{ item }">
+                            <a @click="jumpView(item.cid, item.name)"><v-icon>{{ item.icon }}</v-icon></a>
+                        </template>
+                    </v-treeview>
+                </v-menu>
+            </v-col>
+
+            <v-col style="padding-top: 15px;">
+                <v-menu>
+                    <template v-slot:activator="{ on }">
+                        <v-btn 
+                            outlined
+                            color="red"  
+                            v-on="on"
+                        >
+                            CONSTRAINT
+                        </v-btn>
+                    </template>
+                </v-menu>
+            </v-col>
+        </v-toolbar-items>  
 
         <v-dialog
             v-model='createViewDialog'

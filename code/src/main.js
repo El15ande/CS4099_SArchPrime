@@ -15,8 +15,8 @@ const PATHS = [
         viewname: 'Dashboard'
     },
     {
-        path: '/Customisation',
-        viewname: 'Customisation'
+        path: '/guide',
+        viewname: 'Guide'
     },
     {
         path: '/workbench/:name',
