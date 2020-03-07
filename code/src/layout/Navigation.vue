@@ -13,7 +13,7 @@
 
         <v-divider class="mx-3 mb-3" />
 
-        <v-subheader class="mt-4 light">My Tools</v-subheader>
+        <v-subheader class="mt-4 light">Tools</v-subheader>
        
         <v-list nav>
             <div />
@@ -31,7 +31,7 @@
             </v-list-item>
         </v-list>
 
-        <v-subheader class="mt-4 light">My Architectures</v-subheader>
+        <v-subheader class="mt-4 light">Architectures</v-subheader>
 
         <v-list nav>
             <v-list-item

@@ -1,24 +1,5 @@
 <template>
     <div>
-        <v-menu
-            :close-on-click='false'
-            :close-on-content-click='false'
-            :disable-keys='true'
-            :position-x="treeViewX"
-            :position-y="treeViewY"
-            :value='true'
-        >
-            <v-treeview
-                dark
-                hoverable
-                selected-color='indigo lighten-4'
-                :items='treeViewItems'
-            >
-                <template v-slot:prepend="{ item }">
-                    <a @click="jumpConfiguration(item.cid, item.name)"><v-icon>{{ item.icon }}</v-icon></a>
-                </template>
-            </v-treeview>
-        </v-menu>
 
         <v-menu
             v-model="jointMenu"
@@ -249,10 +230,6 @@
         border: 1px solid #CFD8DC;
     }
 
-    .v-treeview-node {
-        background-color: #3949AB;
-    }
-
     /* Hierarchy change background (indigo accent-1) */
     .bg_hierarchy {
         background-color: #8C9EFF;
@@ -277,6 +254,10 @@
         display: none;
     }
     
+    .marker-arrowhead {
+        display: none;
+    }
+
     .error-hint {
         font-weight: 750;
     }
@@ -298,10 +279,6 @@ export default {
 
             jointGraph: null,
             jointPaper: null,
-            
-            treeViewX: 360,
-            treeViewY: 0,
-            treeViewItems: [],
 
             constraintViewX: 1200,
             constraintViewY: 0,
@@ -719,7 +696,7 @@ export default {
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
             this.archDataAdaptor.qclear();
-            this.treeViewItems = [];
+            EVENTBUS.$emit('INVOKE_TREEVIEW');
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdaptor.getViewpoint(vp);
@@ -976,7 +953,7 @@ export default {
                 this.deregisterConfiguration();
                 this.archDataAdaptor.qpush(sparent);
                 
-                this.treeViewItems = this.archDataAdaptor.getTree(); // Treeview;
+                EVENTBUS.$emit('INVOKE_TREEVIEW', this.archDataAdaptor.getTree());
 
                 if(configuration.component.length > 0) {
                     // Intera configuration;
@@ -1171,6 +1148,7 @@ export default {
         jumpConfiguration(cid, cname) {
             let queue = [];
             let target;
+            let treeViewItems = this.archDataAdaptor.getTree();
 
             let traverse = function(item) {
                 if(item.cid === cid && item.name === cname) target = item;
@@ -1182,7 +1160,7 @@ export default {
                 queue.push({ cid: item.cid, cname: item.name });
             }
 
-            this.treeViewItems[0].children.map(item => traverse(item));
+            treeViewItems[0].children.map(item => traverse(item));
             if(target) {
                 rpush(target);
                 this.archDataAdaptor.qclear();
@@ -1305,6 +1283,10 @@ export default {
         EVENTBUS.$on('DELIVER_GOOVERVIEW', () => {
             this.renderViewModel();
         });
+
+        EVENTBUS.$on('DELIVER_JUMPVIEW', (id, name) => {
+            this.jumpConfiguration(id, name);
+        })
 
 
 

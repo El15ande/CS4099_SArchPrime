@@ -17,13 +17,40 @@
                 outlined
             />
 
-            <v-col 
-                cols="12" md="4" 
-                style="padding-top: 15px;"
-            >
+            <v-col style="padding-top: 15px;">
                 <v-menu>
                     <template v-slot:activator="{ on }">
-                        <v-btn outlined v-on="on">VIEWS</v-btn>
+                        <v-btn 
+                            outlined
+                            color="#1976d2"  
+                            v-on="on"
+                        >
+                            TREEVIEW
+                        </v-btn>
+                    </template>
+
+                    <v-treeview
+                        dark
+                        hoverable
+                        :items='treeViewItems'
+                    >
+                        <template v-slot:prepend="{ item }">
+                            <a @click="jumpView(item.cid, item.name)"><v-icon>{{ item.icon }}</v-icon></a>
+                        </template>
+                    </v-treeview>
+                </v-menu>
+            </v-col>
+            
+            <v-col style="padding-top: 15px;">
+                <v-menu>
+                    <template v-slot:activator="{ on }">
+                        <v-btn 
+                            tile 
+                            outlined
+                            v-on="on"
+                        >
+                            VIEWS
+                        </v-btn>
                     </template>
 
                     <v-list>
@@ -39,12 +66,12 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-            </v-col> 
+            </v-col>
         </v-toolbar-items>
 
         <v-spacer />
-        <v-col 
-            cols="12" md="1"
+        <v-col
+            offset-md="6"
             style="padding-top: 15px;"
         >
             <v-btn
@@ -122,6 +149,12 @@
     </v-app-bar>
 </template>
 
+<style>
+    .v-treeview-node {
+        background-color: #1976d2;
+    }
+</style>
+
 <script>
 import { EVENTBUS } from '../main.js';
 
@@ -165,6 +198,8 @@ export default {
             createViewName: '',
 
             deleteViewDialog: false,
+
+            treeViewItems: [{ name: "Choose a view", icon: "mdi-alert-rhombus" }],
         }
     },
 
@@ -188,6 +223,12 @@ export default {
         goOverview() {
             this.selectedView = null;
             EVENTBUS.$emit('DELIVER_GOOVERVIEW');
+        },
+
+        jumpView(id, name) {
+            if(!id) return;
+
+            EVENTBUS.$emit('DELIVER_JUMPVIEW', id, name);
         }
     },
 
@@ -229,12 +270,17 @@ export default {
         EVENTBUS.$on('INVOKE_ENTERVIEW', (payload) => {
             this.selectedView = payload;
         });
+
+        EVENTBUS.$on('INVOKE_TREEVIEW', (payload = [{ name: "Choose a view", icon: "mdi-alert-rhombus" }]) => {
+            this.treeViewItems = payload;
+        })
     },
 
     beforeDestroy() {
         EVENTBUS.$off('RETURN_ARCHVIEWS');
         EVENTBUS.$off('INVOKE_CREATEVIEW');
         EVENTBUS.$off('INVOKE_ENTERVIEW');
+        EVENTBUS.$off('INVOKE_TREEVIEW');
     }
 }
 </script>
