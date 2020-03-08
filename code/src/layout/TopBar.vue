@@ -68,7 +68,7 @@
                 </v-menu>
             </v-col>
 
-            <!-- <v-col style="padding-top: 15px;">
+            <v-col style="padding-top: 15px;">
                 <v-menu>
                     <template v-slot:activator="{ on }">
                         <v-btn 
@@ -80,7 +80,7 @@
                         </v-btn>
                     </template>
                 </v-menu>
-            </v-col> -->
+            </v-col>
         </v-toolbar-items>  
 
         <v-dialog
