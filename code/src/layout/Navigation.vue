@@ -63,11 +63,11 @@ export default {
                     title: 'Dashboard',
                     icon: 'mdi-view-dashboard-variant' 
                 },
-                {
+                /*{
                     to: '/guide',
                     title: 'User Guide',
                     icon: 'mdi-settings-outline'
-                }
+                }*/
             ],
             archList: []
         }
