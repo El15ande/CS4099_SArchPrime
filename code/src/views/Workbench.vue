@@ -608,8 +608,7 @@ export default {
                                     EVENTBUS.$emit('INVOKE_ENTERVIEW', null);
                                     _this.renderViewModel();
                                 } else {
-                                    _this.archDataAdaptor.qpop();
-                                    let parent = _this.archDataAdaptor.qlast();
+                                    let parent = _this.archDataAdaptor.qpop().qlast();
                                     _this.renderConfiguration(parent.cid, parent.cname);
                                 }
                             }

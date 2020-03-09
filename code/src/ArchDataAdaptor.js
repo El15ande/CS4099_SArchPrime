@@ -13,7 +13,7 @@ export default class ArchDataAdaptor {
         AxiosRequest('POST', `arch/${this.data.name}`, this.data);
 
         return this;
-    };
+    }
 
 
 
@@ -28,7 +28,7 @@ export default class ArchDataAdaptor {
         if(this.archQueue.length !== 0) last = this.archQueue[this.archQueue.length - i];
 
         return last;
-    };
+    }
 
     // Push an item into queue;
     //  payload: item to be pushed;
@@ -40,21 +40,21 @@ export default class ArchDataAdaptor {
         }
 
         return this;
-    };
+    }
 
     // Pop last item in queue;
     qpop = function() {
         this.archQueue.pop();
 
         return this;
-    };
+    }
 
     // Clear current queue;
     qclear = function() {
         this.archQueue.length = 0;
 
         return this;
-    };
+    }
 
 
 
@@ -69,7 +69,7 @@ export default class ArchDataAdaptor {
             width: w ? w : 0,
             height: h ? h : 0
         };
-    };
+    }
 
     makeViewpoint = function() {
         let canvas = this.makeCanvas(0, 0, 240, 120);
@@ -87,7 +87,7 @@ export default class ArchDataAdaptor {
             */
             connector: []
         };
-    };
+    }
 
     makeConnection = function() {
         return {
@@ -106,7 +106,7 @@ export default class ArchDataAdaptor {
             */
             label: ''
         }
-    };
+    }
 
     makeComponent = function() {
         let canvas = this.makeCanvas(0, 0, 240, 120);
@@ -135,7 +135,7 @@ export default class ArchDataAdaptor {
             */
             cpintf: []
         }
-    };
+    }
 
     makeInterface = function() {
         return {
@@ -183,7 +183,7 @@ export default class ArchDataAdaptor {
             */
             cnlabel: ''
         }
-    };
+    }
 
 
 
@@ -194,13 +194,13 @@ export default class ArchDataAdaptor {
     // Get all viewpoints names;
     getViewpoints = function() {
         return this.data.indices;
-    };
+    }
 
     // Get a viewpoint through name;
     //  vpname: target viewpoint name;
     getViewpoint = function(vpname) {
         return this.data[vpname];
-    };
+    }
 
     // Add new unique viewpoint;
     //  vpname: new viewpoint name;
@@ -213,7 +213,7 @@ export default class ArchDataAdaptor {
         }
 
         return this;
-    };
+    }
 
     // Delete a unique viewpoint;
     //  vpname: target viewpoint name;
@@ -227,7 +227,7 @@ export default class ArchDataAdaptor {
         });
 
         return this;
-    };
+    }
 
     // Update viewpoint data;
     //  attr: viewpoint attribute that will be changed;
@@ -262,7 +262,7 @@ export default class ArchDataAdaptor {
         }
 
         return this;
-    };
+    }
 
     /*
         Viewpoint connections (top-level connector);
@@ -271,7 +271,7 @@ export default class ArchDataAdaptor {
     // Get all connections between viewpoints;
     getConnections = function() {
         return this.data.connections;
-    };
+    }
 
     // Add a new connection between viewpoints;
     //  source: source viewpoint;
@@ -284,7 +284,7 @@ export default class ArchDataAdaptor {
         this.data.connections.push(connection);
 
         return this;
-    };
+    }
 
     // Delete a connection;
     //  source: source viewpoint;
@@ -295,7 +295,7 @@ export default class ArchDataAdaptor {
         });
 
         return this;
-    };
+    }
 
     // Update connection data;
     //  attr: connection attribute that will be changed;
@@ -328,7 +328,7 @@ export default class ArchDataAdaptor {
             }
         });
         return this;
-    };
+    }
 
 
 
@@ -356,7 +356,7 @@ export default class ArchDataAdaptor {
                 ? configuration
                 : configuration.component[index];
         }
-    };
+    }
 
     // Get treeview items;
     getTree = function() {
@@ -383,13 +383,13 @@ export default class ArchDataAdaptor {
         return treeItem
             ? [treeItem]
             : [{ cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics'}];
-    };
+    }
 
     updateTreeview = function(treeview) {
         EVENTBUS.$emit('INVOKE_SETTREEVIEW',
             treeview
                 ? treeview
-                : [{ name: "Choose a view", icon: "mdi-alert-rhombus" }] 
+                : [{ name: "Choose a view", icon: "mdi-folder-alert-outline" }] 
         );
 
         return this;
@@ -416,7 +416,7 @@ export default class ArchDataAdaptor {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;
-    };
+    }
 
     // Remove a component from current configuration;
     //  c: component to be removed;
@@ -429,7 +429,7 @@ export default class ArchDataAdaptor {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.parent.sid, c.parent.sname);
 
         return this;
-    };
+    }
     
     // Update component data;
     //  attr: connection attribute that will be changed;
@@ -490,7 +490,7 @@ export default class ArchDataAdaptor {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', cid, cname);
 
         return this;
-    };
+    }
 
     // Add a new connector to current configuration;
     //  parent: parent configuration;
@@ -508,7 +508,7 @@ export default class ArchDataAdaptor {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname);
 
         return this;
-    };
+    }
 
     // Remove a connector from current configuration;
     //  c: connector to be removed
@@ -526,7 +526,7 @@ export default class ArchDataAdaptor {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.sparent.sid, c.sparent.sname);
 
         return this;
-    };
+    }
 
     // Update connector data;
     //  attr: connection attribute that will be changed;
@@ -556,7 +556,7 @@ export default class ArchDataAdaptor {
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', parent.sid, parent.sname); 
 
         return this;
-    };
+    }
 
     /*
         Intera;
@@ -579,7 +579,7 @@ export default class ArchDataAdaptor {
         canvas.width += 40; canvas.height += 40;
 
         return canvas;
-    };
+    }
 
     /*
         Constraints;
@@ -591,23 +591,28 @@ export default class ArchDataAdaptor {
         this.constraintChecker = new ArchConstraintChecker(config);
 
         return this;
-    };
+    }
 
+    // Get constraint array;
     getConstraint = function() {
         let constraints = [];
 
+        //TODO this.constraintChecker checking;
+
         return constraints;
-    };
+    }
 
     // Update top bar constraint treeview;
     //  constraints: treeview items array;
-    updateConstraint = function(constraints = []) {
+    updateConstraint = function(constraints) {
         EVENTBUS.$emit('INVOKE_SETCONSTRAINT', 
-            constraints.length > 0
-                ? constraints 
-                : [{ name: "No warning", icon: "mdi-check-all" }]
+            constraints
+                ? (constraints.length > 0
+                    ? constraints
+                    : [{ name: "No inconsistencies detected", icon: "mdi-check-all" }])
+                : [{ name: "Choose a view", icon: "mdi-folder-alert-outline" }]
         );
 
         return this;
-    };
+    }
 }
