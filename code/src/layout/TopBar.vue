@@ -242,7 +242,7 @@ export default {
                 this.inWorkbench = true;
 
                 setTimeout(() => { // Wait for workbench reloading;
-                    EVENTBUS.$emit('FETCH_ARCHVIEWS');
+                    EVENTBUS.$emit('FETCH_VIEWNAMES');
                 }, 400);
             } else this.inWorkbench = false;
         },
@@ -257,10 +257,10 @@ export default {
 
         if(this.$route.name === 'Workbench') {
             this.inWorkbench = true;
-            EVENTBUS.$emit('FETCH_ARCHVIEWS');
+            EVENTBUS.$emit('FETCH_VIEWNAMES');
         }
 
-        EVENTBUS.$on('RETURN_ARCHVIEWS', (payload) => {
+        EVENTBUS.$on('RETURN_VIEWNAMES', (payload) => {
             payload.forEach((item, index) => this.$set(this.archViews, index, item) );
         });
 
@@ -272,16 +272,16 @@ export default {
             this.selectedView = payload;
         });
 
-        EVENTBUS.$on('INVOKE_TREEVIEW', (payload = [{ name: "Choose a view", icon: "mdi-alert-rhombus" }]) => {
+        EVENTBUS.$on('INVOKE_SETTREEVIEW', (payload = [{ name: "Choose a view", icon: "mdi-alert-rhombus" }]) => {
             this.treeViewItems = payload;
         })
     },
 
     beforeDestroy() {
-        EVENTBUS.$off('RETURN_ARCHVIEWS');
+        EVENTBUS.$off('RETURN_VIEWNAMES');
         EVENTBUS.$off('INVOKE_CREATEVIEW');
         EVENTBUS.$off('INVOKE_ENTERVIEW');
-        EVENTBUS.$off('INVOKE_TREEVIEW');
+        EVENTBUS.$off('INVOKE_SETTREEVIEW');
     }
 }
 </script>

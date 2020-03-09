@@ -250,10 +250,7 @@
         background-color: #84FFFF;
     }
 
-    .tool-remove {
-        display: none;
-    }
-    
+    .tool-remove,
     .marker-arrowhead {
         display: none;
     }
@@ -327,6 +324,7 @@ export default {
             newInterfaceType: '',
             newInterfaceName: '',
 
+            // Intera component interface list;
             interaConnections: []
         }
     },
@@ -618,18 +616,6 @@ export default {
                                 }
                             }
                         },
-
-                        /*{
-                            name: "Relocate treeview",
-                            description: "Put the (purple) treeview menu here",
-                            colourclass: ['bg_edit'],
-                            action: function() {
-                                _this.jointMenu = false;
-                                _this.treeViewX = _this.selectedComponent.spos.x + 255;
-                                _this.treeViewY = _this.selectedComponent.spos.y + 65;
-                            }
-                        },*/
-
                         {
                             name: 'New Component',
                             description: 'Create a new component',
@@ -695,8 +681,8 @@ export default {
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
+            EVENTBUS.$emit('INVOKE_SETTREEVIEW');
             this.archDataAdaptor.qclear();
-            EVENTBUS.$emit('INVOKE_TREEVIEW');
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdaptor.getViewpoint(vp);
@@ -906,7 +892,7 @@ export default {
                     }
                 ).save();
 
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdaptor.getViewpoints())
+                EVENTBUS.$emit('RETURN_VIEWNAMES', this.archDataAdaptor.getViewpoints())
                 this.renderViewModel();
             } else if(this.menuContext === 'CFG_ELEMENT') {
                 this.archDataAdaptor.updateComponent(
@@ -951,9 +937,8 @@ export default {
             if(configuration) {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
+                EVENTBUS.$emit('INVOKE_SETTREEVIEW', this.archDataAdaptor.getTree());
                 this.archDataAdaptor.qpush(sparent);
-                
-                EVENTBUS.$emit('INVOKE_TREEVIEW', this.archDataAdaptor.getTree());
 
                 if(configuration.component.length > 0) {
                     // Intera configuration;
@@ -1257,9 +1242,9 @@ export default {
         });
         setTimeout(() => { this.setViewModel(); }, 400);
         
-        EVENTBUS.$on('FETCH_ARCHVIEWS', () => {
+        EVENTBUS.$on('FETCH_VIEWNAMES', () => {
             setTimeout(() => {
-                EVENTBUS.$emit('RETURN_ARCHVIEWS', this.archDataAdaptor.getViewpoints());
+                EVENTBUS.$emit('RETURN_VIEWNAMES', this.archDataAdaptor.getViewpoints());
             }, 200);
         });
 
@@ -1308,11 +1293,12 @@ export default {
     },
 
     beforeDestroy() {
-        EVENTBUS.$off('FETCH_ARCHVIEWS');
+        EVENTBUS.$off('FETCH_VIEWNAMES');
         EVENTBUS.$off('DELIVER_CREATEVIEW');
         EVENTBUS.$off('DELIVER_REMOVEVIEW');
         EVENTBUS.$off('DELIVER_ENTERVIEW');
         EVENTBUS.$off('DELIVER_GOOVERVIEW');
+        EVENTBUS.$off('DELIVER_JUMPVIEW');
         EVENTBUS.$off('ERROR_CONFIGNOTFOUND');
         EVENTBUS.$off('ERROR_NULLCONNECTOR');
 
