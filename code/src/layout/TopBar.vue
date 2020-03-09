@@ -88,7 +88,11 @@
                         hoverable
                         :items='constraintItems'
                         id='constraint'
-                    />
+                    >
+                        <template v-slot:prepend="{ item }">
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </template>
+                    </v-treeview>
                 </v-menu>
             </v-col>
         </v-toolbar-items>  
@@ -164,6 +168,10 @@
     #tree-view .v-treeview-node {
         background-color: #1976d2;
     }
+
+    #constraint .v-treeview-node {
+        background-color: #E53935;
+    }
 </style>
 
 <script>
@@ -210,9 +218,9 @@ export default {
 
             deleteViewDialog: false,
 
-            treeViewItems: [{ name: "Choose a view", icon: "mdi-alert-rhombus" }],
+            treeViewItems: [],
 
-            constraintItems: [{ name: "No warning"}],
+            constraintItems: [],
         }
     },
 
@@ -284,9 +292,13 @@ export default {
             this.selectedView = payload;
         });
 
-        EVENTBUS.$on('INVOKE_SETTREEVIEW', (payload = [{ name: "Choose a view", icon: "mdi-alert-rhombus" }]) => {
+        EVENTBUS.$on('INVOKE_SETTREEVIEW', (payload) => {
             this.treeViewItems = payload;
-        })
+        });
+
+        EVENTBUS.$on('INVOKE_SETCONSTRAINT', (payload) => {
+            this.constraintItems = payload;
+        });
     },
 
     beforeDestroy() {
@@ -294,6 +306,7 @@ export default {
         EVENTBUS.$off('INVOKE_CREATEVIEW');
         EVENTBUS.$off('INVOKE_ENTERVIEW');
         EVENTBUS.$off('INVOKE_SETTREEVIEW');
+        EVENTBUS.$off('INVOKE_SETCONSTRAINT');
     }
 }
 </script>

@@ -273,12 +273,10 @@ export default {
         return {
             title: '',
             archDataAdaptor: {},
-
+            
+            // jointJS instance;
             jointGraph: null,
             jointPaper: null,
-
-            constraintViewX: 1200,
-            constraintViewY: 0,
 
             // Error dialog;
             errorDialog: false,
@@ -681,8 +679,10 @@ export default {
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
-            this.archDataAdaptor.qclear();
-            EVENTBUS.$emit('INVOKE_SETTREEVIEW');
+            this.archDataAdaptor
+                .qclear()
+                .updateTreeview()
+                .updateConstraint();
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdaptor.getViewpoint(vp);
@@ -937,9 +937,10 @@ export default {
             if(configuration) {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
-                this.archDataAdaptor.qpush(sparent);
-                EVENTBUS.$emit('INVOKE_SETTREEVIEW', this.archDataAdaptor.getTree());
-                this.archDataAdaptor.setConstraintChecker(configuration);
+                this.archDataAdaptor
+                    .qpush(sparent)
+                    .updateTreeview(this.archDataAdaptor.getTree())
+                    .updateConstraint(this.archDataAdaptor.getConstraint());
 
                 if(configuration.component.length > 0) {
                     // Intera configuration;

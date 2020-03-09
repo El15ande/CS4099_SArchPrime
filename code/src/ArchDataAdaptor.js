@@ -385,6 +385,16 @@ export default class ArchDataAdaptor {
             : [{ cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics'}];
     };
 
+    updateTreeview = function(treeview) {
+        EVENTBUS.$emit('INVOKE_SETTREEVIEW',
+            treeview
+                ? treeview
+                : [{ name: "Choose a view", icon: "mdi-alert-rhombus" }] 
+        );
+
+        return this;
+    }
+
     // Add a new component to current configuration;
     //  parent: parent configuration;
     //  cname: new component name;
@@ -486,7 +496,7 @@ export default class ArchDataAdaptor {
     //  parent: parent configuration;
     //  srccid, srciid: source port ids;
     //  tarcid, tariid: target port ids;
-    addConnector(parent, srccid, srciid, tarcid, tariid) {
+    addConnector = function(parent, srccid, srciid, tarcid, tariid) {
         let parentConfig = this.getConfiguration(parent.cid, parent.cname);
 
         if(parentConfig) {
@@ -502,7 +512,7 @@ export default class ArchDataAdaptor {
 
     // Remove a connector from current configuration;
     //  c: connector to be removed
-    removeConnector(c) {
+    removeConnector = function(c) {
         let parentConfig = this.getConfiguration(c.sparent.cid, c.sparent.cname);
 
         if(parentConfig) {
@@ -524,7 +534,7 @@ export default class ArchDataAdaptor {
     //      rlabel: remove label from the connector;
     //  before: data 1;
     //  after: data 2;
-    updateConnector(attr, parent, before, after) {
+    updateConnector = function(attr, parent, before, after) {
         let parentConfig = this.getConfiguration(parent.cid, parent.cname);
 
         if(parentConfig) {
@@ -554,7 +564,7 @@ export default class ArchDataAdaptor {
 
     // Set the canvas for intera configuration;
     //  canvasses: all inner components' canvasses;
-    getInteraCanvas(canvasses) {
+    getInteraCanvas = function(canvasses) {
         let canvas = {...canvasses[0]};
         
         canvasses.forEach((c) => {
@@ -576,7 +586,28 @@ export default class ArchDataAdaptor {
     */
 
     // Set constraint checker;
-    setConstraintChecker(config) {
+    //  config: configuration/component data;
+    setConstraintChecker = function(config) {
         this.constraintChecker = new ArchConstraintChecker(config);
+
+        return this;
+    };
+
+    getConstraint = function() {
+        let constraints = [];
+
+        return constraints;
+    };
+
+    // Update top bar constraint treeview;
+    //  constraints: treeview items array;
+    updateConstraint = function(constraints = []) {
+        EVENTBUS.$emit('INVOKE_SETCONSTRAINT', 
+            constraints.length > 0
+                ? constraints 
+                : [{ name: "No warning", icon: "mdi-check-all" }]
+        );
+
+        return this;
     };
 }
