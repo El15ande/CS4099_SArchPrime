@@ -1,9 +1,11 @@
 import { EVENTBUS, AxiosRequest } from './main.js';
+import ArchConstraintChecker from './ArchConstraintChecker.js';
 
 export default class ArchDataAdaptor {
     constructor(data) {
         this.data = data;
         this.archQueue = [];
+        this.constraintChecker = null;
     }
 
     // Post current data to the server;
@@ -549,6 +551,9 @@ export default class ArchDataAdaptor {
     /*
         Intera;
     */
+
+    // Set the canvas for intera configuration;
+    //  canvasses: all inner components' canvasses;
     getInteraCanvas(canvasses) {
         let canvas = {...canvasses[0]};
         
@@ -564,5 +569,14 @@ export default class ArchDataAdaptor {
         canvas.width += 40; canvas.height += 40;
 
         return canvas;
+    };
+
+    /*
+        Constraints;
+    */
+
+    // Set constraint checker;
+    setConstraintChecker(config) {
+        this.constraintChecker = new ArchConstraintChecker(config);
     };
 }

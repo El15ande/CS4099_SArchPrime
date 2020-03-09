@@ -681,8 +681,8 @@ export default {
 
             sessionStorage.setItem('canvasWidth', $('.v-content__wrap').width());
             sessionStorage.setItem('canvasHeight', $('.v-content__wrap').height());
-            EVENTBUS.$emit('INVOKE_SETTREEVIEW');
             this.archDataAdaptor.qclear();
+            EVENTBUS.$emit('INVOKE_SETTREEVIEW');
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdaptor.getViewpoint(vp);
@@ -937,8 +937,9 @@ export default {
             if(configuration) {
                 this.jointGraph.clear();
                 this.deregisterConfiguration();
-                EVENTBUS.$emit('INVOKE_SETTREEVIEW', this.archDataAdaptor.getTree());
                 this.archDataAdaptor.qpush(sparent);
+                EVENTBUS.$emit('INVOKE_SETTREEVIEW', this.archDataAdaptor.getTree());
+                this.archDataAdaptor.setConstraintChecker(configuration);
 
                 if(configuration.component.length > 0) {
                     // Intera configuration;

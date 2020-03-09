@@ -43,7 +43,7 @@ Technology Stacks
 - [x] 5. Support hierarchical features on connectors. (progress: a single architecture view - hierarchical architecture component with inter-components connector)
 - [x] 6. Provide visualisation on connectors.
 - [x] 7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
-- [ ] 8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
+- [x] 8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
 - [ ] 9. Based on connections, the tool is able to reveal constraints between different components and views. (progress: core function)
 - [ ] 10. Conduct a user evaluation on core design tool, evaluate the design functions and the visualisation design.
 

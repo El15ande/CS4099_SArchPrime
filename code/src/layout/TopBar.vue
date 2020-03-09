@@ -52,7 +52,7 @@
                             color="#1976d2"  
                             v-on="on"
                         >
-                            TREEVIEW
+                            TREE VIEW
                         </v-btn>
                     </template>
 
@@ -60,9 +60,12 @@
                         dark
                         hoverable
                         :items='treeViewItems'
+                        id='tree-view'
                     >
                         <template v-slot:prepend="{ item }">
-                            <a @click="jumpView(item.cid, item.name)"><v-icon>{{ item.icon }}</v-icon></a>
+                            <a @click="jumpView(item.cid, item.name)">
+                                <v-icon>{{ item.icon }}</v-icon>
+                            </a>
                         </template>
                     </v-treeview>
                 </v-menu>
@@ -79,6 +82,13 @@
                             CONSTRAINT
                         </v-btn>
                     </template>
+
+                    <v-treeview
+                        dark
+                        hoverable
+                        :items='constraintItems'
+                        id='constraint'
+                    />
                 </v-menu>
             </v-col>
         </v-toolbar-items>  
@@ -151,7 +161,7 @@
 </template>
 
 <style>
-    .v-treeview-node {
+    #tree-view .v-treeview-node {
         background-color: #1976d2;
     }
 </style>
@@ -201,6 +211,8 @@ export default {
             deleteViewDialog: false,
 
             treeViewItems: [{ name: "Choose a view", icon: "mdi-alert-rhombus" }],
+
+            constraintItems: [{ name: "No warning"}],
         }
     },
 
