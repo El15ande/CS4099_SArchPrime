@@ -105,7 +105,7 @@ export default class ArchGraphComponent {
 
     // Add the component to paper;
     //  paper: joint paper;
-    addTo(paper) {
+    addTo = function(paper) {
         this.jointComponent.addTo(paper);
         this.jointComponent.attributes.z = 100 + this.jointComponent.attributes.cpid;
     }
@@ -114,7 +114,7 @@ export default class ArchGraphComponent {
     //  w: width;
     //  h: height;
     //  str: string to be printed on component;
-    _getFontSize(w, h, str) {
+    _getFontSize = function(w, h, str) {
         if(h <= 20) return 12.5;
         if(w/str.length <= 10.0) return w/str.length * 2;
 

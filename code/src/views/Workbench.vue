@@ -681,7 +681,7 @@ export default {
             this.archDataAdaptor
                 .qclear()
                 .updateTreeview()
-                .updateConstraint();
+                .setConstraintChecker().updateConstraint();
 
             viewpoints.map((vp) => {
                 viewpoint = this.archDataAdaptor.getViewpoint(vp);
@@ -795,7 +795,6 @@ export default {
 
             // Cell (viewpoint): right click;
             this.jointPaper.on('element:contextmenu', (elementView, evt) => {
-                this.showMenu('VM_ELEMENT', evt);
                 this.selectedComponent = {
                     sid: elementView.model.vpid,
                     spos: {
@@ -804,11 +803,12 @@ export default {
                     },
                     ssize: elementView.model.attributes.size
                 };
+
+                this.showMenu('VM_ELEMENT', evt);
             });
 
             // Link (connection): right click;
             this.jointPaper.on('link:contextmenu', (linkView, evt) => {
-                this.showMenu('VM_LINK', evt);
                 this.selectedConnector = {
                     lsource: linkView.sourceView 
                         ? linkView.sourceView.model.vpid
@@ -818,15 +818,18 @@ export default {
                         : linkView.targetPoint,
                     llabel: linkView.model.attributes.labels
                 };
+
+                this.showMenu('VM_LINK', evt);
             });
 
             // Blank space: right click;
             this.jointPaper.on('blank:contextmenu', (evt) => {
-                this.showMenu('VM_BLANK', evt);
                 this.selectedComponent.spos = {
                     x: evt.offsetX,
                     y: evt.offsetY
-                }
+                };
+
+                this.showMenu('VM_BLANK', evt);
             });
         },
         
@@ -939,7 +942,7 @@ export default {
                 this.archDataAdaptor
                     .qpush(sparent)
                     .updateTreeview(this.archDataAdaptor.getTree())
-                    .updateConstraint(this.archDataAdaptor.getConstraint());
+                    .setConstraintChecker(configuration).updateConstraint();
 
                 if(configuration.component.length > 0) {
                     // Intera configuration;
@@ -977,7 +980,6 @@ export default {
 
                 // Blank space: right click;
                 this.jointPaper.on('blank:contextmenu', (evt) => {
-                    this.showMenu('CFG_BLANK', evt);
                     this.selectedComponent = {
                         sid: cid,
                         sname: cname,
@@ -986,6 +988,8 @@ export default {
                             y: evt.offsetY
                         }
                     };
+
+                    this.showMenu('CFG_BLANK', evt);
                 });
 
                 // Component: left double click;
@@ -1023,11 +1027,6 @@ export default {
 
                 // Component: right click;
                 this.jointPaper.on('element:contextmenu', (elementView, evt) => {
-                    this.showMenu(
-                        elementView.model.attributes.cpname === 'interaConfig' ? 'CFG_BLANK' : 'CFG_ELEMENT',
-                        evt
-                    );
-
                     this.selectedComponent = elementView.model.attributes.cpname === 'interaConfig'
                         ? {
                             sid: cid,
@@ -1047,6 +1046,11 @@ export default {
                             ssize: elementView.model.attributes.size,
                             sparent
                         };
+                    
+                    this.showMenu(
+                        elementView.model.attributes.cpname === 'interaConfig' ? 'CFG_BLANK' : 'CFG_ELEMENT',
+                        evt
+                    );
                 });
 
                 this.jointPaper.on('element:magnet:contextmenu', (elementView, evt, magnet) => {
@@ -1075,8 +1079,6 @@ export default {
 
                         this.showMenu('CFG_INTERAPORT', evt);
                     } else {
-                        this.showMenu('CFG_PORT', evt);
-
                         this.selectedComponent = {
                             sid: elementView.model.attributes.cpid,
                             sname: elementView.model.attr().label.text,
@@ -1094,6 +1096,8 @@ export default {
                                 iname: target.attrs.text.text
                             }
                         };
+
+                        this.showMenu('CFG_PORT', evt);
                     }
                 });
 
@@ -1112,8 +1116,6 @@ export default {
                 });
 
                 this.jointPaper.on('link:contextmenu', (linkView, evt) => {
-                    this.showMenu('CFG_LINK', evt);
-                    
                     this.selectedConnector = {
                         source: {
                             cpid: linkView.sourceView.model.attributes.cpid, 
@@ -1125,7 +1127,9 @@ export default {
                         },
                         cnlabel: linkView.model.attributes.labels,
                         sparent
-                    }
+                    };
+
+                    this.showMenu('CFG_LINK', evt);
                 });
             }  
         },

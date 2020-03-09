@@ -22,7 +22,7 @@ export default class ArchGraphInterface {
         }
     }
 
-    _getD(itype, ipos) {
+    _getD = function(itype, ipos) {
         let isInput = itype === 'Input';
 
         if(itype === 'Non-directional') {

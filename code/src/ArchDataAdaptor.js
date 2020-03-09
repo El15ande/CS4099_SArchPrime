@@ -588,28 +588,19 @@ export default class ArchDataAdaptor {
     // Set constraint checker;
     //  config: configuration/component data;
     setConstraintChecker = function(config) {
-        this.constraintChecker = new ArchConstraintChecker(config);
+        this.constraintChecker = config
+            ? new ArchConstraintChecker(config)
+            : null;
 
         return this;
     }
 
-    // Get constraint array;
-    getConstraint = function() {
-        let constraints = [];
-
-        //TODO this.constraintChecker checking;
-
-        return constraints;
-    }
-
     // Update top bar constraint treeview;
     //  constraints: treeview items array;
-    updateConstraint = function(constraints) {
+    updateConstraint = function() {
         EVENTBUS.$emit('INVOKE_SETCONSTRAINT', 
-            constraints
-                ? (constraints.length > 0
-                    ? constraints
-                    : [{ name: "No inconsistencies detected", icon: "mdi-check-all" }])
+            this.constraintChecker
+                ? this.constraintChecker.getConstraints()
                 : [{ name: "Choose a view", icon: "mdi-folder-alert-outline" }]
         );
 

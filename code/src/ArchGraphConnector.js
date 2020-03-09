@@ -12,7 +12,7 @@ export default class ArchGraphConnector {
 
     // Add the component to paper;
     //  paper: joint paper;
-    addTo(paper) {
+    addTo = function(paper) {
         this.jointConnector.addTo(paper);
     }
 }
