@@ -59,8 +59,8 @@
                     <v-treeview
                         dark
                         hoverable
-                        :items='treeViewItems'
-                        id='tree-view'
+                        :items="treeViewItems"
+                        id="tree-view"
                     >
                         <template v-slot:prepend="{ item }">
                             <a @click="jumpView(item.cid, item.name)">
@@ -86,8 +86,8 @@
                     <v-treeview
                         dark
                         hoverable
-                        :items='constraintItems'
-                        id='constraint'
+                        :items="constraintItems"
+                        id="constraint"
                     >
                         <template v-slot:prepend="{ item }">
                             <v-icon>{{ item.icon }}</v-icon>
@@ -98,14 +98,14 @@
         </v-toolbar-items>  
 
         <v-dialog
-            v-model='createViewDialog'
-            width='500'
+            v-model="createViewDialog"
+            width="500"
         >
             <v-card>
                 <v-card-title>Create new view for {{ title }}</v-card-title>
                 <v-card-actions>
                     <v-text-field 
-                        v-model='createViewName'
+                        v-model="createViewName"
                         outlined
                         :rules="['Required']"
                         label="Name" 
@@ -117,13 +117,13 @@
                         text
                         color="teal darken-1"
                         :disabled="!createViewName"
-                        @click='createView()'
+                        @click="createView()"
                     >
                         Continue
                     </v-btn>
                     <v-btn
                         text
-                        @click='createViewDialog = false'
+                        @click="createViewDialog = false"
                     >
                         Cancel
                     </v-btn>
@@ -132,10 +132,10 @@
         </v-dialog>
 
         <v-dialog
-            v-model='deleteViewDialog'
-            width='500'
+            v-model="deleteViewDialog"
+            width="500"
         >
-                <v-card v-if='selectedView'>
+                <v-card v-if="selectedView">
                     <v-card-title>Delete {{ selectedView }}</v-card-title>
                     <v-card-text>This view will be permenently deleted, are you sure?</v-card-text>
                     <v-card-actions>
@@ -143,20 +143,20 @@
                         <v-btn
                             text
                             color="red darken-1"
-                            @click='deleteView(selectedView)'
+                            @click="deleteView(selectedView)"
                         >
                             Continue
                         </v-btn>
                         <v-btn
                             text
-                            @click='deleteViewDialog = false'
+                            @click="deleteViewDialog = false"
                         >
                             Cancel
                         </v-btn>
                     </v-card-actions>
                 </v-card>
 
-                <v-card v-if='!selectedView'>
+                <v-card v-if="!selectedView">
                     <v-card-title>No view to delete</v-card-title>
                     <v-card-text>You haven't selected a view yet.</v-card-text>
                 </v-card>

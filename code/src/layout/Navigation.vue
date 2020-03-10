@@ -18,16 +18,16 @@
         <v-list nav>
             <div />
             <v-list-item
-                v-for='(link, i) in toolList'
-                :key='i'
-                :to='link.to'
+                v-for="(link, i) in toolList"
+                :key="i"
+                :to="link.to"
                 active-class="primary"
             >
                 <v-list-item-action>
                     <v-icon>{{ link.icon }}</v-icon>
                 </v-list-item-action>
                 
-                <v-list-item-title v-text='link.title' />
+                <v-list-item-title v-text="link.title" />
             </v-list-item>
         </v-list>
 
@@ -35,9 +35,9 @@
 
         <v-list nav>
             <v-list-item
-                v-for='(arch, i) in archList'
-                :key='i'
-                :to='"/workbench/" + arch.title'
+                v-for="(arch, i) in archList"
+                :key="i"
+                :to="'/workbench/' + arch.title"
                 active-class="primary"
             >   
                 

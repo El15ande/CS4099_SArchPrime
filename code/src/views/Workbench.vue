@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <v-menu
             v-model="jointMenu"
             absolute
@@ -8,14 +7,14 @@
             :position-y="menuY"
         >
             <v-list
-                max-width='350'
-                :dense='menuContext === "CFG_INTERAPORT"'
+                max-width="350"
+                :dense="menuContext === 'CFG_INTERAPORT'"
             >
                 <v-list-item 
-                    v-for='(item, i) in menu'
-                    :key='i'
-                    :class='item.colourclass'
-                    @click.stop='item.action'
+                    v-for="(item, i) in menu"
+                    :key="i"
+                    :class="item.colourclass"
+                    @click.stop="item.action"
                 >
                     <v-list-item-content>
                         <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -27,7 +26,7 @@
 
         <v-dialog
             v-model="errorDialog"
-            width='500'
+            width="500"
         >
             <v-card outlined>
                 <v-card-title>An error has occurred.</v-card-title>
@@ -39,7 +38,7 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='errorDialog = false'
+                        @click="errorDialog = false"
                     >
                         OK
                     </v-btn>
@@ -50,7 +49,7 @@
 
         <v-dialog
             v-model="labelDialog"
-            width='500'
+            width="500"
         >
             <v-card>
                 <v-card-title>{{ labelDialogTitle }}</v-card-title>
@@ -66,13 +65,13 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='addConnectorLabel()'
+                        @click="addConnectorLabel()"
                     >
                         Add/Edit
                     </v-btn>
                     <v-btn
                         text
-                        @click='labelDialog = false'
+                        @click="labelDialog = false"
                     >
                         Cancel
                     </v-btn>
@@ -82,7 +81,7 @@
 
         <v-dialog
             v-model="customiseDialog"
-            width='500'
+            width="500"
         >
             <v-card>
                 <v-card-title>Customise</v-card-title>
@@ -122,13 +121,13 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='customise()'
+                        @click="customise()"
                     >
                         Change
                     </v-btn>
                     <v-btn
                         text
-                        @click='customiseDialog = false'
+                        @click="customiseDialog = false"
                     >
                         Cancel
                     </v-btn>
@@ -136,16 +135,14 @@
             </v-card>
         </v-dialog>
 
-
-
         <v-dialog
             v-model="componentDialog"
-            width='500'
+            width="500"
         >
             <v-card>
                 <v-card-title>Create new component</v-card-title>
                 <v-card-actions>
-                    <v-col md='12'>
+                    <v-col md="12">
                         <v-text-field
                             v-model="newComponentName"
                             outlined
@@ -159,13 +156,13 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='addComponent()'
+                        @click="addComponent()"
                     >
                         Add/Edit
                     </v-btn>
                     <v-btn
                         text
-                        @click='componentDialog = false'
+                        @click="componentDialog = false"
                     >
                         Cancel
                     </v-btn>
@@ -175,7 +172,7 @@
 
         <v-dialog
             v-model="interfaceDialog"
-            width='500'
+            width="500"
         >
             <v-card>
                 <v-card-title>{{ interfaceDialogTitle }}</v-card-title>
@@ -207,13 +204,13 @@
                     <v-btn
                         text
                         color="teal darken-1"
-                        @click='addInterface()'
+                        @click="addInterface()"
                     >
                         Add/Edit
                     </v-btn>
                     <v-btn
                         text
-                        @click='interfaceDialog = false'
+                        @click="interfaceDialog = false"
                     >
                         Cancel
                     </v-btn>

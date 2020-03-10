@@ -389,7 +389,7 @@ export default class ArchDataAdaptor {
         EVENTBUS.$emit('INVOKE_SETTREEVIEW',
             treeview
                 ? treeview
-                : [{ name: "Choose a view", icon: "mdi-folder-alert-outline" }] 
+                : [{ name: 'Choose a view', icon: 'mdi-folder-alert-outline' }] 
         );
 
         return this;
@@ -440,7 +440,7 @@ export default class ArchDataAdaptor {
     //      eintf: edit interface data;
     //  cid, cname: component key;
     //  v: new value;
-    updateComponent = function(attr, cid, cname, v) {
+    updateComponent = function(attr, cid, cname, v, parent) {
         let component = this.getConfiguration(cid, cname);
 
         if(component) {
@@ -467,6 +467,24 @@ export default class ArchDataAdaptor {
                     break;
                 }
                 case 'rintf': {
+                    let parent = this.getConfiguration(this.qlast().cid, this.qlast().cname);
+                    let newConnector = [];
+
+                    parent.connector.forEach((cn) => {
+                        if(cn.source.cpid === component.cpid) {
+                            if(cn.source.iid !== v.iid) {
+                                if(cn.source.iid > v.iid) cn.source.iid = cn.source.iid - 1;
+                                newConnector.push(cn);
+                            }
+                        } else if(cn.target.cpid === component.cpid) {
+                            if(cn.target.iid !== v.iid) {
+                                if(cn.target.iid > v.iid) cn.target.iid = cn.target.iid - 1;
+                                newConnector.push(cn);
+                            } 
+                        } else newConnector.push(cn);
+                    });
+                    parent.connector = newConnector;
+
                     component.cpintf = component.cpintf.filter((intf) => { return intf.iid !== v.iid; });
                     component.cpintf = component.cpintf.map((intf, index) => { return Object.assign({}, intf, { iid: index + 1 }); });
                     break;
@@ -601,7 +619,7 @@ export default class ArchDataAdaptor {
         EVENTBUS.$emit('INVOKE_SETCONSTRAINT', 
             this.constraintChecker
                 ? this.constraintChecker.getConstraints()
-                : [{ name: "Choose a view", icon: "mdi-folder-alert-outline" }]
+                : [{ name: 'Choose a view', icon: 'mdi-folder-alert-outline' }]
         );
 
         return this;
