@@ -723,7 +723,7 @@ export default {
                     'position',
                     elementView.model.attr().label.text, 
                     elementView.model.attributes.position
-                )
+                );
             });
 
             // Link (connection): drag & drop;
@@ -1292,6 +1292,8 @@ export default {
 
             this.renderConfiguration(id, name);
         });
+
+        window.onbef
     },
 
     beforeDestroy() {
