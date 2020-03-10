@@ -362,9 +362,16 @@ export default class ArchDataAdaptor {
     getTree = function() {
         let treeItem;
         let configuration = this.getConfiguration(this.archQueue[0].cid, this.archQueue[0].cname);
+        let idCount = 0;
 
         let makeTree = function(cp, parent) {
-            let item = { cid: cp.cpid, name: cp.cpname, icon:'mdi-arrow-right-bold-box', parent };
+            let item = { 
+                id: ++idCount, 
+                name: cp.cpname, 
+                icon:'mdi-arrow-right-bold-box',
+                cid: cp.cpid, 
+                parent 
+            };
             
             if(cp.component.length > 0) {
                 item.icon = 'mdi-arrow-down-bold-box';
@@ -376,13 +383,24 @@ export default class ArchDataAdaptor {
         }
 
         if(configuration.component.length > 0) {
-            treeItem = { cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics', children: []};
+            treeItem = { 
+                id: ++idCount, 
+                name: this.archQueue[0].cname, 
+                icon: 'mdi-home-analytics', 
+                children: [],
+                cid: this.archQueue[0].cid,
+            };
             configuration.component.map(cp => treeItem.children.push(makeTree(cp, treeItem)));
         }
 
         return treeItem
             ? [treeItem]
-            : [{ cid: this.archQueue[0].cid, name: this.archQueue[0].cname, icon: 'mdi-home-analytics'}];
+            : [{ 
+                id: ++idCount, 
+                name: this.archQueue[0].cname, 
+                icon: 'mdi-home-analytics',
+                cid: this.archQueue[0].cid,
+            }];
     }
 
     updateTreeview = function(treeview) {

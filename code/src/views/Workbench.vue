@@ -320,7 +320,7 @@ export default {
             newInterfaceName: '',
 
             // Intera component interface list;
-            interaConnections: []
+            interaConnections: [],
         }
     },
 

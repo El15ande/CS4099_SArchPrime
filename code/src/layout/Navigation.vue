@@ -66,7 +66,7 @@ export default {
                 {
                     to: '/guide',
                     title: 'User Guide',
-                    icon: 'mdi-settings-outline'
+                    icon: 'mdi-help'
                 }
             ],
             archList: []

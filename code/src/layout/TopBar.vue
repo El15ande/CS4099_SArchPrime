@@ -90,7 +90,9 @@
                         id="constraint"
                     >
                         <template v-slot:prepend="{ item }">
-                            <v-icon>{{ item.icon }}</v-icon>
+                            <a @click="showConstraint(item)">
+                                <v-icon>{{ item.icon }}</v-icon>
+                            </a>
                         </template>
                     </v-treeview>
                 </v-menu>
@@ -161,6 +163,21 @@
                     <v-card-text>You haven't selected a view yet.</v-card-text>
                 </v-card>
         </v-dialog>
+
+        <v-dialog
+            v-model="constraintDialog"
+            width="700"
+        >
+            <v-card>
+                <v-card-title>{{ constraintTitle }}</v-card-title>
+                <v-card-text
+                    v-for="(item, i) in constraintTexts"
+                    :key="i"
+                >
+                    {{ item }}
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-app-bar>
 </template>
 
@@ -220,6 +237,9 @@ export default {
 
             treeViewItems: [],
 
+            constraintDialog: false,
+            constraintTitle: '',
+            constraintTexts: [],
             constraintItems: [],
         }
     },
@@ -250,6 +270,12 @@ export default {
             if(!id) return;
 
             EVENTBUS.$emit('DELIVER_JUMPVIEW', id, name);
+        },
+
+        showConstraint(item) {
+            this.constraintDialog = true;
+            this.constraintTitle = item.dialog.title ? item.dialog.title : item.name;
+            this.constraintTexts = item.dialog.explanation;
         }
     },
 
