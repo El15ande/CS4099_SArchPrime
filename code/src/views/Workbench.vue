@@ -1293,7 +1293,27 @@ export default {
             this.renderConfiguration(id, name);
         });
 
-        window.onbef
+
+
+        window.addEventListener('keydown', (e) => {
+            let eventRoute = (flag, func) => { if(flag) func() };
+
+            switch(e.code) {
+                case 'Escape': {
+                    eventRoute(this.jointMenu, () => this.jointMenu = false);
+                    return;
+                }
+                case 'Enter': {
+                    eventRoute(this.errorDialog, () => this.errorDialog = false);
+                    eventRoute(this.labelDialog, this.addConnectorLabel);
+                    eventRoute(this.customiseDialog, this.customise);
+                    eventRoute(this.componentDialog, this.addComponent);
+                    eventRoute(this.interfaceDialog, this.addInterface);
+                    return;
+                }
+                default: { return; }
+            }
+        });
     },
 
     beforeDestroy() {
