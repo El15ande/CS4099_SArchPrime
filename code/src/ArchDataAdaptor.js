@@ -364,7 +364,7 @@ export default class ArchDataAdaptor {
         let configuration = this.getConfiguration(this.archQueue[0].cid, this.archQueue[0].cname);
         let idCount = 0;
 
-        let makeTree = function(cp, parent) {
+        let makeTree = (cp, parent) => {
             let item = { 
                 id: ++idCount, 
                 name: cp.cpname, 
