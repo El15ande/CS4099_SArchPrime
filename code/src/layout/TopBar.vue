@@ -79,7 +79,7 @@
                             color="red"  
                             v-on="on"
                         >
-                            CONSTRAINT
+                            CONSTRAINT ({{ constraintAmount }})
                         </v-btn>
                     </template>
 
@@ -241,6 +241,19 @@ export default {
             constraintTitle: '',
             constraintTexts: [],
             constraintItems: [],
+        }
+    },
+
+    computed: {
+        constraintAmount: function() {
+            if(this.constraintItems.length === 0) return 0;
+
+            if(this.constraintItems.length > 1 || this.constraintItems[0].id) {
+                let count = 0;
+
+                this.constraintItems.forEach((item) => count += item.children.length);
+                return count;
+            } else return 0;
         }
     },
 

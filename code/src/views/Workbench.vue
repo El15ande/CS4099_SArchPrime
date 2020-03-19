@@ -662,7 +662,7 @@ export default {
             setTimeout(() => {
                 this.jointGraph.clear();
                 this.setViewModel();
-            }, 400);
+            }, 500);
         },
         
 
@@ -1242,7 +1242,7 @@ export default {
 
             interactive: (cellView) => { return cellView.model.attributes.cpid !== 'INTERA'; }
         });
-        setTimeout(() => { this.setViewModel(); }, 400);
+        setTimeout(() => { this.setViewModel(); }, 500);
         
         EVENTBUS.$on('FETCH_VIEWNAMES', () => {
             setTimeout(() => {
