@@ -34,14 +34,10 @@ const archDataPrototype = {
     connections: []
 };
 
-// yw69.host.cs.st-andrews.ac.uk/node
 APP.get('/', function(req, res) {
     console.log(`GET /`);
-
-    res.send('Welcome to my server!');
 });
 
-// yw69.host.cs.st-andrews.ac.uk/nodearchlist
 // GET Archlist.json;
 APP.get('/archlist', (req, res) => {
     console.log(`GET /archlist`);
@@ -53,7 +49,6 @@ APP.get('/archlist', (req, res) => {
     });
 });
 
-// yw69.host.cs.st-andrews.ac.uk/nodearch
 // GET {title}.json;
 APP.get('/arch/:title', (req, res) => {
     let jsonFile = `${req.params.title}.json`;
@@ -67,7 +62,6 @@ APP.get('/arch/:title', (req, res) => {
     });
 });
 
-// yw69.host.cs-st-andrews.ac.uk/nodearch
 // POST(update) {title}.json;
 APP.post('/arch/:title', (req, res) => {
     let jsonFile = `${req.params.title}.json`;
@@ -80,7 +74,6 @@ APP.post('/arch/:title', (req, res) => {
     res.end();
 });
 
-// yw69.host.cs.st-andrews.ac.uk/nodearch
 // PUT(create) {title}.json;
 APP.put('/arch/:title', (req, res) => {
     let newTitle = req.params.title;
@@ -108,7 +101,6 @@ APP.put('/arch/:title', (req, res) => {
     res.end();
 });
 
-// yw69.host.cs.st-andrews.ac.uk/nodearch
 // DELETE {title}.json;
 APP.delete('/arch/:title', (req, res) => {
     let deletedTitle = req.params.title;

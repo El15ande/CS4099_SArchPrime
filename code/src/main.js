@@ -14,10 +14,10 @@ const PATHS = [
         path: '/',
         viewname: 'Dashboard'
     },
-    {
+    /*{
         path: '/guide',
         viewname: 'Guide'
-    },
+    },*/
     {
         path: '/workbench/:name',
         viewname: 'Workbench'

@@ -36,7 +36,7 @@
                             @click="item.action"
                         >
                             <v-list-item-icon>
-                                <v-icon v-text="item.icon" />
+                                <v-icon v-text="item.icon"></v-icon>
                             </v-list-item-icon>
                             <v-list-item-title>{{ item.text }}</v-list-item-title>
                         </v-list-item>
@@ -203,19 +203,19 @@ export default {
             viewpointItems: [
                 { 
                     text: 'Go to overview', 
-                    icon: 'mdi-file-document-box',
+                    icon: 'mdi-text-box',
                     action: this.goOverview 
                 },
 
                 {
                     text: 'Create a new view',
-                    icon: 'mdi-file-document-box-plus',
+                    icon: 'mdi-text-box-plus',
                     action: () => { this.createViewDialog = true }
                 },
 
                 {
                     text: 'Remove the current view',
-                    icon: 'mdi-file-document-box-minus',
+                    icon: 'mdi-text-box-remove',
                     action: () => { this.deleteViewDialog = true }
                 }
             ],
