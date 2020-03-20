@@ -8,7 +8,7 @@ export default class ArchConstraintChecker {
 
         this
             ._pushConstraints(this._checkMismatchedInterfaces(), {
-                name: 'Inconsistency: Mismatched Interfaces',
+                name: 'Mismatched Interfaces',
                 icon: 'mdi-alert-box',
                 explanation: [
                     'Two connected interfaces needed to be matched in type:',
@@ -35,10 +35,10 @@ export default class ArchConstraintChecker {
                 }
             })
             ._pushConstraints(this._checkUnconnectedInterfaces(), {
-                name: 'Inconsistency: unconnected interface',
+                name: 'Isolated Interface',
                 icon: 'mdi-alert-box',
                 explanation: [
-                    'An interface has to match with other interface(s).'
+                    'An interface is needed to match with other interface(s).'
                 ]
             },
             (i) => {
@@ -60,7 +60,7 @@ export default class ArchConstraintChecker {
     getConstraints = function() {
         return this.constraints.length > 0
             ? this.constraints
-            : [{ name: 'No inconsistencies detected', icon: 'mdi-check-all' }];
+            : [{ name: 'No suggestions', icon: 'mdi-check-all' }];
     }
 
     _pushConstraints = function(arr, { name, icon, explanation }, childProcessor) {

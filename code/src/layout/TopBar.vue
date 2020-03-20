@@ -79,7 +79,7 @@
                             color="red"  
                             v-on="on"
                         >
-                            CONSTRAINT ({{ constraintAmount }})
+                            ADVICE ({{ constraintAmount }})
                         </v-btn>
                     </template>
 

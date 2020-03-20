@@ -442,6 +442,7 @@ export default class ArchDataAdaptor {
         let parentConfig = this.getConfiguration(c.sparent.sid, c.sparent.sname);
 
         if(parentConfig) {
+            parentConfig.connector = parentConfig.connector.filter((cn) => { return !(cn.source.cpid === c.sid || cn.target.cpid === c.sid); });
             parentConfig.component = parentConfig.component.filter((cp) => { return !(c.sid === cp.cpid && c.sname === cp.cpname); });
             parentConfig.component = parentConfig.component.map((cp, index) => { return Object.assign({}, cp, { cpid: index + 1 }); });
         } else EVENTBUS.$emit('ERROR_CONFIGNOTFOUND', c.parent.sid, c.parent.sname);
