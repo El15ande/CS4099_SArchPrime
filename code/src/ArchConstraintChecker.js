@@ -35,7 +35,7 @@ export default class ArchConstraintChecker {
                 }
             })
             ._pushConstraints(this._checkUnconnectedInterfaces(), {
-                name: 'Isolated Interface',
+                name: 'Isolated Interfaces',
                 icon: 'mdi-alert-box',
                 explanation: [
                     'An interface is needed to match with other interface(s).'
@@ -47,7 +47,7 @@ export default class ArchConstraintChecker {
                     name: `${ i.component.cpname }: ${ i.interface.iname ? i.interface.iname : i.interface.ipos + ' unnamed interface' }`,
                     icon: 'mdi-alert-box-outline',
                     dialog: {
-                        title: 'Unconnected Interface',
+                        title: 'Isolated Interface',
                         explanation: [
                             `Component: ${ i.component.cpname }`,
                             `Interface: ${ i.interface.ipos } ${ i.interface.itype} ${ i.interface.iname ? i.interface.iname: 'unnamed' } interface.`
@@ -55,6 +55,26 @@ export default class ArchConstraintChecker {
                     }
                 }
             })
+            ._pushConstraints(this._checkIsolatedComponents(), {
+                name: 'Isolated Components',
+                icon: 'mdi-alert-box',
+                explanation: [
+                    'A component is needed to connect with other components through interfaces.'
+                ]
+            },
+            (i) => {
+                return {
+                    id: ++this.idCount,
+                    name: `${ i.cpname }`,
+                    icon: 'mdi-alert-box-outline',
+                    dialog: {
+                        title: 'Isolated Component',
+                        explanation: [
+                            `${ i.cpname } is cannot communicate to other components.`
+                        ]
+                    }
+                }
+            });
     }
 
     getConstraints = function() {
@@ -132,5 +152,30 @@ export default class ArchConstraintChecker {
         });
 
         return unlinkedInterfaces;
+    }
+
+    _checkIsolatedComponents = function() {
+        let isolatedComponents = [];
+        let countArr = [];
+        let ic = {};
+
+        let addCount = (i) => {
+            if(!countArr.includes(i)) countArr.push(i);
+        }
+
+        this.configuration.connector.forEach((cn) => {
+            addCount(cn.source.cpid);
+            addCount(cn.target.cpid);
+        });
+
+        for(let x = 1; x <= this.configuration.component.length; x++) {
+            if(!countArr.includes(x)) {
+                ic.cpname = this.configuration.component[x-1].cpname;
+                isolatedComponents.push(ic);
+                ic = {};
+            }
+        }
+
+        return isolatedComponents;
     }
 }
