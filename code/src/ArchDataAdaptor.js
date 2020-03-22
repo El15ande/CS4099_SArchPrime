@@ -407,7 +407,7 @@ export default class ArchDataAdaptor {
         EVENTBUS.$emit('INVOKE_SETTREEVIEW',
             treeview
                 ? treeview
-                : [{ name: 'Choose a view', icon: 'mdi-folder-alert-outline' }] 
+                : [{ name: 'Choose a view', icon: 'mdi-folder-alert-outline', action: () => {} }] 
         );
 
         return this;
@@ -638,7 +638,7 @@ export default class ArchDataAdaptor {
         EVENTBUS.$emit('INVOKE_SETCONSTRAINT', 
             this.constraintChecker
                 ? this.constraintChecker.getConstraints()
-                : [{ name: 'Choose a view', icon: 'mdi-folder-alert-outline' }]
+                : [{ name: 'Choose a view', icon: 'mdi-folder-alert-outline', action: () => {} }]
         );
 
         return this;

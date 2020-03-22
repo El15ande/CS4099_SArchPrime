@@ -25,13 +25,40 @@
                             outlined
                             v-on="on"
                         >
-                            VIEWS
+                            VIEW TOOL
                         </v-btn>
                     </template>
 
                     <v-list>
                         <v-list-item
-                            v-for="(item, i) in viewpointItems"
+                            v-for="(item, i) in viewItems"
+                            :key="i"
+                            @click="item.action"
+                        >
+                            <v-list-item-icon>
+                                <v-icon v-text="item.icon"></v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>{{ item.text }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-col>
+
+            <v-col style="padding-top: 15px;">
+                <v-menu>
+                    <template v-slot:activator="{ on }">
+                        <v-btn 
+                            tile 
+                            outlined
+                            v-on="on"
+                        >
+                            CONFIGURATION TOOL
+                        </v-btn>
+                    </template>
+
+                    <v-list>
+                        <v-list-item
+                            v-for="(item, i) in configItems"
                             :key="i"
                             @click="item.action"
                         >
@@ -200,7 +227,7 @@ export default {
             // Page title;
             title: this.$route.params.name || this.$route.name,
 
-            viewpointItems: [
+            viewItems: [
                 { 
                     text: 'Go to overview', 
                     icon: 'mdi-text-box',
@@ -217,6 +244,14 @@ export default {
                     text: 'Remove the current view',
                     icon: 'mdi-text-box-remove',
                     action: () => { this.deleteViewDialog = true }
+                }
+            ],
+
+            configItems: [
+                {
+                    text: 'Choose a view',
+                    icon: 'mdi-folder-alert-outline',
+                    action: () => {}
                 }
             ],
 
@@ -276,6 +311,7 @@ export default {
 
         goOverview() {
             this.selectedView = null;
+            this.configItems = [{ text: 'Choose a view', icon: 'mdi-folder-alert-outline', action: () => {} }];
             EVENTBUS.$emit('DELIVER_GOOVERVIEW');
         },
 
@@ -329,6 +365,28 @@ export default {
 
         EVENTBUS.$on('INVOKE_ENTERVIEW', (payload) => {
             this.selectedView = payload;
+
+            this.configItems = payload
+                ? [
+                    {
+                        text: 'Back to previous configuration level',
+                        icon: 'mdi-arrow-left',
+                        action: () => { EVENTBUS.$emit('INVOKE_BACKVIEW'); }
+                    },
+
+                    {
+                        text: 'Create a new component',
+                        icon: 'mdi-plus',
+                        action: () => { EVENTBUS.$emit('INVOKE_CREATECP'); }
+                    }
+                ]
+                : [
+                    {
+                        text: 'Choose a view',
+                        icon: 'mdi-folder-alert-outline',
+                        action: () => {}
+                    }
+                ];
         });
 
         EVENTBUS.$on('INVOKE_SETTREEVIEW', (payload) => {

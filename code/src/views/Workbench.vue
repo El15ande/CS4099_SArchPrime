@@ -596,7 +596,7 @@ export default {
                     return [
                         {
                             name: 'Back',
-                            description: 'Return to previous architecture level',
+                            description: 'Return to previous configuration level',
                             colourclass: ['bg_hierarchy'],
                             action: function() {
                                 _this.jointMenu = false;
@@ -1273,7 +1273,34 @@ export default {
 
         EVENTBUS.$on('DELIVER_JUMPVIEW', (id, name) => {
             this.jumpConfiguration(id, name);
-        })
+        });
+
+        EVENTBUS.$on('INVOKE_BACKVIEW', () => {
+            if(this.archDataAdaptor.archQueue.length > 0) {
+                let parent = this.archDataAdaptor.qpop().qlast();
+
+                if(parent) {
+                    this.renderConfiguration(parent.cid, parent.cname);
+                } else {
+                    EVENTBUS.$emit('INVOKE_ENTERVIEW', null);
+                    this.renderViewModel();
+                }
+            }
+        });
+
+        EVENTBUS.$on('INVOKE_CREATECP', () => {
+            this.componentDialog = true;
+            this.newComponentName = '';
+
+            this.selectedComponent = {
+                sid: this.archDataAdaptor.qlast().cid,
+                sname: this.archDataAdaptor.qlast().cname,
+                spos: {
+                    x: 0,
+                    y: 0
+                }
+            };
+        });
 
 
 
