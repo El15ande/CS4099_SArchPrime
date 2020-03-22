@@ -44,11 +44,11 @@ Technology Stacks
 - [x] 6. Provide visualisation on connectors.
 - [x] 7. Implement a design tool that is able to edit and connect multiple views. (progress: composite views with view-view connections)
 - [x] 8. Support intra-components and inter-components connection. (progress: customised model: composite views with hierarchical view connections)
-- [ ] 9. Based on connections, the tool is able to reveal constraints between different components and views. (progress: core function)
-- [ ] 10. Conduct a user evaluation on core design tool, evaluate the design functions and the visualisation design.
+- [x] 9. Based on connections, the tool is able to reveal constraints between different components and views. (progress: core function)
+- [x] 10. Conduct a user evaluation on core design tool, evaluate the design functions and the visualisation design.
 
 2.2 __Secondary objectives__: improve user experience & software quality  
-- [ ] 1. Improve user experience based on the first evaluation
+- [x] 1. Improve user experience based on the first evaluation
 - [ ] 2. Add IO function: the product diagram / visualisation can be imported or exported for reuse.
 - [ ] 3. Implement extension tool(s) that provide further software engineering behaviours. (e.g. Agile developments, existing software engineering tools connection)
 - [ ] 4. Conduct the second user evaluation on the overall tool, evaluate the quality and robustness of the system.
