@@ -7,7 +7,7 @@
     >
         <v-list-item two-line>
             <v-list-item-title class="title">
-                Senior Honours Project
+                <center>ArchPrime</center>
             </v-list-item-title>
         </v-list-item>
 

@@ -34,6 +34,7 @@ export default class ArchConstraintChecker {
                     }
                 }
             })
+
             ._pushConstraints(this._checkUnconnectedInterfaces(), {
                 name: 'Isolated Interfaces',
                 icon: 'mdi-alert-box',
@@ -55,6 +56,7 @@ export default class ArchConstraintChecker {
                     }
                 }
             })
+            
             ._pushConstraints(this._checkIsolatedComponents(), {
                 name: 'Isolated Components',
                 icon: 'mdi-alert-box',

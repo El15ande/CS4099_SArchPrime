@@ -19,7 +19,7 @@ Technology Stacks
 
 ### 1. Description
 
-1.1 __Project title: Software architecture viewpoint design & visualisation tool__
+1.1 __Project title: ArchPrime__
 
 1.2 __Description:__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In software engineering, the process of transforming textual architecture documentations into some diagrammatic or visualisation representations is inevitable for architects and project managers, this could lead to numerous amount of components, connectors and view models documentations which emphasise distinct focal points regarding different stakeholders and contexts involved in the development (i.e. different architecture viewpoints). In industrial environment, the static architecture diagram (whiteboard handrafts or generic diagram design tools) may be transient and lack of visualisation or software engineering support, while professional modelling and analysing tools may be difficult to utilise and thus lead to a large amount of workload. On the other hand, existing software architecture design and visualisation tools (e.g. [Structurizr](http://structurizr.com), [Confluence](https://www.atlassian.com/software/confluence)) can satisfy most of the above requirements, but are rarely supported with the features of multiple viewpoints switching and connections revealing.  
@@ -49,7 +49,7 @@ Technology Stacks
 
 2.2 __Secondary objectives__: improve user experience & software quality  
 - [x] 1. Improve user experience based on the first evaluation
-- [ ] 2. Add IO function: the product diagram / visualisation can be imported or exported for reuse.
+- [x] 2. Add IO function: the product diagram / visualisation can be imported or exported for reuse.
 - [ ] 3. Implement extension tool(s) that provide further software engineering behaviours. (e.g. Agile developments, existing software engineering tools connection)
 - [ ] 4. Conduct the second user evaluation on the overall tool, evaluate the quality and robustness of the system.
 
