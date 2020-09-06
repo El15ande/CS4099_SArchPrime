@@ -1,2 +1,7 @@
-# CS4099: Senior Honours Project
-Reconstruction in progress...
+# 2019/20 Senior Honours Project (CS4099): ArchPrime
+
+## Introduction
+TBA
+
+## Technology Stack
+TBA
