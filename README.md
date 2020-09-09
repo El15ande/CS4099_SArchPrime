@@ -2,6 +2,8 @@
 
 ## Commands
 
+* Vue CLI UI: `vue ui`
+
 * Setup: `npm install`
 * Compile (development): `npm run serve`
 * Compile (production): `npm run build`
