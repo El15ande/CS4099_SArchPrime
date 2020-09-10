@@ -10,7 +10,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState } from 'vuex';
 import Store from '../../store/index';
 
 export default Vue.extend({
