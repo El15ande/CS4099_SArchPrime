@@ -1,18 +1,22 @@
 <template>
     <v-app>
-        <Topbar />
+        <left-drawer />
+        <right-drawer />
     </v-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Topbar from './components/layout/Topbar.vue';
+import LeftDrawer from './components/layout/LeftDrawer.vue';
+import RightDrawer from './components/layout/RightDrawer.vue';
 
 export default Vue.extend({
     name: 'App',
 
     components: {
-        Topbar
+        TopBar,
+        LeftDrawer,
+        RightDrawer
     }
 });
 </script>
