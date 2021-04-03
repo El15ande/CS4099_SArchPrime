@@ -6,7 +6,7 @@
         color="indigo darken-4"
     >
         <v-app-bar-nav-icon @click.stop="_commit('changeLeft')"></v-app-bar-nav-icon>
-        <v-toolbar-title>ArchPrime</v-toolbar-title>
+        <v-toolbar-title>SWArchPrime</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-app-bar-nav-icon @click.stop="_commit('changeRight')"></v-app-bar-nav-icon>
     </v-app-bar>
