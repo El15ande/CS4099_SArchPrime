@@ -1,38 +1,27 @@
 <template>
-    <el-container>
-        <!-- Navigator -->
-        <el-aside>
-            <Navigator />
-        </el-aside>
-
-        <el-container>
-            <el-main>Main</el-main>
-        </el-container>
-  </el-container>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import Navigator from './components/Navigator.vue';
+import { defineComponent } from 'vue';
+import HelloWorld from './components/HelloWorld.vue';
 
-@Options({
-    components: { Navigator }
-})
-
-export default class App extends Vue {}
+export default defineComponent({
+  name: 'App',
+  components: {
+    HelloWorld
+  }
+});
 </script>
 
 <style>
-/* Global style */
-#app,.el-aside {
-    min-height: 100vh;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-.el-aside {
-    width: 200px;
-}
-
-.el-menu {
-    min-height: 100vh;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }
 </style>
