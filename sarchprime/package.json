@@ -7,10 +7,14 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@element-plus/icons": "^0.0.11",
+    "element-plus": "^1.2.0-beta.5",
     "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",

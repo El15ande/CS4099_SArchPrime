@@ -6,11 +6,10 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 
 ## Setup
 
-- Vue CLI UI: `vue ui`
-- Dependency installation: `npm install`
-- Build (development): `npm run serve`
-- Build (production): `npm run build`
-- Lint: `npm run lint`
+- Load [Vue CLI](https://cli.vuejs.org/) UI: `vue ui`
+- Project set-up: `npm install`
+- Compile & hot-reload (for development): `npm run serve`
+- Compile & minify (for production): `npm run build`
 
 ---
 
@@ -18,5 +17,6 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 
 - [vue@next](https://v3.vuejs.org/)
     - [element-plus](https://element-plus.org/)
+    - [@element-plus/icons](https://element-plus.org/en-US/component/icon.html)
 
 ---
