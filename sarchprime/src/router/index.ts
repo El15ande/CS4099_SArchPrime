@@ -1,7 +1,7 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
-import Dashboard from '../views/Dashboard.vue'
-import Assistance from '../views/Assistance.vue'
+import Dashboard from '../views/Dashboard.vue';
+import Assistance from '../views/Assistance.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,14 +15,14 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/assistance',
-    name: 'assistance',
+    name: 'Assistance',
     component: Assistance
   }
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
+});
 
-export default router
+export default router;

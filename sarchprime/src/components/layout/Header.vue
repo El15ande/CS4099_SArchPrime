@@ -1,7 +1,5 @@
 <template>
 
-
-
 </template>
 
 <script lang="ts">
@@ -12,3 +10,9 @@ export default defineComponent({
 });
 
 </script>
+
+<style scoped>
+h1 {
+    color: var(--MAIN_THEME_DARK);
+}
+</style>

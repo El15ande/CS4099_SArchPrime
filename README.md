@@ -11,6 +11,10 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 - Compile & hot-reload (for development): `npm run serve`
 - Compile & minify (for production): `npm run build`
 
+- `Error: digital envelop routines::unsupported` solution
+    - Windows: `set NODE_OPTIONS=--openssl-legacy-provider`
+    - UNIX: `export NODE_OPTIONS=--openssl-legacy-provider`
+
 ---
 
 ## Technology Stack
@@ -18,5 +22,20 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 - [vue@next](https://v3.vuejs.org/)
     - [element-plus](https://element-plus.org/)
     - [@element-plus/icons](https://element-plus.org/en-US/component/icon.html)
+- [jointjs](https://www.jointjs.com/)
 
 ---
+
+## Development Route
+
+- [ ] Framework
+    - [x] UI: Vue 3 + Element-UI.
+    - [x] Layout: sidebar, (header, main-board).
+    - [ ] JointJS integration.
+- [ ] Dashboard
+    - [ ] Two-way ADF input: SAPServer (node.js online), file input (offline).
+- [ ] Assistance
+
+### Functional Requirements
+
+### Non-Functional Requirements

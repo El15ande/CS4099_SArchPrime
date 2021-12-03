@@ -1,4 +1,5 @@
 <template>
+    
     <el-menu
         default-active="1"
         active-text-color="var(--MAIN_THEME_DARK)"
@@ -17,9 +18,11 @@
             </el-menu-item>
         </router-link>
     </el-menu>
+
 </template>
 
 <script lang="ts">
+
 import { defineComponent } from 'vue';
 import { 
     Menu as IconMenu,
@@ -36,9 +39,11 @@ export default defineComponent({
         Sort
     }
 });
+
 </script>
 
 <style scoped>
+
 .el-menu {
     height: 100vh;
 
@@ -49,4 +54,5 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
 </style>
