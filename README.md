@@ -20,6 +20,7 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 ## Technology Stack
 
 - [vue@next](https://v3.vuejs.org/)
+    - [vue-router](https://router.vuejs.org/)
     - [element-plus](https://element-plus.org/)
     - [@element-plus/icons](https://element-plus.org/en-US/component/icon.html)
 - [jointjs](https://www.jointjs.com/)
@@ -29,9 +30,10 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 ## Development Route
 
 - [ ] Framework
-    - [x] UI: Vue 3 + Element-UI.
+    - [x] UI: (Vue 3 framework, vue-router), Element-UI.
     - [x] Layout: sidebar, (header, main-board).
     - [ ] JointJS integration.
+    - [ ] SAPStore: light-weight flux-architecture state management.
 - [ ] Dashboard
     - [ ] Two-way ADF input: SAPServer (node.js online), file input (offline).
 - [ ] Assistance
