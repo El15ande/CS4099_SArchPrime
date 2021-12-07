@@ -2,7 +2,7 @@
 
     <el-row>
         <el-col :span="12">
-            <div v-if="serverMode">
+            <div v-if="serverState">
                 Online
             </div>
             <div v-else>
@@ -16,10 +16,21 @@
         </el-col>
 
         <el-col :span="2" :offset="10">
-            <el-button v-if="serverMode" type="success" round @click="flipSAPServer(true)">Online</el-button>
-            <el-button v-else type="danger" round @click="flipSAPServer(false)">Offline</el-button>
+            <el-button v-if="serverState" type="success" round @click="tryDisconnect">Online</el-button>
+            <el-button v-else type="danger" round @click="tryConnect">Offline</el-button>
         </el-col>
     </el-row>
+
+    <el-dialog
+        v-model="showDialog"
+        :title="dialogtitle"
+        width="33%"
+    >
+        <span>{{ dialogtext }}</span>
+        <template #footer>
+            <el-button type="primary" @click="showDialog=false">Confirm</el-button>
+        </template>
+    </el-dialog>
 
 </template>
 
@@ -30,24 +41,54 @@ import { defineComponent } from 'vue';
 import SAPStore from '../../SAPStore';
 
 export default defineComponent({
+    data() {
+        return {
+            showDialog: false, // boolean.
+            dialogtitle: '', // string.
+            dialogtext: '' // string.
+        }
+    },
     computed: {
-        serverMode():boolean {
+        serverState():boolean {
             return SAPStore.serverState();
         },
     },
 
     methods: {
-        flipSAPServer(isOnline:boolean):void {
-            console.log(isOnline);
+        _setDialog(title:string, text:string):void {
+            this.dialogtitle = title;
+            this.dialogtext = text;
+            this.showDialog = true;
         },
 
         openADF():void {
             let adfLoader:HTMLInputElement = document.createElement('input');
             adfLoader.type = 'file';
-            adfLoader.accept = '.adf,.json';
+            adfLoader.accept = '.json';
 
             adfLoader.click();
+        },
+
+        async tryConnect():Promise<void> {
+            let connres = await SAPStore.connect();
+
+            this._setDialog(
+                connres ? 'SAPServer Connected' : 'SAPServer Not Detected',
+                connres ? 'Switched to online mode.' : 'Kept offline mode.'
+            );
+        },
+        tryDisconnect():void {
+            SAPStore.disconnect();
+
+            this._setDialog(
+                'SAPServer Disconnected',
+                'Switched to offline mode.'
+            );
         }
+    },
+
+    mounted() {
+        this.tryConnect();
     }
 });
 
@@ -56,9 +97,5 @@ export default defineComponent({
 <style scoped>
 h1 {
     color: var(--MAIN_THEME_DARK);
-}
-
-input {
-    display: none;
 }
 </style>

@@ -33,7 +33,8 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
     - [x] UI: (Vue 3 framework, vue-router), Element-UI.
     - [x] Layout: sidebar, (header, main-board).
     - [ ] JointJS integration.
-    - [ ] SAPStore: light-weight flux-architecture state management.
+    - [x] SAPStore: light-weight flux-architecture state management.
+    - [x] SAPServer: light-weight node.js server for online mode.
 - [ ] Dashboard
     - [ ] Two-way ADF input: SAPServer (node.js online), file input (offline).
 - [ ] Assistance
