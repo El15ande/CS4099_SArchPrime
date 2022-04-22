@@ -1,6 +1,3 @@
-/**
- * Light-weight flux-architecture state management.
- */
 import { reactive } from 'vue';
 
 const PORT:number = 8081;

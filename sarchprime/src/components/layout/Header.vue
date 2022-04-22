@@ -1,53 +1,54 @@
 <template>
-
     <el-row>
-        <el-col :span="12">
-            <div v-if="serverState">
-                Online
-            </div>
+        <el-col :span="22">
+            <div v-if="serverState">Online</div>
             <div v-else>
-                <el-button 
+                <el-button plain 
                     color="var(--MAIN_THEME_DARK)" 
-                    plain
-                    @click="openADF">
+                    @click="openADF"
+                >
                     Select local files
                 </el-button>
             </div>
         </el-col>
 
-        <el-col :span="2" :offset="10">
+        <el-col :span="2">
             <el-button v-if="serverState" type="success" round @click="tryDisconnect">Online</el-button>
             <el-button v-else type="danger" round @click="tryConnect">Offline</el-button>
         </el-col>
     </el-row>
 
-    <el-dialog
-        v-model="showDialog"
-        :title="dialogtitle"
+    <el-dialog v-model="showDialog" 
         width="33%"
+        :title="dialogtitle"
     >
-        <span>{{ dialogtext }}</span>
+        <span>{{dialogtext}}</span>
         <template #footer>
-            <el-button type="primary" @click="showDialog=false">Confirm</el-button>
+            <el-button 
+                @click="showDialog=false"
+            >
+                Confirm
+            </el-button>
         </template>
     </el-dialog>
-
 </template>
 
 <script lang="ts">
-
 import { defineComponent } from 'vue';
 
 import SAPStore from '../../SAPStore';
 
+
+
 export default defineComponent({
     data() {
         return {
-            showDialog: false, // boolean.
-            dialogtitle: '', // string.
-            dialogtext: '' // string.
+            showDialog: false,  // boolean
+            dialogtitle: '',    // string
+            dialogtext: ''      // string
         }
     },
+
     computed: {
         serverState():boolean {
             return SAPStore.serverState();
@@ -70,11 +71,11 @@ export default defineComponent({
         },
 
         async tryConnect():Promise<void> {
-            let connres = await SAPStore.connect();
+            let connRes = await SAPStore.connect();
 
             this._setDialog(
-                connres ? 'SAPServer Connected' : 'SAPServer Not Detected',
-                connres ? 'Switched to online mode.' : 'Kept offline mode.'
+                connRes ? 'SAPServer Connected' : 'SAPServer Not Detected',
+                connRes ? 'Switched to online mode.' : 'Kept offline mode.'
             );
         },
         tryDisconnect():void {
