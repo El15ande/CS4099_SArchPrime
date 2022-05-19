@@ -4,23 +4,13 @@
 
 Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/tree/FinalSubmission).
 
-## Setup
+## Configuration
 
-- Load [Vue CLI](https://cli.vuejs.org/) UI: `vue ui`
-- Project set-up: `npm install`
-- Compile & hot-reload (for development): `npm run serve`
-- Compile & minify (for production): `npm run build`
+- [Vue CLI](https://cli.vuejs.org/) `scaffolding`: `vue ui`
 
-- `Error: digital envelop routines::unsupported` solution
-    - Windows: `set NODE_OPTIONS=--openssl-legacy-provider`
-    - UNIX: `export NODE_OPTIONS=--openssl-legacy-provider`
+**`Error: digital envelop routines::unsupported` solution**
+- Windows: `set NODE_OPTIONS=--openssl-legacy-provider`
+- Linux: `export NODE_OPTIONS=--openssl-legacy-provider`
 
----
-
-## Technology Stack
-
-- [vue@next](https://v3.vuejs.org/)
-    - [vue-router](https://router.vuejs.org/)
-    - [element-plus](https://element-plus.org/)
-    - [@element-plus/icons](https://element-plus.org/en-US/component/icon.html)
-- [jointjs](https://www.jointjs.com/)
+**Tech. stack**
+- [Vue 3](https://vuejs.org/)
