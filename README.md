@@ -6,11 +6,9 @@ Origin: [FinalSubmission branch](https://github.com/El15ande/CS4099_SArchPrime/t
 
 ## Configuration
 
-- [Vue CLI](https://cli.vuejs.org/) `scaffolding`: `vue ui`
-
-**`Error: digital envelop routines::unsupported` solution**
-- Windows: `set NODE_OPTIONS=--openssl-legacy-provider`
-- Linux: `export NODE_OPTIONS=--openssl-legacy-provider`
+- [Vue CLI](https://cli.vuejs.org/) scaffolding: `vue ui`
 
 **Tech. stack**
 - [Vue 3](https://vuejs.org/)
+    - [ElementPlus](https://element-plus.org/)
+    - [Pinia](https://pinia.vuejs.org/)
